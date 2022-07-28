@@ -1,8 +1,8 @@
-import { combine, createEvent, createStore, forward, sample } from "effector-next"
+import { combine, createStore, forward, sample } from "effector-next"
 import { Controller, createRequestFx } from "fry-fx"
 import { getCategories } from "../../api"
 import { CategoryModel } from "../../models/Category"
-import { CategoryGate, ParentCategoryId } from "./common"
+import { $categoryId, ParentCategoryId } from "./common"
 
 const $categories = createStore<CategoryModel[]>([])
 
@@ -20,11 +20,7 @@ forward({
 const $isLoading = loadCategoriesFx.pending
 
 sample({
-  // on gate state change
-  clock: CategoryGate.state,
-  // forward state
-  source: CategoryGate.state.map((v) => v.categoryId),
-  // to loadCategories
+  source: $categoryId,
   target: loadCategoriesFx,
 })
 
@@ -33,4 +29,4 @@ const $subcategoriesState = combine({
   categories: $categories,
 })
 
-export { $subcategoriesState, CategoryGate, loadCategoriesFx }
+export { $subcategoriesState, loadCategoriesFx }

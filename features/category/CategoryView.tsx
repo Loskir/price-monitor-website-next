@@ -3,9 +3,10 @@ import Link from "next/link"
 import React from "react"
 import { SortOrder, SortType } from "../../api"
 import { ProductListItem } from "../../components/ProductListItem"
+import { CategoryGate } from "./common"
 import { $productsState } from "./products"
 import { $sort, sortChanged, sortOrderFlipped } from "./sort"
-import { $subcategoriesState, CategoryGate } from "./subcategories"
+import { $subcategoriesState } from "./subcategories"
 
 const Subcategories: React.FC = () => {
   const {

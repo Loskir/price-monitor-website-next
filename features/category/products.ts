@@ -2,7 +2,7 @@ import { combine, createStore, forward } from "effector-next"
 import { Controller, createRequestFx } from "fry-fx"
 import { getProductsByCategory, SortOrder, SortType } from "../../api"
 import { ProductWithPriceModel } from "../../models/Product"
-import { CategoryGate } from "./common"
+import { $categoryId } from "./common"
 import { $sort } from "./sort"
 
 const $products = createStore<ProductWithPriceModel[]>([])
@@ -22,8 +22,6 @@ const loadProductsFx = createRequestFx<
     })
   },
 )
-
-const $categoryId = CategoryGate.state.map((v) => v.categoryId)
 
 const $categoryIdWithSort = combine({
   $categoryId,
