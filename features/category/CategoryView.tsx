@@ -65,7 +65,7 @@ const Products: React.FC = () => {
   if (products.length > 0) {
     return (
       <div className="flex flex-col mt-4">
-        {products.map((p) => <ProductListItem product={p} />)}
+        {products.map((product) => <ProductListItem product={product} key={product.productId} />)}
       </div>
     )
   }
