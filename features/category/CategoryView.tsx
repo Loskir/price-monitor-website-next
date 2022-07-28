@@ -1,5 +1,6 @@
 import { useEvent, useGate, useStore } from "effector-react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import React from "react"
 import { SortOrder, SortType } from "../../api"
 import { ProductListItem } from "../../components/ProductListItem"
@@ -74,7 +75,8 @@ const Products: React.FC = () => {
 }
 
 export const CategoryView: React.FC<{ categoryId: number | null }> = ({ categoryId }) => {
-  useGate(CategoryGate, { categoryId })
+  const router = useRouter()
+  useGate(CategoryGate, { categoryId, routerReady: router.isReady })
   return (
     <main className="max-w-xl mx-auto mt-4 px-4">
       <Subcategories />

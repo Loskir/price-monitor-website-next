@@ -4,7 +4,7 @@ import { CategoryView } from "../../features/category/CategoryView"
 
 const Categories: NextPage = () => {
   const router = useRouter()
-  return <CategoryView categoryId={Number(router.query.id)} />
+  return <CategoryView categoryId={router.isReady ? Number(router.query.id) : null} />
 }
 
 export default Categories
