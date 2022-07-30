@@ -3,7 +3,7 @@ import Link from "next/link"
 
 const Home: NextPage = () => {
   return (
-    <main className="bg-red-500">
+    <main>
       <p>
         <Link href={"/scanner"}>Scanner</Link>
       </p>
