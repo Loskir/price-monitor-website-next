@@ -1,4 +1,4 @@
-import { combine, createStore, forward } from "effector-next"
+import { combine, createStore, domain, forward } from "effector-next"
 import { Controller, createRequestFx } from "fry-fx"
 import { getProductsByCategory, SortOrder, SortType } from "../../api"
 import { ProductWithPriceModel } from "../../models/Product"
@@ -13,15 +13,17 @@ const loadProductsFx = createRequestFx<
   LoadProductsFxPayload,
   ProductWithPriceModel[],
   Error
->(
-  async ({ categoryId, sortType, sortOrder }, controller?: Controller) => {
+>({
+  name: "loadProductsFx",
+  domain,
+  handler: async ({ categoryId, sortType, sortOrder }, controller?: Controller) => {
     return getProductsByCategory(categoryId, {
       sortType,
       sortOrder,
       signal: controller?.getSignal(),
     })
   },
-)
+})
 
 const $categoryIdWithSort = combine({
   $categoryId,

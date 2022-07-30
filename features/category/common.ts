@@ -1,4 +1,4 @@
-import { createEvent, forward, sample } from "effector-next"
+import { createEvent, sample } from "effector-next"
 import { createGate } from "effector-react"
 
 export type ParentCategoryId = number | null
@@ -40,7 +40,5 @@ sample({
   },
   target: categoryIdChanged,
 })
-
-categoryIdChanged.watch(() => console.log("category id changed!"))
 
 export { $categoryId, CategoryGate, categoryIdChanged }

@@ -1,16 +1,24 @@
-import { combine, createStore, forward, sample } from "effector-next"
+import { combine, createStore, domain, forward, sample } from "effector-next"
 import { Controller, createRequestFx } from "fry-fx"
 import { getCategories } from "../../api"
 import { CategoryModel } from "../../models/Category"
-import { $categoryId, ParentCategoryId } from "./common"
+import { $categoryId, categoryIdChanged, ParentCategoryId } from "./common"
 
 const $categories = createStore<CategoryModel[]>([])
 
-const loadCategoriesFx = createRequestFx<ParentCategoryId, CategoryModel[], Error>(
-  async (parentId, controller?: Controller) => {
+const loadCategoriesFx = createRequestFx<ParentCategoryId, CategoryModel[], Error>({
+  name: "loadCategoriesFx",
+  domain,
+  handler: async (parentId, controller?: Controller) => {
     return getCategories(parentId, controller?.getSignal())
   },
-)
+})
+
+sample({
+  clock: categoryIdChanged,
+  source: $categoryId,
+  target: loadCategoriesFx,
+})
 
 forward({
   from: loadCategoriesFx.doneData,
@@ -18,11 +26,6 @@ forward({
 })
 
 const $isLoading = loadCategoriesFx.pending
-
-sample({
-  source: $categoryId,
-  target: loadCategoriesFx,
-})
 
 const $subcategoriesState = combine({
   isLoading: $isLoading,

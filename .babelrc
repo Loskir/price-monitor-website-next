@@ -10,6 +10,7 @@
           "effector-next"
         ]
       }
-    ]
+    ],
+    "effector-logger/babel-plugin"
   ]
 }
