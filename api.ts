@@ -2,11 +2,11 @@ const apiRoot = process.env.NEXT_PUBLIC_API_ROOT
 import type { CategoryModel } from "./models/Category"
 import type { ProductPriceModel, ProductWithPriceModel } from "./models/Product"
 
-export function getProductById(id: string): Promise<ProductWithPriceModel | undefined> {
-  return fetch(`${apiRoot}/products/${id}`)
+export function getProductById(id: string, signal?: AbortSignal): Promise<ProductWithPriceModel | null> {
+  return fetch(`${apiRoot}/products/${id}`, { signal })
     .then(async (res) => {
       if (res.status === 404) {
-        return
+        return null
       }
       if (res.status > 400) {
         throw new Error() // todo
@@ -15,8 +15,8 @@ export function getProductById(id: string): Promise<ProductWithPriceModel | unde
     })
 }
 
-export function getProductHistoryById(id: string): Promise<ProductPriceModel[]> {
-  return fetch(`${apiRoot}/product/${id}/history`)
+export function getProductHistoryById(id: string, signal?: AbortSignal): Promise<ProductPriceModel[]> {
+  return fetch(`${apiRoot}/product/${id}/history`, { signal })
     .then(async (res) => {
       if (res.status === 404) {
         return []
