@@ -2,6 +2,7 @@ import clsx from "clsx"
 import { useGate, useStore } from "effector-react"
 import { DateTime } from "luxon"
 import { NextPage } from "next"
+import Head from "next/head"
 import { useRouter } from "next/router"
 import React from "react"
 import styles from "../../components/Product.module.css"
@@ -78,15 +79,21 @@ const ProductInner: React.FC = () => {
 }
 
 const ProductView: NextPage = () => {
+  const state = useStore($productState)
   const router = useRouter()
   useGate(ProductGate, {
     productId: router.query.id?.toString() || null,
     routerReady: router.isReady,
   })
   return (
-    <div className="max-w-xl mx-auto py-8 px-4 min-h-screen">
-      <ProductInner />
-    </div>
+    <>
+      <Head>
+        <title>{state.product?.name || "Product"} — Price Monitor</title>
+      </Head>
+      <div className="max-w-xl mx-auto py-8 px-4 min-h-screen">
+        <ProductInner />
+      </div>
+    </>
   )
 }
 
