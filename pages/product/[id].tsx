@@ -88,7 +88,7 @@ const ProductView: NextPage = () => {
   return (
     <>
       <Head>
-        <title>{state.product?.name || "Product"} — Price Monitor</title>
+        <title>{`${state.product?.name || "Product"} — Price Monitor`}</title>
       </Head>
       <div className="max-w-xl mx-auto py-8 px-4 min-h-screen">
         <ProductInner />
