@@ -28,6 +28,19 @@ export function getProductHistoryById(id: string, signal?: AbortSignal): Promise
     })
 }
 
+export function getProductByEan(ean: string, signal?: AbortSignal): Promise<ProductWithPriceModel | null> {
+  return fetch(`${apiRoot}/product/ean/${ean}`, { signal })
+    .then(async (res) => {
+      if (res.status === 404) {
+        return null
+      }
+      if (res.status > 400) {
+        throw new Error() // todo
+      }
+      return await res.json() as ProductWithPriceModel
+    })
+}
+
 export function searchProducts(query: string): Promise<ProductWithPriceModel[]> {
   const queryString = new URLSearchParams({
     query,
