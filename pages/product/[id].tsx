@@ -4,7 +4,7 @@ import { DateTime } from "luxon"
 import { NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import React from "react"
+import React, { useEffect } from "react"
 import styles from "../../components/Product.module.css"
 import { ProductHistoryGraph } from "../../components/ProductView/ProductHistoryGraph"
 import { $productHistoryState, $productState, ProductGate } from "../../features/product/state"
@@ -85,6 +85,12 @@ const ProductView: NextPage = () => {
     productId: router.query.id?.toString() || null,
     routerReady: router.isReady,
   })
+  useEffect(() => {
+    router.beforePopState((state) => {
+      console.log("state2", state)
+      return true
+    })
+  }, [])
   return (
     <>
       <Head>

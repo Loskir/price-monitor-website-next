@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@zxing/library": "^0.19.1",
+    "@undecaf/zbar-wasm": "^0.9.11",
     "chart.js": "^3.8.2",
     "chartjs-adapter-luxon": "^1.1.0",
     "clsx": "^1.2.1",
