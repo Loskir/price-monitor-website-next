@@ -1,4 +1,5 @@
-import { scanImageData } from "@undecaf/zbar-wasm"
+import { type ZBarSymbol } from "@undecaf/zbar-wasm"
+const { scanImageData } = require("@undecaf/zbar-wasm")
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
 import React, { useEffect, useRef, useState } from "react"
@@ -93,7 +94,7 @@ const Scanner: React.FC<{ onResult: (result: string) => unknown }> = ({ onResult
     canvas.height = video.videoHeight
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
     const data = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    const res = await scanImageData(data)
+    const res: ZBarSymbol[] = await scanImageData(data)
     // console.log(Date.now() - s)
     reportFps(Date.now() - s)
     // console.log(res)
