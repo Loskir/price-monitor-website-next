@@ -141,7 +141,7 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
 
     pendingScans.current = 0
 
-    const interval = setInterval(grab, 20)
+    const interval = setInterval(grab, 200)
 
     return () => {
       clearInterval(interval)
