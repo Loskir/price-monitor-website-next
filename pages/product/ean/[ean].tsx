@@ -48,7 +48,7 @@ const ProductView: NextPage = () => {
   }, [router])
   useEffect(() => {
     if (state.product) {
-      router.push(`/product/${state.product.productId}`)
+      router.replace(`/product/${state.product.productId}`)
     }
   }, [state])
   if (state.isLoading) {
