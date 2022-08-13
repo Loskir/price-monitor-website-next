@@ -5,18 +5,18 @@ import { useRouter } from "next/router"
 import React, { useEffect, useRef, useState } from "react"
 
 const useFps = () => {
-  const [fps, setFps] = useState(0)
+  const [ms, setMs] = useState(0)
   const len = 10
-  const [fpsArray] = useState(Array.from({ length: len }, () => 0))
-  const reportFps = (ms: number) => {
-    fpsArray.shift()
-    fpsArray.push(ms)
-    const sum = fpsArray.reduce((a, v) => a + v, 0)
-    setFps(1000 / (sum / len))
+  const [msArray] = useState(Array.from({ length: len }, () => 0))
+  const reportMs = (ms: number) => {
+    msArray.shift()
+    msArray.push(ms)
+    const sum = msArray.reduce((a, v) => a + v, 0)
+    setMs(sum / len)
   }
   return {
-    fps,
-    reportFps,
+    ms,
+    reportMs,
   }
 }
 
@@ -24,7 +24,7 @@ const Scanner: React.FC<{ onResult: (result: string) => unknown }> = ({ onResult
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const { fps, reportFps } = useFps()
+  const { ms, reportMs } = useFps()
   // const reader = useMemo(() => {
   //   const reader = new BrowserMultiFormatReader()
   //
@@ -96,7 +96,7 @@ const Scanner: React.FC<{ onResult: (result: string) => unknown }> = ({ onResult
     const data = ctx.getImageData(0, 0, canvas.width, canvas.height)
     const res: ZBarSymbol[] = await scanImageData(data)
     // console.log(Date.now() - s)
-    reportFps(Date.now() - s)
+    reportMs(Date.now() - s)
     // console.log(res)
     const z = res.find((v) => v.typeName === "ZBAR_EAN13")
     if (z) {
@@ -118,10 +118,15 @@ const Scanner: React.FC<{ onResult: (result: string) => unknown }> = ({ onResult
 
   useEffect(() => {
     let stopped = false
+    let lastAt = 0
     const loop = async () => {
       if (stopped) {
         return
       }
+      if (Date.now() - lastAt < 200) {
+        return requestAnimationFrame(loop)
+      }
+      lastAt = Date.now()
       await grab()
       requestAnimationFrame(loop)
     }
@@ -140,7 +145,7 @@ const Scanner: React.FC<{ onResult: (result: string) => unknown }> = ({ onResult
       {/*</select>*/}
       <div className="relative">
         <video playsInline ref={videoRef} />
-        <span className="absolute right-0 top-0 bg-white font-semibold text-xs px-1 py-0.5">{fps.toFixed(2)} FPS</span>
+        <span className="absolute right-0 top-0 bg-white font-semibold text-xs px-1 py-0.5">{ms.toFixed(1)} ms</span>
       </div>
       <canvas style={{ display: "none" }} ref={canvasRef} />
     </div>
