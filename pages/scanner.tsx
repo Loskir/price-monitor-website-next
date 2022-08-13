@@ -77,23 +77,37 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
 
   useEffect(() => {
     void (async () => {
-      if (!navigator?.mediaDevices?.getUserMedia) return
+      if (!navigator?.mediaDevices?.getUserMedia) {
+        setStatus("Your device does not support camera")
+      }
 
       setStatus("Setting up camera...")
 
-      const res = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: "environment",
-          width: 1920,
-        },
-      })
+      let cameraRes: MediaStream
+      try {
+        cameraRes = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "environment",
+            width: 1920,
+          },
+        })
+      } catch (error) {
+        console.error(error)
+        if (error instanceof DOMException) {
+          if (error.name === "NotAllowedError") {
+            return setStatus("Camera access denied")
+          }
+        }
+        setStatus("Failed to access camera")
+        return
+      }
 
       const video = videoRef.current
       if (!video) return
 
       setStatus("Setting up video...")
 
-      video.srcObject = res
+      video.srcObject = cameraRes
       video.play()
         .then(() => {
           const canvas = canvasRef.current
@@ -158,7 +172,7 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
       {/*  {devices.map((device) => <option value={device.deviceId} key={device.deviceId}>{device.label}</option>)}*/}
       {/*</select>*/}
       {!isReady && (
-        <div>
+        <div className="fixed inset-0 bg-white flex flex-col justify-center text-center">
           {status}
         </div>
       )}
