@@ -138,9 +138,10 @@ const Scanner: React.FC<{ onResult: (result: string) => unknown }> = ({ onResult
       {/*<select onChange={(e) => setDeviceId(e.target.value)} value={deviceId || undefined}>*/}
       {/*  {devices.map((device) => <option value={device.deviceId} key={device.deviceId}>{device.label}</option>)}*/}
       {/*</select>*/}
-      <video playsInline ref={videoRef} />
-      <button onClick={grab}>Grab!</button>
-      <span>{fps.toFixed(2)} FPS</span>
+      <div className="relative">
+        <video playsInline ref={videoRef} />
+        <span className="absolute right-0 top-0 bg-white font-semibold text-xs">{fps.toFixed(2)} FPS</span>
+      </div>
       <canvas style={{ display: "none" }} ref={canvasRef} />
     </div>
   )
@@ -148,11 +149,6 @@ const Scanner: React.FC<{ onResult: (result: string) => unknown }> = ({ onResult
 
 const Home: NextPage = () => {
   const router = useRouter()
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     onResult("124345")
-  //   }, 5000)
-  // }, [])
   const onResult = async (result: string) => {
     console.log("onResult!")
     await router.push(`/product/ean/${result}`)
@@ -166,7 +162,6 @@ const Home: NextPage = () => {
   return (
     <main>
       <Scanner onResult={onResult} />
-      {/*<button onClick={() => onResult("1234")}>Go product</button>*/}
     </main>
   )
 }
