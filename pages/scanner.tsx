@@ -176,9 +176,8 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
       )}
       <div className="relative" style={{ display: isReady ? undefined : "none" }}>
         <video playsInline ref={videoRef} />
-        <span className="absolute right-0 top-0 font-semibold text-xs text-right">
+        <span className="absolute right-0 top-0 font-semibold text-xs text-right flex flex-col items-end">
           <span className="bg-white px-1 py-0.5">{dimensions[0]}×{dimensions[1]}</span>
-          <br />
           <span className="bg-white px-1 py-0.5">{ms.toFixed(1)} ms</span>
         </span>
       </div>
