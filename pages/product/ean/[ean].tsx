@@ -4,7 +4,8 @@ import { Controller, createRequestFx } from "fry-fx"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
 import React, { useEffect } from "react"
-import { getProductByEan, getProductById } from "../../../api"
+import { getProductByEan } from "../../../api"
+import { CenteredOverlay } from "../../../components/CenteredOverlay"
 import { ProductWithPriceModel } from "../../../models/Product"
 
 const eanChanged = createEvent<string>()
@@ -40,6 +41,7 @@ const ProductView: NextPage = () => {
   const router = useRouter()
   const eanChangedL = useEvent(eanChanged)
   const state = useStore($state)
+
   useEffect(() => {
     const ean = router.query.ean?.toString()
     if (router.isReady && ean) {
@@ -51,10 +53,11 @@ const ProductView: NextPage = () => {
       router.replace(`/product/${state.product.productId}`)
     }
   }, [state])
-  if (state.isLoading) {
-    return <p>Loading...</p>
+  // state.product → redirecting
+  if (state.isLoading || state.product) {
+    return <CenteredOverlay>Loading...</CenteredOverlay>
   }
-  return <p>Not found :(</p>
+  return <CenteredOverlay>Not found :(</CenteredOverlay>
 }
 
 export default ProductView

@@ -2,6 +2,7 @@ import { type ZBarSymbol } from "@undecaf/zbar-wasm"
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
 import React, { useEffect, useRef, useState } from "react"
+import { CenteredOverlay } from "../components/CenteredOverlay"
 
 const useFps = () => {
   const [ms, setMs] = useState(0)
@@ -163,11 +164,7 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
 
   return (
     <div>
-      {!isReady && (
-        <div className="fixed inset-0 bg-white flex flex-col justify-center text-center font-medium">
-          {status}
-        </div>
-      )}
+      {!isReady && <CenteredOverlay>{status}</CenteredOverlay>}
       <div className="relative" style={{ display: isReady ? undefined : "none" }}>
         <video playsInline ref={videoRef} />
         <span className="absolute right-0 top-0 font-semibold text-xs text-right flex flex-col items-end">

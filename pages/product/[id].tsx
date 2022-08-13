@@ -5,6 +5,7 @@ import { NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import React, { useEffect } from "react"
+import { CenteredOverlay } from "../../components/CenteredOverlay"
 import styles from "../../components/Product.module.css"
 import { ProductHistoryGraph } from "../../components/ProductView/ProductHistoryGraph"
 import { $productHistoryState, $productState, ProductGate } from "../../features/product/state"
@@ -57,18 +58,10 @@ const ProductHistory: React.FC = () => {
 const ProductInner: React.FC = () => {
   const state = useStore($productState)
   if (state.isLoading) {
-    return (
-      <div className="absolute inset-12 flex flex-col justify-center">
-        <span className="text-center">Loading...</span>
-      </div>
-    )
+    return <CenteredOverlay>Loading...</CenteredOverlay>
   }
   if (!state.product) {
-    return (
-      <div className="absolute inset-12 flex flex-col justify-center">
-        <span className="text-center">Not found :(</span>
-      </div>
-    )
+    return <CenteredOverlay>Not found :(</CenteredOverlay>
   }
   return (
     <>
