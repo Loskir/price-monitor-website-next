@@ -1,5 +1,5 @@
 import { type ZBarSymbol } from "@undecaf/zbar-wasm"
-const { scanImageData } = require("@undecaf/zbar-wasm")
+// const { scanImageData } = require("@undecaf/zbar-wasm")
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
 import React, { useEffect, useRef, useState } from "react"
@@ -20,40 +20,71 @@ const useFps = () => {
   }
 }
 
-const Scanner: React.FC<{ onResult: (result: string) => unknown }> = ({ onResult }) => {
+const initWorker = (video: HTMLVideoElement) => {
+  const worker = new Worker(new URL("../scanner.worker.ts", import.meta.url))
+  worker.postMessage({ type: "init", d: [video.videoWidth, video.videoHeight] })
+  return worker
+}
+
+const setCanvasSize = (canvas: HTMLCanvasElement, video: HTMLVideoElement) => {
+  canvas.width = video.videoWidth
+  canvas.height = video.videoHeight
+}
+
+type OnResultFn = (result: string) => unknown
+
+const handleScanResult = (result: ZBarSymbol[], onResult: OnResultFn) => {
+  const z = result.find((v) => v.typeName === "ZBAR_EAN13")
+  if (z) {
+    return onResult(Array.from(z.data).map((v) => String.fromCharCode(v)).join(""))
+  }
+}
+
+const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const worker = useRef<Worker | null>(null)
+  const pendingScans = useRef(0)
+  const dateStart = useRef(0)
 
   const { ms, reportMs } = useFps()
-  // const reader = useMemo(() => {
-  //   const reader = new BrowserMultiFormatReader()
-  //
-  //   const hints = new Map()
-  //   const formats = [BarcodeFormat.EAN_13, BarcodeFormat.EAN_8]
-  //   hints.set(DecodeHintType.POSSIBLE_FORMATS, formats)
-  //   reader.hints = hints
-  //
-  //   return reader
-  // }, [])
 
   useEffect(() => {
-    if (!videoRef.current) {
-      return
-    }
-    navigator?.mediaDevices?.getUserMedia({
-      video: {
-        facingMode: "environment",
-        width: 1920,
-      },
-    })
-      .then((res) => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = res
-          videoRef.current.play().catch((error) => {
-            console.warn("unable to play video", error)
-          })
-        }
+    void (async () => {
+      if (!navigator?.mediaDevices?.getUserMedia) return
+
+      const res = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "environment",
+          width: 1920,
+        },
       })
+
+      const video = videoRef.current
+      if (!video) return
+      video.srcObject = res
+      video.play()
+        .then(() => {
+          const canvas = canvasRef.current
+          if (canvas) {
+            setCanvasSize(canvas, video)
+          }
+          worker.current = initWorker(video)
+          worker.current?.addEventListener("message", (event) => {
+            if (event.data.type === "scan") {
+              pendingScans.current--
+              handleScanResult(event.data.result, onResult)
+              reportMs(Date.now() - dateStart.current)
+            }
+            // console.log("from worker", event.data)
+          })
+          // if (typeof OffscreenCanvas !== "undefined") {
+          // }
+        })
+        .catch((error) => {
+          console.warn("unable to play video", error)
+        })
+    })()
 
     // reader.decodeFromConstraints(
     //   { video: { facingMode: "environment" } },
@@ -67,7 +98,10 @@ const Scanner: React.FC<{ onResult: (result: string) => unknown }> = ({ onResult
     // )
     //
     // return () => reader.reset()
-  }, [videoRef])
+    return () => {
+      worker.current?.terminate()
+    }
+  }, [])
 
   // useEffect(() => {
   //   void (async () => {
@@ -82,59 +116,35 @@ const Scanner: React.FC<{ onResult: (result: string) => unknown }> = ({ onResult
   //   })()
   // }, [])
 
-  const grab = async () => {
-    let s = Date.now()
-    if (!canvasRef.current || !videoRef.current) return
-    const canvas = canvasRef.current
-    const video = videoRef.current
-    if (video.videoWidth === 0 || video.videoHeight === 0) return
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-    canvas.width = video.videoWidth
-    canvas.height = video.videoHeight
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-    const data = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    const res: ZBarSymbol[] = await scanImageData(data)
-    // console.log(Date.now() - s)
-    reportMs(Date.now() - s)
-    // console.log(res)
-    const z = res.find((v) => v.typeName === "ZBAR_EAN13")
-    if (z) {
-      return onResult(Array.from(z.data).map((v) => String.fromCharCode(v)).join(""))
-    }
-    // for (const code of res) {
-    //   if (code.points.length > 0) {
-    //     ctx.strokeStyle = "green"
-    //     ctx.lineWidth = 2
-    //     ctx.moveTo(code.points[0].x, code.points[0].y)
-    //     for (let i = 1; i < code.points.length; ++i) {
-    //       ctx.lineTo(code.points[i].x, code.points[i].y)
-    //     }
-    //     ctx.stroke()
-    //   }
-    // }
-    // reader.decodeFromVideoDevice()
-  }
-
   useEffect(() => {
-    let stopped = false
-    let lastAt = 0
-    const loop = async () => {
-      if (stopped) {
-        return
+    const grab = () => {
+      if (pendingScans.current < 1) {
+        dateStart.current = Date.now()
+        if (!canvasRef.current || !videoRef.current) return
+        const canvas = canvasRef.current
+        const video = videoRef.current
+        if (video.videoWidth === 0 || video.videoHeight === 0) return
+        const ctx = canvas.getContext("2d")
+        if (!ctx) return
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        // console.log(worker)
+        worker.current?.postMessage({ type: "scan", data })
+        pendingScans.current++
       }
-      if (Date.now() - lastAt < 200) {
-        return requestAnimationFrame(loop)
-      }
-      lastAt = Date.now()
-      await grab()
-      requestAnimationFrame(loop)
+      // const res: ZBarSymbol[] = await scanImageData(data)
+      // console.log(Date.now() - s)
+      // reportMs(Date.now() - s)
+      // console.log(res)
+      // handleScanResult(res, onResult)
     }
 
-    loop()
+    pendingScans.current = 0
+
+    const interval = setInterval(grab, 20)
 
     return () => {
-      stopped = true
+      clearInterval(interval)
     }
   }, [])
 

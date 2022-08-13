@@ -181,6 +181,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.6.tgz#0ba49ac517ad69abe7a1508bc9b3a5483df9d5d7"
   integrity sha512-/xUq6H2aQm261exT6iZTMifUySEt4GR5KX8eYyY+C4MSNPqSh9oNIP7tz2GLKTlFaiBbgZNxffoR3CVRG+cljw==
 
+"@types/offscreencanvas@^2019.7.0":
+  version "2019.7.0"
+  resolved "https://registry.yarnpkg.com/@types/offscreencanvas/-/offscreencanvas-2019.7.0.tgz#e4a932069db47bb3eabeb0b305502d01586fa90d"
+  integrity sha512-PGcyveRIpL1XIqK8eBsmRBt76eFgtzuPiSTyKHZxnGemp2yzGzWpjYKAfK3wIMiU7eH+851yEpiuP8JZerTmWg==
+
 "@types/prop-types@*":
   version "15.7.5"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
@@ -2317,8 +2322,3 @@ yauzl@=2.10.0:
   dependencies:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
-
-zbar.wasm@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/zbar.wasm/-/zbar.wasm-2.1.1.tgz#f39d201d263ce4d6e559fe8c024af294acd4cf4e"
-  integrity sha512-iXX2tMFRRt2R4+mbKBhNa3TrN0fd5CbzLceasGTBOofA7eF1VvwZeAHW3UkEMDU8w3rSvwx9N3cyosX55UJ+Xw==
