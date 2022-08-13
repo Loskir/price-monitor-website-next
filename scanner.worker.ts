@@ -1,4 +1,4 @@
-import { scanImageData } from "@undecaf/zbar-wasm"
+import { getDefaultScanner, scanImageData } from "@undecaf/zbar-wasm"
 import { WorkerEvent } from "./workerTypes"
 // let offscreenCanvas: OffscreenCanvas
 
@@ -23,4 +23,6 @@ addEventListener("message", async (event: MessageEvent<WorkerEvent>) => {
   }
 })
 
-export {}
+getDefaultScanner().then(() => {
+  return postMessage({ type: "ready" })
+})

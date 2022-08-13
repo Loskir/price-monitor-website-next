@@ -19,12 +19,6 @@ const useFps = () => {
   }
 }
 
-const initWorker = (video: HTMLVideoElement) => {
-  const worker = new Worker(new URL("../scanner.worker.ts", import.meta.url))
-  worker.postMessage({ type: "init", d: [video.videoWidth, video.videoHeight] })
-  return worker
-}
-
 type OnResultFn = (result: string) => unknown
 
 const handleScanResult = (result: ZBarSymbol[], onResult: OnResultFn) => {
@@ -34,10 +28,39 @@ const handleScanResult = (result: ZBarSymbol[], onResult: OnResultFn) => {
   }
 }
 
+const useWorker = (onScan: (data: ZBarSymbol[]) => any) => {
+  const worker = useRef<Worker | null>(null)
+  const workerReady = useRef(false)
+  const [workerError, setWorkerError] = useState("")
+
+  useEffect(() => {
+    const w = new Worker(new URL("../scanner.worker.ts", import.meta.url))
+    worker.current = w
+    w.addEventListener("message", (event) => {
+      if (event.data.type === "ready") {
+        workerReady.current = true
+      } else if (event.data.type === "scan") {
+        onScan(event.data.result)
+      }
+    })
+    w.addEventListener("error", (event) => {
+      setWorkerError(event.message)
+    })
+    return () => {
+      worker.current?.terminate()
+    }
+  }, [])
+
+  return {
+    worker,
+    workerReady,
+    workerError,
+  }
+}
+
 const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const worker = useRef<Worker | null>(null)
   const interval = useRef<NodeJS.Timer | undefined>(undefined)
   const pendingScans = useRef(0)
   const dateStart = useRef(0)
@@ -47,20 +70,29 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
   const [isReady, setIsReady] = useState(false)
   const [status, setStatus] = useState("Loading...")
 
+  const {
+    worker,
+    workerReady,
+    workerError,
+  } = useWorker((result) => {
+    pendingScans.current--
+    handleScanResult(result, onResult)
+    reportMs(Date.now() - dateStart.current)
+  })
+
   const { ms, reportMs } = useFps()
 
   const runInterval = () => {
     const grab = () => {
       if (pendingScans.current < 1) {
         dateStart.current = Date.now()
-        if (!canvasRef.current || !videoRef.current) return
+        if (!canvasRef.current || !videoRef.current || !workerReady.current) return
         const canvas = canvasRef.current
         const video = videoRef.current
         const ctx = canvas.getContext("2d")
         if (!ctx) return
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
         const data = ctx.getImageData(0, 0, canvas.width, canvas.height)
-        // console.log(worker)
         worker.current?.postMessage({ type: "scan", data })
         pendingScans.current++
       }
@@ -112,15 +144,6 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
             canvas.width = video.videoWidth
             canvas.height = video.videoHeight
           }
-          worker.current = initWorker(video)
-          worker.current?.addEventListener("message", (event) => {
-            if (event.data.type === "scan") {
-              pendingScans.current--
-              handleScanResult(event.data.result, onResult)
-              reportMs(Date.now() - dateStart.current)
-            }
-            // console.log("from worker", event.data)
-          })
 
           setStatus("Running...")
 
@@ -132,45 +155,16 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
         })
     })()
 
-    // reader.decodeFromConstraints(
-    //   { video: { facingMode: "environment" } },
-    //   videoRef.current,
-    //   (result, error) => {
-    //     if (!result) {
-    //       return
-    //     }
-    //     return onResult(result)
-    //   },
-    // )
-    //
-    // return () => reader.reset()
     return () => {
       console.log("Clearing up...")
       clearInterval(interval.current)
-      worker.current?.terminate()
     }
   }, [])
 
-  // useEffect(() => {
-  //   void (async () => {
-  //     // const device = await navigator?.mediaDevices?.getUserMedia({ video: { facingMode: "environment" } })
-  //     // setDeviceId(device.id)
-  //     // const devices = await reader.listVideoInputDevices()
-  //     // console.log(devices)
-  //     // setDevices(devices)
-  //     // if (devices.length > 0) {
-  //     //   setDeviceId(devices.find((v) => v.)?.deviceId || devices[0].deviceId)
-  //     // }
-  //   })()
-  // }, [])
-
   return (
     <div>
-      {/*<select onChange={(e) => setDeviceId(e.target.value)} value={deviceId || undefined}>*/}
-      {/*  {devices.map((device) => <option value={device.deviceId} key={device.deviceId}>{device.label}</option>)}*/}
-      {/*</select>*/}
       {!isReady && (
-        <div className="fixed inset-0 bg-white flex flex-col justify-center text-center">
+        <div className="fixed inset-0 bg-white flex flex-col justify-center text-center font-medium">
           {status}
         </div>
       )}
@@ -178,7 +172,11 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
         <video playsInline ref={videoRef} />
         <span className="absolute right-0 top-0 font-semibold text-xs text-right flex flex-col items-end">
           <span className="bg-white px-1 py-0.5">{dimensions[0]}×{dimensions[1]}</span>
-          <span className="bg-white px-1 py-0.5">{ms.toFixed(1)} ms</span>
+          <span className="bg-white px-1 py-0.5">
+            {workerError
+              ? `Worker error: ${workerError}`
+              : (workerReady.current ? `${ms.toFixed(1)} ms` : "Worker not ready")}
+          </span>
         </span>
       </div>
       <canvas style={{ display: "none" }} ref={canvasRef} />
