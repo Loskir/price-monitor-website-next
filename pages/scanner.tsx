@@ -25,11 +25,6 @@ const initWorker = (video: HTMLVideoElement) => {
   return worker
 }
 
-const setCanvasSize = (canvas: HTMLCanvasElement, video: HTMLVideoElement) => {
-  canvas.width = video.videoWidth
-  canvas.height = video.videoHeight
-}
-
 type OnResultFn = (result: string) => unknown
 
 const handleScanResult = (result: ZBarSymbol[], onResult: OnResultFn) => {
@@ -47,6 +42,8 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
   const pendingScans = useRef(0)
   const dateStart = useRef(0)
 
+  const [dimensions, setDimensions] = useState<[number, number]>([0, 0])
+
   const [isReady, setIsReady] = useState(false)
   const [status, setStatus] = useState("Loading...")
 
@@ -59,7 +56,6 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
         if (!canvasRef.current || !videoRef.current) return
         const canvas = canvasRef.current
         const video = videoRef.current
-        if (video.videoWidth === 0 || video.videoHeight === 0) return
         const ctx = canvas.getContext("2d")
         if (!ctx) return
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
@@ -110,9 +106,11 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
       video.srcObject = cameraRes
       video.play()
         .then(() => {
+          setDimensions([video.videoWidth, video.videoHeight])
           const canvas = canvasRef.current
           if (canvas) {
-            setCanvasSize(canvas, video)
+            canvas.width = video.videoWidth
+            canvas.height = video.videoHeight
           }
           worker.current = initWorker(video)
           worker.current?.addEventListener("message", (event) => {
@@ -178,7 +176,11 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
       )}
       <div className="relative" style={{ display: isReady ? undefined : "none" }}>
         <video playsInline ref={videoRef} />
-        <span className="absolute right-0 top-0 bg-white font-semibold text-xs px-1 py-0.5">{ms.toFixed(1)} ms</span>
+        <span className="absolute right-0 top-0 font-semibold text-xs text-right">
+          <span className="bg-white px-1 py-0.5">{dimensions[0]}×{dimensions[1]}</span>
+          <br />
+          <span className="bg-white px-1 py-0.5">{ms.toFixed(1)} ms</span>
+        </span>
       </div>
       <canvas style={{ display: "none" }} ref={canvasRef} />
     </div>
