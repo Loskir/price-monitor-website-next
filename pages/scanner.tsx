@@ -140,7 +140,7 @@ const Scanner: React.FC<{ onResult: (result: string) => unknown }> = ({ onResult
       {/*</select>*/}
       <div className="relative">
         <video playsInline ref={videoRef} />
-        <span className="absolute right-0 top-0 bg-white font-semibold text-xs">{fps.toFixed(2)} FPS</span>
+        <span className="absolute right-0 top-0 bg-white font-semibold text-xs px-1 py-0.5">{fps.toFixed(2)} FPS</span>
       </div>
       <canvas style={{ display: "none" }} ref={canvasRef} />
     </div>
