@@ -1,14 +1,14 @@
 import { scanImageData } from "@undecaf/zbar-wasm"
 import { WorkerEvent } from "./workerTypes"
-let offscreenCanvas: OffscreenCanvas
+// let offscreenCanvas: OffscreenCanvas
 
 addEventListener("message", async (event: MessageEvent<WorkerEvent>) => {
   // console.log(event.data)
   if (event.data.type === "init") {
-    if (typeof OffscreenCanvas !== "undefined") {
-      const { d } = event.data
-      offscreenCanvas = new OffscreenCanvas(d[0], d[1])
-    }
+    // if (typeof OffscreenCanvas !== "undefined") {
+    //   const { d } = event.data
+    //   offscreenCanvas = new OffscreenCanvas(d[0], d[1])
+    // }
   }
   if (event.data.type === "scan") {
     const { data } = event.data
