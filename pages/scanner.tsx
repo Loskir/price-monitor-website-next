@@ -78,8 +78,6 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
             }
             // console.log("from worker", event.data)
           })
-          // if (typeof OffscreenCanvas !== "undefined") {
-          // }
         })
         .catch((error) => {
           console.warn("unable to play video", error)
