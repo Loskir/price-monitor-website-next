@@ -1,5 +1,4 @@
 import { type ZBarSymbol } from "@undecaf/zbar-wasm"
-// const { scanImageData } = require("@undecaf/zbar-wasm")
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
 import React, { useEffect, useRef, useState } from "react"
@@ -44,14 +43,43 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const worker = useRef<Worker | null>(null)
+  const interval = useRef<NodeJS.Timer | undefined>(undefined)
   const pendingScans = useRef(0)
   const dateStart = useRef(0)
 
+  const [isReady, setIsReady] = useState(false)
+  const [status, setStatus] = useState("Loading...")
+
   const { ms, reportMs } = useFps()
+
+  const runInterval = () => {
+    const grab = () => {
+      if (pendingScans.current < 1) {
+        dateStart.current = Date.now()
+        if (!canvasRef.current || !videoRef.current) return
+        const canvas = canvasRef.current
+        const video = videoRef.current
+        if (video.videoWidth === 0 || video.videoHeight === 0) return
+        const ctx = canvas.getContext("2d")
+        if (!ctx) return
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        // console.log(worker)
+        worker.current?.postMessage({ type: "scan", data })
+        pendingScans.current++
+      }
+    }
+
+    pendingScans.current = 0
+    grab()
+    interval.current = setInterval(grab, 200)
+  }
 
   useEffect(() => {
     void (async () => {
       if (!navigator?.mediaDevices?.getUserMedia) return
+
+      setStatus("Setting up camera...")
 
       const res = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -62,6 +90,9 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
 
       const video = videoRef.current
       if (!video) return
+
+      setStatus("Setting up video...")
+
       video.srcObject = res
       video.play()
         .then(() => {
@@ -78,6 +109,11 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
             }
             // console.log("from worker", event.data)
           })
+
+          setStatus("Running...")
+
+          runInterval()
+          setIsReady(true)
         })
         .catch((error) => {
           console.warn("unable to play video", error)
@@ -97,6 +133,8 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
     //
     // return () => reader.reset()
     return () => {
+      console.log("Clearing up...")
+      clearInterval(interval.current)
       worker.current?.terminate()
     }
   }, [])
@@ -114,44 +152,17 @@ const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
   //   })()
   // }, [])
 
-  useEffect(() => {
-    const grab = () => {
-      if (pendingScans.current < 1) {
-        dateStart.current = Date.now()
-        if (!canvasRef.current || !videoRef.current) return
-        const canvas = canvasRef.current
-        const video = videoRef.current
-        if (video.videoWidth === 0 || video.videoHeight === 0) return
-        const ctx = canvas.getContext("2d")
-        if (!ctx) return
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-        const data = ctx.getImageData(0, 0, canvas.width, canvas.height)
-        // console.log(worker)
-        worker.current?.postMessage({ type: "scan", data })
-        pendingScans.current++
-      }
-      // const res: ZBarSymbol[] = await scanImageData(data)
-      // console.log(Date.now() - s)
-      // reportMs(Date.now() - s)
-      // console.log(res)
-      // handleScanResult(res, onResult)
-    }
-
-    pendingScans.current = 0
-
-    const interval = setInterval(grab, 200)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
-
   return (
     <div>
       {/*<select onChange={(e) => setDeviceId(e.target.value)} value={deviceId || undefined}>*/}
       {/*  {devices.map((device) => <option value={device.deviceId} key={device.deviceId}>{device.label}</option>)}*/}
       {/*</select>*/}
-      <div className="relative">
+      {!isReady && (
+        <div>
+          {status}
+        </div>
+      )}
+      <div className="relative" style={{ display: isReady ? undefined : "none" }}>
         <video playsInline ref={videoRef} />
         <span className="absolute right-0 top-0 bg-white font-semibold text-xs px-1 py-0.5">{ms.toFixed(1)} ms</span>
       </div>
