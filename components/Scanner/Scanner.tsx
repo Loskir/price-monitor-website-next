@@ -29,7 +29,7 @@ const handleScanResult = (result: ZBarSymbol[], onResult: OnResultFn) => {
 
 const useWorker = (onScan: (data: ZBarSymbol[]) => any) => {
   const worker = useRef<Worker | null>(null)
-  const workerReady = useRef(false)
+  const [workerReady, setWorkerReady] = useState(false)
   const [workerError, setWorkerError] = useState("")
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const useWorker = (onScan: (data: ZBarSymbol[]) => any) => {
     worker.current = w
     w.addEventListener("message", (event) => {
       if (event.data.type === "ready") {
-        workerReady.current = true
+        setWorkerReady(true)
       } else if (event.data.type === "scan") {
         onScan(event.data.result)
       }
@@ -48,7 +48,7 @@ const useWorker = (onScan: (data: ZBarSymbol[]) => any) => {
     return () => {
       worker.current?.terminate()
     }
-  }, [])
+  }, [onScan])
 
   return {
     worker,
@@ -61,13 +61,13 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const videoStream = useRef<MediaStream | null>(null)
-  const interval = useRef<NodeJS.Timer | undefined>(undefined)
   const pendingScans = useRef(0)
   const dateStart = useRef(0)
 
+  const [videoReady, setVideoReady] = useState(false)
+
   const [dimensions, setDimensions] = useState<[number, number]>([0, 0])
 
-  const [isReady, setIsReady] = useState(false)
   const [status, setStatus] = useState("Loading...")
 
   const {
@@ -82,11 +82,13 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
 
   const { ms, reportMs } = useFps()
 
-  const runInterval = () => {
+  useEffect(() => {
+    if (!videoReady || !workerReady) return
+
     const grab = () => {
       if (pendingScans.current < 1) {
         dateStart.current = Date.now()
-        if (!canvasRef.current || !videoRef.current || !workerReady.current) return
+        if (!canvasRef.current || !videoRef.current || !workerReady) return
         const canvas = canvasRef.current
         const video = videoRef.current
         const ctx = canvas.getContext("2d")
@@ -100,8 +102,12 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
 
     pendingScans.current = 0
     grab()
-    interval.current = setInterval(grab, 200)
-  }
+    const interval = setInterval(grab, 200)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [worker, videoReady, workerReady])
 
   useEffect(() => {
     void (async () => {
@@ -148,9 +154,7 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
           }
 
           setStatus("Running...")
-
-          runInterval()
-          setIsReady(true)
+          setVideoReady(true)
         })
         .catch((error) => {
           console.warn("unable to play video", error)
@@ -159,22 +163,21 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
 
     return () => {
       console.log("Clearing up...")
-      clearInterval(interval.current)
       videoStream.current?.getTracks().forEach((track) => track.stop())
     }
   }, [])
 
   return (
     <div>
-      {!isReady && <CenteredOverlay>{status}</CenteredOverlay>}
-      <div className="relative" style={{ display: isReady ? undefined : "none" }}>
+      {!videoReady && <CenteredOverlay>{status}</CenteredOverlay>}
+      <div className="relative" style={{ display: videoReady ? undefined : "none" }}>
         <video playsInline ref={videoRef} />
         <span className="absolute right-0 top-0 font-semibold text-xs text-right flex flex-col items-end">
           <span className="bg-white px-1 py-0.5">{dimensions[0]}×{dimensions[1]}</span>
           <span className="bg-white px-1 py-0.5">
             {workerError
               ? `Worker error: ${workerError}`
-              : (workerReady.current ? `${ms.toFixed(1)} ms` : "Worker not ready")}
+              : (workerReady ? `${ms.toFixed(1)} ms` : "Worker not ready")}
           </span>
         </span>
       </div>
