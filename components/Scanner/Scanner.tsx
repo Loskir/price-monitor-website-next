@@ -60,6 +60,7 @@ const useWorker = (onScan: (data: ZBarSymbol[]) => any) => {
 export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const videoStream = useRef<MediaStream | null>(null)
   const interval = useRef<NodeJS.Timer | undefined>(undefined)
   const pendingScans = useRef(0)
   const dateStart = useRef(0)
@@ -129,6 +130,8 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
         return
       }
 
+      videoStream.current = cameraRes
+
       const video = videoRef.current
       if (!video) return
 
@@ -157,6 +160,7 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
     return () => {
       console.log("Clearing up...")
       clearInterval(interval.current)
+      videoStream.current?.getTracks().forEach((track) => track.stop())
     }
   }, [])
 
