@@ -1,6 +1,20 @@
 import { getDefaultScanner, scanImageData } from "@undecaf/zbar-wasm"
-import { WorkerEvent } from "./workerTypes"
-// let offscreenCanvas: OffscreenCanvas
+
+interface AbstractWorkerEvent {
+  type: string
+}
+
+export interface InitWorkerEvent extends AbstractWorkerEvent {
+  type: "init"
+  d: [number, number]
+}
+
+export interface ScanWorkerEvent extends AbstractWorkerEvent {
+  type: "scan"
+  data: ImageData
+}
+
+export type WorkerEvent = InitWorkerEvent | ScanWorkerEvent
 
 addEventListener("message", async (event: MessageEvent<WorkerEvent>) => {
   // console.log(event.data)

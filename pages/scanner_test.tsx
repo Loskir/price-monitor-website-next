@@ -4,8 +4,7 @@ import React from "react"
 import { Scanner } from "../components/Scanner/Scanner"
 
 const Home: NextPage = () => {
-  const router = useRouter()
-  const onResult = (ean: string) => router.push(`/product/ean/${ean}`)
+  const onResult = (ean: string) => alert(ean)
   return (
     <main>
       <Scanner onResult={onResult} />
