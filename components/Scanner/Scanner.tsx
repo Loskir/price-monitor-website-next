@@ -84,13 +84,14 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
 
   useEffect(() => {
     if (!videoReady || !workerReady) return
+    if (!canvasRef.current || !videoRef.current) return
+
+    const canvas = canvasRef.current
+    const video = videoRef.current
 
     const grab = () => {
       if (pendingScans.current < 1) {
         dateStart.current = Date.now()
-        if (!canvasRef.current || !videoRef.current || !workerReady) return
-        const canvas = canvasRef.current
-        const video = videoRef.current
         const ctx = canvas.getContext("2d")
         if (!ctx) return
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
