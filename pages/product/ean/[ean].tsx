@@ -1,5 +1,5 @@
 import { combine, createEvent, createStore, domain, forward } from "effector-next"
-import { createGate, useEvent, useGate, useStore } from "effector-react"
+import { useEvent, useStore } from "effector-react"
 import { Controller, createRequestFx } from "fry-fx"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
@@ -37,22 +37,31 @@ const $state = combine({
   product: $product,
 })
 
+const productIdReceived = createEvent<string>()
+
+$product.watch((product) => {
+  console.log("watch", product)
+  if (product?.productId) {
+    return productIdReceived(product.productId)
+  }
+})
+
 const ProductView: NextPage = () => {
   const router = useRouter()
   const eanChangedL = useEvent(eanChanged)
   const state = useStore($state)
 
+  productIdReceived.watch((productId) => {
+    return router.replace(`/product/${productId}`)
+  })
+
   useEffect(() => {
+    $product.reset()
     const ean = router.query.ean?.toString()
     if (router.isReady && ean) {
       eanChangedL(ean)
     }
   }, [router])
-  useEffect(() => {
-    if (state.product) {
-      router.replace(`/product/${state.product.productId}`)
-    }
-  }, [state])
   // state.product → redirecting
   if (state.isLoading || state.product) {
     return <CenteredOverlay>Loading...</CenteredOverlay>
