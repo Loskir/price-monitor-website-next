@@ -1,5 +1,5 @@
 import { ZBarSymbol } from "@undecaf/zbar-wasm"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { CenteredOverlay } from "../CenteredOverlay"
 
 const useFps = () => {
@@ -70,15 +70,17 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
 
   const [status, setStatus] = useState("Loading...")
 
+  const onScanCallback = useCallback((result: ZBarSymbol[]) => {
+    pendingScans.current--
+    handleScanResult(result, onResult)
+    reportMs(Date.now() - dateStart.current)
+  }, [])
+
   const {
     worker,
     workerReady,
     workerError,
-  } = useWorker((result) => {
-    pendingScans.current--
-    handleScanResult(result, onResult)
-    reportMs(Date.now() - dateStart.current)
-  })
+  } = useWorker(onScanCallback)
 
   const { ms, reportMs } = useFps()
 
