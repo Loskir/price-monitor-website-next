@@ -11,23 +11,54 @@ import { ProductHistoryGraph } from "../../components/ProductView/ProductHistory
 import { $productHistoryState, $productState, ProductGate } from "../../features/product/state"
 import { ProductWithPriceModel } from "../../models/Product"
 
-const ProductPrice: React.FC<{ price: ProductWithPriceModel["price"] }> = ({ price }) => {
+const GlobusIcon: React.FC = () => {
+  // {/*<div className="w-10 inline-block align-middle mr-2">*/}
+  // {/*  <Image src="/globus_logo.svg" width={1237} height={780} />*/}
+  // {/*</div>*/}
+  return (
+    <div className="ml-2 w-14 inline-block align-middle">
+      <img className="h-full mx-auto" src="/globus_logo.svg" alt="Globus" />
+    </div>
+  )
+}
+
+const LentaIcon: React.FC = () => {
+  return (
+    <div className="ml-2 w-20 inline-block align-middle">
+      <img src="/lenta_logo_2.svg" alt="Lenta" />
+    </div>
+  )
+}
+
+const ProductPrice: React.FC<{
+  price: ProductWithPriceModel["price"]
+  icon?: "lenta" | "globus"
+}> = ({ price, icon }) => {
   if (!price) {
     return <></>
   }
-  if (price.price !== price.basePrice) {
-    return (
-      <h2 className="pt-1">
-        <span className="font-bold text-green-600 text-2xl">
-          {price.price}₽
-        </span>{" "}
-        <s>
-          {price.basePrice}₽
-        </s>
-      </h2>
-    )
-  }
-  return <span className="font-bold text-2xl">{price.price}₽</span>
+  const isDiscount = price.price !== price.basePrice
+  const priceWhole = Math.floor(price.price)
+  const priceDecimal = Math.floor((price.price - priceWhole) * 100)
+  return (
+    <h2 className="pt-1 font-bold text-3xl">
+      <span className={clsx("align-baseline mr-2", isDiscount && "text-green-600")}>
+        {priceWhole}
+        <span className="align-text-top text-lg">
+          <span className="w-0 inline-block opacity-0">.</span>
+          {priceDecimal}₽
+        </span>
+      </span>
+      {isDiscount
+        && (
+          <s className="text-gray-300 font-semibold text-base align-baseline">
+            {price.basePrice}₽
+          </s>
+        )}
+      {icon === "lenta" && <LentaIcon />}
+      {icon === "globus" && <GlobusIcon />}
+    </h2>
+  )
 }
 
 const Product: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
