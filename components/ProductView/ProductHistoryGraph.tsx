@@ -39,6 +39,7 @@ export const ProductHistoryGraph: React.FC<{ history: ProductPriceModel[] }> = (
         scales: {
           x: {
             type: "time",
+            suggestedMax: Date.now(),
           },
           y: {
             ticks: {
