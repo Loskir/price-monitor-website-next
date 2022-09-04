@@ -41,7 +41,7 @@ const ProductPrice: React.FC<{
   const priceWhole = Math.floor(price.price)
   const priceDecimal = Math.floor((price.price - priceWhole) * 100)
   return (
-    <h2 className="pt-1 font-bold text-3xl">
+    <h2 className="font-bold text-4xl my-2">
       <span className={clsx("align-baseline mr-2", isDiscount && "text-green-600")}>
         {priceWhole}
         <span className="align-text-top text-lg">
@@ -51,7 +51,7 @@ const ProductPrice: React.FC<{
       </span>
       {isDiscount
         && (
-          <s className="text-gray-300 font-semibold text-base align-baseline">
+          <s className="text-gray-300 font-semibold text-base align-middle">
             {price.basePrice}₽
           </s>
         )}
@@ -77,10 +77,13 @@ const Product: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
   }
   return (
     <div className="flex flex-col">
-      {product.photoUrl && <img className={clsx("mb-4", styles.image)} src={product.photoUrl} alt="Photo" />}
-      <h1 className="text-2xl font-semibold">{product.name}</h1>
+      {product.photoUrl && <img className={styles.image} src={product.photoUrl} alt="Photo" />}
+      <h1 className={clsx("font-semibold mt-4", product.name.length > 40 ? "text-xl" : "text-2xl")}>{product.name}</h1>
+      {/*<ProductPrice price={product.price} icon="globus" />*/}
+      {/*<ProductPrice price={product.price} icon="lenta" />*/}
+      {/*<ProductPrice price={product.price} />*/}
       <ProductPrice price={product.price} />
-      <p className="text-gray-500 pt-1">Арт. {product.ean}</p>
+      <p className="text-gray-500">Арт. {product.ean}</p>
       <ProductPriceUpdatedAt />
     </div>
   )
