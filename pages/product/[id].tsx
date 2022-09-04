@@ -31,18 +31,26 @@ const ProductPrice: React.FC<{ price: ProductWithPriceModel["price"] }> = ({ pri
 }
 
 const Product: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
+  const ProductPriceUpdatedAt: React.FC = () => {
+    if (!product.price) return <></>
+    const date = DateTime.fromISO(product.price.time)
+    const dateString = date.setLocale("ru").toFormat("d MMMM в HH:mm ZZZZ")
+    const duration = DateTime.now().diff(date, "days")
+    const isOutdated = duration.days > 2
+    return (
+      <p className={isOutdated ? "text-red-500" : "text-gray-500"}>
+        Обновлено {dateString}
+        {isOutdated && ". Цена может быть неактуальной"}
+      </p>
+    )
+  }
   return (
     <div className="flex flex-col">
       {product.photoUrl && <img className={clsx("mb-4", styles.image)} src={product.photoUrl} alt="Photo" />}
       <h1 className="text-2xl font-semibold">{product.name}</h1>
       <ProductPrice price={product.price} />
       <p className="text-gray-500 pt-1">Арт. {product.ean}</p>
-      <p className="text-gray-500">ID: {product.productId}</p>
-      {product.price && (
-        <p className="text-gray-500">
-          Обновлено {DateTime.fromISO(product.price.time).setLocale("ru").toFormat("dd MMMM в HH:mm ZZZZ")}
-        </p>
-      )}
+      <ProductPriceUpdatedAt />
     </div>
   )
 }
