@@ -21,7 +21,7 @@ const useFps = () => {
 type OnResultFn = (result: string) => unknown
 
 const handleScanResult = (result: ZBarSymbol[], onResult: OnResultFn) => {
-  const z = result.find((v) => v.typeName === "ZBAR_EAN13")
+  const z = result.find((v) => ["ZBAR_EAN13", "ZBAR_EAN8"].includes(v.typeName))
   if (z) {
     return onResult(Array.from(z.data).map((v) => String.fromCharCode(v)).join(""))
   }
