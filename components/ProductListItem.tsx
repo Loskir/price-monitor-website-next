@@ -34,7 +34,9 @@ export const ProductListItem: React.FC<{ product: ProductWithPriceModel }> = ({ 
                   </>
                 )
                 : <span className="font-semibold text-xl">{product.price.price}₽</span>}
-              <span className="ml-2">{product.price?.unitPrice.toFixed(2)}₽/{formatUom(product)}</span>
+              {product.price?.unitPrice && (
+                <span className="ml-2">{product.price.unitPrice.toFixed(2)}₽/{formatUom(product)}</span>
+              )}
             </h2>
           )}
         </div>

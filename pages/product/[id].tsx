@@ -8,56 +8,68 @@ import React, { useEffect } from "react"
 import { CenteredOverlay } from "../../components/CenteredOverlay"
 import styles from "../../components/Product.module.css"
 import { ProductHistoryGraph } from "../../components/ProductView/ProductHistoryGraph"
+import { getShopName, ShopIcon } from "../../components/shops"
 import { $productHistoryState, $productState, ProductGate } from "../../features/product/state"
-import { ProductWithPriceModel } from "../../models/Product"
+import { formatUom } from "../../functions/products"
+import { ProductWithPriceModel, ShopType } from "../../models/Product"
 
-const GlobusIcon: React.FC = () => {
-  // {/*<div className="w-10 inline-block align-middle mr-2">*/}
-  // {/*  <Image src="/globus_logo.svg" width={1237} height={780} />*/}
-  // {/*</div>*/}
-  return (
-    <div className="ml-2 w-14 inline-block align-middle">
-      <img className="h-full mx-auto" src="/globus_logo.svg" alt="Globus" />
-    </div>
-  )
-}
+const locale = "ru"
 
-const LentaIcon: React.FC = () => {
-  return (
-    <div className="ml-2 w-20 inline-block align-middle">
-      <img src="/lenta_logo_2.svg" alt="Lenta" />
-    </div>
-  )
+const splitPrice = (price: number) => {
+  const priceWhole = Math.floor(price)
+  const priceDecimal = (price - priceWhole).toFixed(2).slice(2)
+  return [priceWhole.toString(), priceDecimal]
 }
 
 const ProductPrice: React.FC<{
   price: ProductWithPriceModel["price"]
-  icon?: "lenta" | "globus"
-}> = ({ price, icon }) => {
+  shopType: ShopType
+  uom: string
+}> = ({ price, shopType, uom }) => {
   if (!price) {
     return <></>
   }
   const isDiscount = price.price !== price.basePrice
-  const priceWhole = Math.floor(price.price)
-  const priceDecimal = Math.floor((price.price - priceWhole) * 100)
+  const [priceWhole, priceDecimal] = splitPrice(Number(price.price))
   return (
-    <h2 className="font-bold text-4xl my-2">
-      <span className={clsx("align-baseline mr-2", isDiscount && "text-green-600")}>
-        {priceWhole}
-        <span className="align-text-top text-lg">
-          <span className="w-0 inline-block opacity-0">.</span>
-          {priceDecimal}₽
-        </span>
-      </span>
-      {isDiscount
-        && (
-          <s className="text-gray-300 font-semibold text-base align-middle">
-            {price.basePrice}₽
-          </s>
+    <div className="flex flex-row items-center py-4 flex-wrap">
+      <ShopIcon shopType={shopType} className={styles.shopIcon} />
+      <div className="flex flex-col mr-4">
+        <span className={styles.shopName}>{getShopName(shopType)}</span>
+        {/*<span className={clsx(styles.shopSubtitle, styles.decreasedLineHeight)}>10 часов назад</span>*/}
+        {price.unitPrice && (
+          <span className={styles.shopSubtitle}>
+            {price.unitPrice.toFixed(2)}₽/{uom}
+          </span>
         )}
-      {icon === "lenta" && <LentaIcon />}
-      {icon === "globus" && <GlobusIcon />}
-    </h2>
+      </div>
+      <div className="flex flex-col ml-auto">
+        {isDiscount
+          && (
+            <span className={styles.priceSecondary}>
+              {price.offerValidUntil && (
+                <span>
+                  по {DateTime.fromISO(price.offerValidUntil).setLocale(locale).toFormat("d MMM")} • {" "}
+                </span>
+              )}
+              <span className="line-through">{Number(price.basePrice).toFixed(2)}₽</span>
+            </span>
+          )}
+        <span
+          className={clsx(
+            "align-baseline font-bold text-2xl shrink-0 sm:text-3xl",
+            isDiscount && "text-green-600",
+            styles.priceMain,
+          )}
+        >
+          {priceWhole}
+          <span className="align-text-top text-base sm:text-lg">
+            <span className="w-0 inline-block opacity-0">.</span>
+            {priceDecimal}
+          </span>
+        </span>
+      </div>
+    </div>
   )
 }
 
@@ -65,7 +77,7 @@ const Product: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
   const ProductPriceUpdatedAt: React.FC = () => {
     if (!product.price) return <></>
     const date = DateTime.fromISO(product.price.time)
-    const dateString = date.setLocale("ru").toFormat("d MMMM в HH:mm ZZZZ")
+    const dateString = date.setLocale(locale).toFormat("d MMMM в HH:mm ZZZZ")
     const duration = DateTime.now().diff(date, "days")
     const isOutdated = duration.days > 2
     return (
@@ -75,17 +87,33 @@ const Product: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
       </p>
     )
   }
+  const uom = formatUom(product)
   return (
-    <div className="flex flex-col">
-      {product.photoUrl && <img className={styles.image} src={product.photoUrl} alt="Photo" />}
-      <h1 className={clsx("font-semibold mt-4", product.name.length > 40 ? "text-xl" : "text-2xl")}>{product.name}</h1>
-      {/*<ProductPrice price={product.price} icon="globus" />*/}
-      {/*<ProductPrice price={product.price} icon="lenta" />*/}
-      {/*<ProductPrice price={product.price} />*/}
-      <ProductPrice price={product.price} />
-      <p className="text-gray-500">Арт. {product.ean}</p>
-      <ProductPriceUpdatedAt />
-    </div>
+    <>
+      <div className="flex flex-col">
+        {product.photoUrl && <img className={styles.image} src={product.photoUrl} alt="Photo" />}
+        <h1 className={clsx("font-semibold mt-4", product.name.length > 40 ? "text-xl" : "text-2xl")}>
+          {product.name}
+        </h1>
+        <div className={clsx("my-2", styles.prices)}>
+          <ProductPrice price={product.price} shopType="globus" uom={uom} />
+          {/*<ProductPrice price={product.price} shopType="lenta" uom={uom} />*/}
+          {/*<ProductPrice*/}
+          {/*  price={{ price: 100, basePrice: 101, time: new Date().toString() }}*/}
+          {/*  shopType={"lenta"}*/}
+          {/*  uom={uom}*/}
+          {/*/>*/}
+          {/*<ProductPrice*/}
+          {/*  price={{ price: 100, basePrice: 100, time: new Date().toString() }}*/}
+          {/*  shopType={"lenta"}*/}
+          {/*  uom={uom}*/}
+          {/*/>*/}
+        </div>
+        <p className="text-gray-500">Арт. {product.ean}</p>
+        <ProductPriceUpdatedAt />
+      </div>
+      <ProductHistory />
+    </>
   )
 }
 
@@ -105,12 +133,7 @@ const ProductInner: React.FC = () => {
   if (!state.product) {
     return <CenteredOverlay>Not found :(</CenteredOverlay>
   }
-  return (
-    <>
-      <Product product={state.product} />
-      <ProductHistory />
-    </>
-  )
+  return <Product product={state.product} />
 }
 
 const ProductView: NextPage = () => {

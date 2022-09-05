@@ -10,8 +10,8 @@ export const ProductHistoryGraph: React.FC<{ history: ProductPriceModel[] }> = (
   Chart.register(...registerables)
   const chartData = useMemo((): ChartData<"line"> => {
     const labels = props.history.map((v) => DateTime.fromISO(v.time).startOf("day").toJSDate())
-    const data = props.history.map((v) => v.price)
-    const dataBasePrice = props.history.map((v) => v.basePrice)
+    const data = props.history.map((v) => Number(v.price))
+    const dataBasePrice = props.history.map((v) => Number(v.basePrice))
     return {
       labels,
       datasets: [{
@@ -40,7 +40,10 @@ export const ProductHistoryGraph: React.FC<{ history: ProductPriceModel[] }> = (
         scales: {
           x: {
             type: "time",
-            suggestedMax: Date.now(),
+            suggestedMax: DateTime.now().startOf("day").toString(),
+            time: {
+              unit: "day",
+            },
           },
           y: {
             ticks: {

@@ -3,3 +3,45 @@
     object-fit: contain;
     height: 300px;
 }
+
+.prices > :not(:last-child) {
+    @apply border-b border-solid border-gray-100
+}
+
+.shopIcon {
+    width: 50px;
+    flex-shrink: 0;
+    @apply mr-4 w-14 sm:w-16;
+}
+
+.shopName {
+    @apply font-semibold sm:text-lg;
+}
+
+.shopSubtitle {
+    @apply text-gray-500 font-medium text-sm sm:text-base;
+}
+
+.priceMain {
+    @apply text-end;
+}
+
+.shopName, .shopSubtitle {
+    @apply leading-snug;
+}
+
+.priceSecondary {
+    @apply text-gray-500 font-medium text-end text-sm sm:text-base;
+    line-height: 1;
+}
+
+/*.lineThrough {*/
+/*    position: relative;*/
+/*}*/
+
+/*.lineThrough::before {*/
+/*    content: '';*/
+/*    position: absolute;*/
+/*    inset: 0;*/
+/*    background: linear-gradient(to bottom, transparent 0%, transparent calc(50% - 0.5px), black calc(50% - 0.5px), black calc(50% + 0.5px), transparent calc(50% + 0.5px), transparent 100%);*/
+/*}*/

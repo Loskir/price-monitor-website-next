@@ -1,11 +1,7 @@
 export enum UomType {
-  kg = 'kg',
-  l = 'l',
-  none = 'none',
-}
-
-export interface Offer {
-
+  kg = "kg",
+  l = "l",
+  none = "none",
 }
 
 export interface ProductModel {
@@ -19,13 +15,15 @@ export interface ProductModel {
 }
 export interface ProductWithPriceModel extends ProductModel {
   price?: ProductPriceModel & {
-    unitPrice: number
+    unitPrice?: number
   }
 }
 
 export interface ProductPriceModel {
-  price: number
-  basePrice: number
-  offer?: Offer
+  price: number | string // fixme
+  basePrice: number | string // fixme
+  offerValidUntil?: string
   time: string
 }
+
+export type ShopType = "lenta" | "globus"
