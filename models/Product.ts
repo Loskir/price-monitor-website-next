@@ -16,13 +16,13 @@ export interface ProductModel {
 export interface ProductWithPriceModel extends ProductModel {
   price?: ProductPriceModel & {
     unitPrice?: number
+    offerValidUntil?: string
   }
 }
 
 export interface ProductPriceModel {
   price: number | string // fixme
   basePrice: number | string // fixme
-  offerValidUntil?: string
   time: string
 }
 
