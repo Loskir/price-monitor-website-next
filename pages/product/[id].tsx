@@ -109,7 +109,7 @@ const Product: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
           {/*  uom={uom}*/}
           {/*/>*/}
         </div>
-        <p className="text-gray-500">Арт. {product.ean}</p>
+        {product.ean && <p className="text-gray-500">Арт. {product.ean}</p>}
         <ProductPriceUpdatedAt />
       </div>
       <ProductHistory />
