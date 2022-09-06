@@ -1,7 +1,7 @@
 .image {
     width: 100%;
     object-fit: contain;
-    height: 300px;
+    @apply h-60 sm:h-80
 }
 
 .prices > :not(:last-child) {
