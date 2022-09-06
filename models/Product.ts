@@ -4,6 +4,12 @@ export enum UomType {
   none = "none",
 }
 
+export interface PriceHistoryPriceModel {
+  price: number | string // fixme
+  basePrice: number | string // fixme
+  time: string
+}
+
 export interface ProductModel {
   productId: string
   name: string
@@ -13,17 +19,18 @@ export interface ProductModel {
   uom?: string
   volume?: number
 }
-export interface ProductWithPriceModel extends ProductModel {
-  price?: ProductPriceModel & {
-    unitPrice?: number
-    offerValidUntil?: string
-  }
+
+export interface ProductPriceModel extends PriceHistoryPriceModel {
+  unitPrice?: number
+  offerValidUntil?: string
+}
+export interface ProductPriceEntry extends ProductPriceModel {
+  shopType: ShopType
 }
 
-export interface ProductPriceModel {
-  price: number | string // fixme
-  basePrice: number | string // fixme
-  time: string
+export interface ProductWithPriceModel extends ProductModel {
+  price?: ProductPriceModel
+  prices: ProductPriceEntry[]
 }
 
 export type ShopType = "lenta" | "globus"
