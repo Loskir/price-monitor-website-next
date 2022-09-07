@@ -21,6 +21,8 @@ export const Header: React.FC = () => {
         <HeaderLink link="/scanner" text="Scanner" />
         {/*<HeaderLink link="/search" text="Search" />*/}
         <HeaderLink link="/categories" text="Categories" />
+        <div className="flex-grow"></div>
+        <HeaderLink link="/search" text="Search" />
       </div>
     </div>
   )

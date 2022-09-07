@@ -43,11 +43,11 @@ export function getProductByEan(ean: string, signal?: AbortSignal): Promise<Prod
     })
 }
 
-export function searchProducts(query: string): Promise<ProductWithPriceModel[]> {
+export function searchProducts(query: string, signal?: AbortSignal): Promise<ProductWithPriceModel[]> {
   const queryString = new URLSearchParams({
     query,
   })
-  return fetch(`${apiRoot}/products/search?${queryString}`)
+  return fetch(`${apiRoot}/products/search?${queryString}`, { signal })
     .then(async (res) => {
       if (res.status > 400) {
         throw new Error() // todo
