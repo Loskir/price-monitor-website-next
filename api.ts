@@ -81,19 +81,18 @@ export enum SortOrder {
 export function getProductsByCategory(categoryId: number, {
   sortType,
   sortOrder,
+  limit,
   signal,
 }: {
   sortType?: SortType
   sortOrder?: SortOrder
+  limit?: number
   signal?: AbortSignal
 } = {}): Promise<ProductWithPriceModel[]> {
   const params = new URLSearchParams()
-  if (sortType) {
-    params.append("sort", sortType)
-  }
-  if (sortOrder) {
-    params.append("sortOrder", sortOrder)
-  }
+  if (sortType) params.append("sort", sortType)
+  if (sortOrder) params.append("sortOrder", sortOrder)
+  if (limit) params.append("limit", limit.toString())
   return fetch(`${apiRoot}/categories/${categoryId}/products?${params}`, { signal })
     .then(async (res) => {
       if (res.status > 400) {
