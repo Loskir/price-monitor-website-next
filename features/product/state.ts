@@ -3,7 +3,7 @@ import { createGate } from "effector-react"
 import { Controller, createRequestFx } from "fry-fx"
 import { getProductById, getProductHistoryById } from "../../api"
 import { isNotNull } from "../../functions/utils"
-import { PriceHistoryPriceModel, ProductWithPriceModel } from "../../models/Product"
+import { PriceHistoryModel, ProductWithPriceModel } from "../../models/Product"
 
 const ProductGate = createGate<{
   productId: string | null
@@ -60,9 +60,9 @@ const $productState = combine({
 })
 
 // load history
-const $productHistory = createStore<PriceHistoryPriceModel[]>([])
+const $productHistory = createStore<PriceHistoryModel | null>(null)
 
-const loadProductHistoryFx = createRequestFx<string, PriceHistoryPriceModel[], Error>({
+const loadProductHistoryFx = createRequestFx<string, PriceHistoryModel | null, Error>({
   name: "loadProductHistoryFx",
   domain,
   handler: async (productId, controller?: Controller) => {

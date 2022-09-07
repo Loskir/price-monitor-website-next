@@ -1,6 +1,8 @@
+import { PriceHistoryModel } from "./models/Product"
+
 const apiRoot = process.env.NEXT_PUBLIC_API_ROOT
 import type { CategoryModel } from "./models/Category"
-import type { PriceHistoryPriceModel, ProductWithPriceModel } from "./models/Product"
+import type { ProductWithPriceModel } from "./models/Product"
 
 export function getProductById(id: string, signal?: AbortSignal): Promise<ProductWithPriceModel | null> {
   return fetch(`${apiRoot}/products/${id}`, { signal })
@@ -15,16 +17,16 @@ export function getProductById(id: string, signal?: AbortSignal): Promise<Produc
     })
 }
 
-export function getProductHistoryById(id: string, signal?: AbortSignal): Promise<PriceHistoryPriceModel[]> {
-  return fetch(`${apiRoot}/product/${id}/history`, { signal })
+export function getProductHistoryById(id: string, signal?: AbortSignal): Promise<PriceHistoryModel | null> {
+  return fetch(`${apiRoot}/products/${id}/history`, { signal })
     .then(async (res) => {
       if (res.status === 404) {
-        return []
+        return null
       }
       if (res.status > 400) {
         throw new Error() // todo
       }
-      return await res.json() as PriceHistoryPriceModel[]
+      return PriceHistoryModel.parse(await res.json())
     })
 }
 

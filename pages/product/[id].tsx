@@ -96,7 +96,9 @@ const Product: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
           {product.name}
         </h1>
         <div className={clsx("my-2", styles.prices)}>
-          <ProductPrice price={product.price} shopType="globus" uom={uom} />
+          {product.shops.map((price, index) => (
+            <ProductPrice key={index} price={price} shopType={price.shopType} uom={uom} />
+          ))}
           {/*<ProductPrice price={product.price} shopType="lenta" uom={uom} />*/}
           {/*<ProductPrice*/}
           {/*  price={{ price: 100, basePrice: 101, time: new Date().toString() }}*/}
@@ -119,7 +121,7 @@ const Product: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
 
 const ProductHistory: React.FC = () => {
   const productHistoryState = useStore($productHistoryState)
-  if (productHistoryState.isLoading) {
+  if (productHistoryState.isLoading || !productHistoryState.history) {
     return <div>Loading...</div>
   }
   return <ProductHistoryGraph history={productHistoryState.history} />
