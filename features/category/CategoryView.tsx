@@ -3,6 +3,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import React from "react"
 import { SortOrder, SortType } from "../../api"
+import { MainLayout } from "../../components/Layout"
 import { ProductListItem } from "../../components/ProductListItem"
 import { CategoryGate } from "./common"
 import { $productsState } from "./products"
@@ -78,11 +79,11 @@ export const CategoryView: React.FC<{ categoryId: number | null }> = ({ category
   const router = useRouter()
   useGate(CategoryGate, { categoryId, routerReady: router.isReady })
   return (
-    <main className="max-w-xl mx-auto mt-4 px-4">
+    <MainLayout>
       <Subcategories />
       <Sort />
       <Products />
-    </main>
+    </MainLayout>
   )
 }
 

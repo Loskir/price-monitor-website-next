@@ -4,6 +4,7 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import React, { useEffect } from "react"
 import { CenteredOverlay } from "../../components/CenteredOverlay"
+import { MainLayout } from "../../components/Layout"
 import { Product } from "../../components/ProductView/Product"
 import { $productHistoryState, $productState, ProductGate } from "../../features/product/state"
 
@@ -37,9 +38,11 @@ const ProductView: NextPage = () => {
       <Head>
         <title>{`${state.product?.name || "Product"} — Price Monitor`}</title>
       </Head>
-      <div className="max-w-xl mx-auto py-8 px-4 min-h-screen">
-        <ProductInner />
-      </div>
+      <MainLayout>
+        <div className="pt-4">
+          <ProductInner />
+        </div>
+      </MainLayout>
     </>
   )
 }
