@@ -85,4 +85,7 @@ const $productHistoryState = combine({
   history: $productHistory,
 })
 
+$product.reset(ProductGate.close)
+$productHistory.reset(ProductGate.close)
+
 export { $productHistoryState, $productState, ProductGate }
