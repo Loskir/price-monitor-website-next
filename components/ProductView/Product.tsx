@@ -95,6 +95,7 @@ export const Product: React.FC<{ product: ProductWithPriceModel; priceHistory: P
   return (
     <>
       <div className="flex flex-col">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         {product.photoUrl && <img className={styles.image} src={product.photoUrl} alt="Photo" />}
         <h1 className={clsx("font-semibold mt-4", product.name.length > 40 ? "text-xl" : "text-2xl")}>
           {product.name}

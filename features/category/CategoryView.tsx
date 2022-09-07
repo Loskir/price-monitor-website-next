@@ -1,4 +1,4 @@
-import { useEvent, useGate, useStore } from "effector-react"
+import { useGate, useUnit } from "effector-react/scope"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React from "react"
@@ -13,7 +13,7 @@ const Subcategories: React.FC = () => {
   const {
     isLoading,
     categories,
-  } = useStore($subcategoriesState)
+  } = useUnit($subcategoriesState)
   if (isLoading) {
     return <p>Loading...</p>
   }
@@ -35,9 +35,9 @@ const Sort: React.FC = () => {
   const {
     sortType,
     sortOrder,
-  } = useStore($sort)
-  const setSort = useEvent(sortChanged)
-  const flipOrder = useEvent(sortOrderFlipped)
+  } = useUnit($sort)
+  const setSort = useUnit(sortChanged)
+  const flipOrder = useUnit(sortOrderFlipped)
   return (
     <div>
       <select
@@ -60,7 +60,7 @@ const Products: React.FC = () => {
   const {
     isLoading,
     products,
-  } = useStore($productsState)
+  } = useUnit($productsState)
   if (isLoading) {
     return <p>Loading...</p>
   }

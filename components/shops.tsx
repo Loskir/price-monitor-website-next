@@ -8,6 +8,7 @@ export const GlobusIcon: React.FC<{ className?: string }> = ({ className }) => {
   // {/*</div>*/}
   return (
     <div className={clsx("w-14 inline-block", className)}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/globus_logo.svg" alt="Globus" />
     </div>
   )
@@ -16,6 +17,7 @@ export const GlobusIcon: React.FC<{ className?: string }> = ({ className }) => {
 export const LentaIcon: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div className={clsx("w-20 inline-block", className)}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/lenta_logo_2.svg" alt="Lenta" />
     </div>
   )

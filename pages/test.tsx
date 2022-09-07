@@ -1,5 +1,5 @@
 import { createEffect, createEvent, createStore, forward, PageContext, withStart } from "effector-next"
-import { useStore } from "effector-react"
+import { useUnit } from "effector-react"
 import { NextPage } from "next"
 
 const pageLoaded = createEvent<PageContext>()
@@ -24,7 +24,7 @@ forward({
 })
 
 const Test: NextPage = () => {
-  const greeting = useStore($greeting)
+  const greeting = useUnit($greeting)
   return (
     <main>
       {greeting}

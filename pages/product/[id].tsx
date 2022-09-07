@@ -1,4 +1,4 @@
-import { useGate, useStore } from "effector-react"
+import { useGate, useUnit } from "effector-react"
 import { NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
@@ -8,8 +8,8 @@ import { Product } from "../../components/ProductView/Product"
 import { $productHistoryState, $productState, ProductGate } from "../../features/product/state"
 
 const ProductInner: React.FC = () => {
-  const state = useStore($productState)
-  const priceHistory = useStore($productHistoryState)
+  const state = useUnit($productState)
+  const priceHistory = useUnit($productHistoryState)
   if (state.isLoading) {
     return <CenteredOverlay>Loading...</CenteredOverlay>
   }
@@ -20,7 +20,7 @@ const ProductInner: React.FC = () => {
 }
 
 const ProductView: NextPage = () => {
-  const state = useStore($productState)
+  const state = useUnit($productState)
   const router = useRouter()
   useGate(ProductGate, {
     productId: router.query.id?.toString() || null,
@@ -31,7 +31,7 @@ const ProductView: NextPage = () => {
       console.log("state2", state)
       return true
     })
-  }, [])
+  }, [router])
   return (
     <>
       <Head>

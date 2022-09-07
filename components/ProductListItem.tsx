@@ -10,6 +10,7 @@ export const ProductListItem: React.FC<{ product: ProductWithPriceModel }> = ({ 
     <div className="flex flex-col">
       <div className="flex flex-row justify-start relative items-stretch">
         {product.photoUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             className={clsx("h-24 w-24 mr-4 p-2 flex-shrink-0 flex-grow-0", styles.image)}
             src={product.photoUrl}

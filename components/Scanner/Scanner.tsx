@@ -70,19 +70,19 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
 
   const [status, setStatus] = useState("Loading...")
 
+  const { ms, reportMs } = useFps()
+
   const onScanCallback = useCallback((result: ZBarSymbol[]) => {
     pendingScans.current--
     handleScanResult(result, onResult)
     reportMs(Date.now() - dateStart.current)
-  }, [])
+  }, [onResult, reportMs])
 
   const {
     worker,
     workerReady,
     workerError,
   } = useWorker(onScanCallback)
-
-  const { ms, reportMs } = useFps()
 
   useEffect(() => {
     if (!videoReady || !workerReady) return
