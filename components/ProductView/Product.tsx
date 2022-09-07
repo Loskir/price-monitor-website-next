@@ -52,7 +52,6 @@ const ProductPrice: React.FC<{
         <span
           className={clsx(
             "align-baseline font-bold text-2xl shrink-0 sm:text-3xl",
-            isDiscount && "text-green-600",
             styles.priceMain,
           )}
         >
