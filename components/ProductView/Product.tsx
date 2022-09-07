@@ -15,6 +15,17 @@ const splitPrice = (price: number) => {
   return [priceWhole.toString(), priceDecimal]
 }
 
+const getUpdatedAt = (time: string) => {
+  const date = DateTime.fromISO(time)
+  const dateString = date.setLocale(locale).toFormat("d MMMM в HH:mm ZZZZ")
+  const duration = DateTime.now().diff(date, "days")
+  const isOutdated = duration.days > 2
+  return {
+    isOutdated,
+    dateString,
+  }
+}
+
 const ProductPrice: React.FC<{
   price: ProductWithPriceModel["price"]
   shopType: ShopType
@@ -25,6 +36,10 @@ const ProductPrice: React.FC<{
   }
   const isDiscount = price.price !== price.basePrice
   const [priceWhole, priceDecimal] = splitPrice(Number(price.price))
+  const {
+    isOutdated,
+    dateString,
+  } = getUpdatedAt(price.time)
   return (
     <div className="flex flex-row items-center py-4 flex-wrap">
       <ShopIcon shopType={shopType} className={styles.shopIcon} />
@@ -37,7 +52,7 @@ const ProductPrice: React.FC<{
           </span>
         )}
       </div>
-      <div className="flex flex-col ml-auto">
+      <div className="flex flex-col ml-auto" title={`Обновлено ${dateString}`}>
         {isDiscount
           && (
             <span className={styles.priceSecondary}>
@@ -78,19 +93,6 @@ const ProductHistory: React.FC<PriceHistoryProps> = ({ isLoading, history }) => 
 export const Product: React.FC<{ product: ProductWithPriceModel; priceHistory: PriceHistoryProps }> = (
   { product, priceHistory },
 ) => {
-  const ProductPriceUpdatedAt: React.FC = () => {
-    if (!product.price) return <></>
-    const date = DateTime.fromISO(product.price.time)
-    const dateString = date.setLocale(locale).toFormat("d MMMM в HH:mm ZZZZ")
-    const duration = DateTime.now().diff(date, "days")
-    const isOutdated = duration.days > 2
-    return (
-      <p className={isOutdated ? "text-red-500" : "text-gray-500"}>
-        Обновлено {dateString}
-        {isOutdated && ". Цена может быть неактуальной"}
-      </p>
-    )
-  }
   const uom = formatUom(product)
   return (
     <>
@@ -100,24 +102,12 @@ export const Product: React.FC<{ product: ProductWithPriceModel; priceHistory: P
         <h1 className={clsx("font-semibold mt-4", product.name.length > 40 ? "text-xl" : "text-2xl")}>
           {product.name}
         </h1>
+        {product.ean && <p className="text-gray-500">Арт. {product.ean}</p>}
         <div className={clsx("my-2", styles.prices)}>
           {product.shops.map((price, index) => (
             <ProductPrice key={index} price={price} shopType={price.shopType} uom={uom} />
           ))}
-          {/*<ProductPrice price={product.price} shopType="lenta" uom={uom} />*/}
-          {/*<ProductPrice*/}
-          {/*  price={{ price: 100, basePrice: 101, time: new Date().toString() }}*/}
-          {/*  shopType={"lenta"}*/}
-          {/*  uom={uom}*/}
-          {/*/>*/}
-          {/*<ProductPrice*/}
-          {/*  price={{ price: 100, basePrice: 100, time: new Date().toString() }}*/}
-          {/*  shopType={"lenta"}*/}
-          {/*  uom={uom}*/}
-          {/*/>*/}
         </div>
-        {product.ean && <p className="text-gray-500">Арт. {product.ean}</p>}
-        <ProductPriceUpdatedAt />
       </div>
       <ProductHistory isLoading={priceHistory.isLoading} history={priceHistory.history} />
     </>
