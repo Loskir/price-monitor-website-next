@@ -3,7 +3,7 @@ import { DateTime } from "luxon"
 import React from "react"
 import styles from "../../components/ProductView/Product.module.css"
 import { formatUom } from "../../functions/products"
-import { PriceHistoryModel, ProductWithPriceModel, ShopType } from "../../models/Product"
+import { PriceHistoryModel, ProductPriceModel, ProductWithPriceModel, ShopType } from "../../models/Product"
 import { getShopName, ShopIcon } from "../shops"
 import { ProductHistoryGraph } from "./ProductHistoryGraph"
 
@@ -27,7 +27,7 @@ const getUpdatedAt = (time: string) => {
 }
 
 const ProductPrice: React.FC<{
-  price: ProductWithPriceModel["price"]
+  price: ProductPriceModel
   shopType: ShopType
   uom: string
 }> = ({ price, shopType, uom }) => {
