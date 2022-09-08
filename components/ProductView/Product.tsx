@@ -27,8 +27,12 @@ const getUpdatedAt = (time: string) => {
 }
 
 const ProductImage: React.FC<{ url: string }> = ({ url }) => {
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img className="h-60 sm:h-80 mx-auto" src={url} alt="Photo" />
+  return (
+    <div className="h-60 sm:h-80 mx-auto flex justify-center items-center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="max-w-full max-h-full" src={url} alt="Photo" />
+    </div>
+  )
 }
 
 const ProductPrice: React.FC<{
