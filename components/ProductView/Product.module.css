@@ -17,7 +17,7 @@
 }
 
 .priceMain {
-    @apply text-end;
+    @apply self-end;
 }
 
 .shopName, .shopSubtitle {
