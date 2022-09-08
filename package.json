@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.4",
     "@undecaf/zbar-wasm": "^0.9.11",
     "chart.js": "^3.8.2",
     "chartjs-adapter-luxon": "^1.1.0",

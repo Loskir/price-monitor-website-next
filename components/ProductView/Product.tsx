@@ -1,3 +1,4 @@
+import { Tooltip } from "@mui/material"
 import clsx from "clsx"
 import { DateTime } from "luxon"
 import React from "react"
@@ -16,8 +17,9 @@ const splitPrice = (price: number) => {
 }
 
 const getUpdatedAt = (time: string) => {
-  const date = DateTime.fromISO(time)
-  const dateString = date.setLocale(locale).toFormat("d MMMM в HH:mm ZZZZ")
+  const date = DateTime.fromISO(time).setLocale(locale)
+  // const dateString = date.toFormat("d MMMM в HH:mm ZZZZ")
+  const dateString = `Обновлено ${date.toRelative()}`
   const duration = DateTime.now().diff(date, "days")
   const isOutdated = duration.days > 2
   return {
@@ -61,7 +63,7 @@ const ProductPrice: React.FC<{
           </span>
         )}
       </div>
-      <div className="flex flex-col ml-auto" title={`Обновлено ${dateString}`}>
+      <div className="flex flex-col ml-auto">
         {isDiscount
           && (
             <span className={styles.priceSecondary}>
@@ -73,18 +75,26 @@ const ProductPrice: React.FC<{
               <span className="line-through">{Number(price.basePrice).toFixed(2)}₽</span>
             </span>
           )}
-        <span
-          className={clsx(
-            "align-baseline font-bold text-2xl shrink-0 sm:text-3xl",
-            styles.priceMain,
-          )}
+        <Tooltip
+          title={dateString}
+          arrow
+          disableFocusListener
+          enterTouchDelay={250}
+          placement="left"
         >
-          {priceWhole}
-          <span className="align-text-top text-base sm:text-lg">
-            <span className="w-0 inline-block opacity-0">.</span>
-            {priceDecimal}
+          <span
+            className={clsx(
+              "align-baseline font-bold text-2xl shrink-0 sm:text-3xl",
+              styles.priceMain,
+            )}
+          >
+            {priceWhole}
+            <span className="align-text-top text-base sm:text-lg">
+              <span className="w-0 inline-block opacity-0">.</span>
+              {priceDecimal}
+            </span>
           </span>
-        </span>
+        </Tooltip>
       </div>
     </div>
   )
