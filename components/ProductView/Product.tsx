@@ -3,18 +3,12 @@ import clsx from "clsx"
 import { DateTime } from "luxon"
 import React from "react"
 import styles from "../../components/ProductView/Product.module.css"
-import { formatUom } from "../../functions/products"
+import { formatUom, splitPrice } from "../../functions/products"
 import { PriceHistoryModel, ProductPriceModel, ProductWithPriceModel, ShopType } from "../../models/Product"
 import { getShopName, ShopIcon } from "../shops"
 import { ProductHistoryGraph } from "./ProductHistoryGraph"
 
 const locale = "ru"
-
-const splitPrice = (price: number) => {
-  const priceWhole = Math.floor(price)
-  const priceDecimal = (price - priceWhole).toFixed(2).slice(2)
-  return [priceWhole.toString(), priceDecimal]
-}
 
 const getUpdatedAt = (time: string) => {
   const date = DateTime.fromISO(time).setLocale(locale)
