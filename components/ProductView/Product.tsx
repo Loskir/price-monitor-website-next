@@ -26,6 +26,11 @@ const getUpdatedAt = (time: string) => {
   }
 }
 
+const ProductImage: React.FC<{ url: string }> = ({ url }) => {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img className="h-60 sm:h-80 mx-auto" src={url} alt="Photo" />
+}
+
 const ProductPrice: React.FC<{
   price: ProductPriceModel
   shopType: ShopType
@@ -97,8 +102,7 @@ export const Product: React.FC<{ product: ProductWithPriceModel; priceHistory: P
   return (
     <>
       <div className="flex flex-col">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        {product.photoUrl && <img className={styles.image} src={product.photoUrl} alt="Photo" />}
+        {product.photoUrl && <ProductImage url={product.photoUrl} />}
         <h1 className={clsx("font-semibold mt-4", product.name.length > 40 ? "text-xl" : "text-2xl")}>
           {product.name}
         </h1>
