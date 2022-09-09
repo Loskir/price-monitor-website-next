@@ -1,5 +1,5 @@
 import { combine, createEvent, createStore, domain, forward } from "effector-next"
-import { useUnit } from "effector-react"
+import { useEvent, useStore } from "effector-react"
 import { Controller, createRequestFx } from "fry-fx"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
@@ -48,8 +48,8 @@ $product.watch((product) => {
 
 const ProductView: NextPage = () => {
   const router = useRouter()
-  const eanChangedL = useUnit(eanChanged)
-  const state = useUnit($state)
+  const eanChangedL = useEvent(eanChanged)
+  const state = useStore($state)
 
   productIdReceived.watch((productId) => {
     return router.replace(`/product/${productId}`)

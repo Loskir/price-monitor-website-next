@@ -1,14 +1,14 @@
-import { useUnit } from "effector-react"
+import { useEvent, useStore } from "effector-react"
 import { NextPage } from "next"
 import { MainLayout } from "../components/Layout"
 import { ProductListItem } from "../components/ProductListItem"
 import { $isLoading, $products, $query, queryChanged } from "../features/search/state"
 
 const Search: NextPage = () => {
-  const query = useUnit($query)
-  const queryChangedL = useUnit(queryChanged)
-  const products = useUnit($products)
-  const isLoading = useUnit($isLoading)
+  const query = useStore($query)
+  const queryChangedL = useEvent(queryChanged)
+  const products = useStore($products)
+  const isLoading = useStore($isLoading)
   return (
     <MainLayout>
       <div className="flex flex-col h-full">

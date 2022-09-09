@@ -5,5 +5,8 @@
     "plugin:effector/react",
     "plugin:effector/scope",
     "next/core-web-vitals"
-  ]
+  ],
+  "rules": {
+    "effector/prefer-useUnit": "off"
+  }
 }

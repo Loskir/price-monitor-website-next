@@ -5,7 +5,11 @@ import { domain } from "effector-next"
 import type { AppProps } from "next/app"
 import { HeaderLayout } from "../components/HeaderLayout"
 
-attachLogger(domain)
+attachLogger(domain, {
+  reduxDevtools: "disabled",
+  inspector: "disabled",
+  console: "disabled",
+})
 
 const enhance = withHydrate()
 
