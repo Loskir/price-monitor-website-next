@@ -11,3 +11,5 @@ export const HeaderLayout: React.FC<{ children: ReactNode }> = ({ children }) =>
     </>
   )
 }
+
+export const HeaderSpacer: React.FC = () => <div style={{ height: "calc(56px + env(safe-area-inset-top))" }} />
