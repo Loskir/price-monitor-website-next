@@ -1,12 +1,23 @@
+import { Search } from "@mui/icons-material"
 import clsx from "clsx"
 import Link from "next/link"
-import React from "react"
+import React, { ReactNode } from "react"
 import styles from "./Header.module.css"
 
 const HeaderLink: React.FC<{ link: string; text: string }> = ({ link, text }) => {
   return (
     <Link href={link}>
       <a className="my-2 py-2 px-4 rounded-lg hover:bg-gray-200 font-medium flex-shrink-0">{text}</a>
+    </Link>
+  )
+}
+
+const HeaderLinkIcon: React.FC<{ link: string; label: string; children: ReactNode }> = ({ link, label, children }) => {
+  return (
+    <Link href={link}>
+      <a className="p-2 rounded-lg leading-none hover:bg-gray-200 flex-shrink-0" aria-label={label}>
+        {children}
+      </a>
     </Link>
   )
 }
@@ -22,7 +33,10 @@ export const Header: React.FC = () => {
         {/*<HeaderLink link="/search" text="Search" />*/}
         <HeaderLink link="/categories" text="Categories" />
         <div className="flex-grow"></div>
-        <HeaderLink link="/search" text="Search" />
+
+        <HeaderLinkIcon link="/search" label="Search">
+          <Search />
+        </HeaderLinkIcon>
       </div>
     </div>
   )
