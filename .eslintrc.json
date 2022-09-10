@@ -7,6 +7,7 @@
     "next/core-web-vitals"
   ],
   "rules": {
-    "effector/prefer-useUnit": "off"
+    "effector/prefer-useUnit": "off",
+    "@next/next/no-img-element": "off"
   }
 }

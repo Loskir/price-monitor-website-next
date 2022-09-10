@@ -3,24 +3,12 @@ import clsx from "clsx"
 import { DateTime } from "luxon"
 import React from "react"
 import styles from "../../components/ProductView/Product.module.css"
-import { formatUom, splitPrice } from "../../functions/products"
+import { formatUom, getUpdatedAt, splitPrice } from "../../functions/products"
 import { PriceHistoryModel, ProductPriceModel, ProductWithPriceModel, ShopType } from "../../models/Product"
 import { getShopName, ShopIcon } from "../shops"
 import { ProductHistoryGraph } from "./ProductHistoryGraph"
 
 const locale = "ru"
-
-const getUpdatedAt = (time: string) => {
-  const date = DateTime.fromISO(time).setLocale(locale)
-  // const dateString = date.toFormat("d MMMM в HH:mm ZZZZ")
-  const dateString = `Обновлено ${date.toRelative()}`
-  const duration = DateTime.now().diff(date, "days")
-  const isOutdated = duration.days > 2
-  return {
-    isOutdated,
-    dateString,
-  }
-}
 
 const ProductImage: React.FC<{ url: string }> = ({ url }) => {
   return (
@@ -40,7 +28,7 @@ const ProductPrice: React.FC<{
     return <></>
   }
   const isDiscount = price.price !== price.basePrice
-  const [priceWhole, priceDecimal] = splitPrice(Number(price.price))
+  const [priceWhole, priceDecimal] = splitPrice(price.price)
   const {
     isOutdated,
     dateString,
@@ -80,6 +68,7 @@ const ProductPrice: React.FC<{
             className={clsx(
               "align-baseline font-bold text-2xl shrink-0 sm:text-3xl",
               styles.priceMain,
+              isOutdated && "text-gray-400",
             )}
           >
             {priceWhole}
