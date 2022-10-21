@@ -23,6 +23,15 @@ export const LentaIcon: React.FC<{ className?: string }> = ({ className }) => {
   )
 }
 
+export const AuchanIcon: React.FC<{ className?: string }> = ({ className }) => {
+  return (
+    <div className={className}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/auchan_logo.svg" alt="Auchan" />
+    </div>
+  )
+}
+
 export const ShopIcon: React.FC<{ shopType: ShopType; className?: string }> = ({ shopType, className }) => {
   if (shopType === "globus") {
     return <GlobusIcon className={className} />
@@ -30,11 +39,15 @@ export const ShopIcon: React.FC<{ shopType: ShopType; className?: string }> = ({
   if (shopType === "lenta") {
     return <LentaIcon className={className} />
   }
+  if (shopType === "auchan") {
+    return <AuchanIcon className={className} />
+  }
   return <></>
 }
 
-export const getShopName = (shopType: ShopType): string => {
+export const getShopName = (shopType: string): string => {
   if (shopType === "globus") return "Глобус"
   if (shopType === "lenta") return "Гипер Лента"
-  return ""
+  if (shopType === "auchan") return "Ашан"
+  return "?"
 }

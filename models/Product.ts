@@ -37,7 +37,7 @@ export interface ProductWithPriceModel extends ProductModel {
 }
 
 export const PriceHistoryEntryModel = z.object({
-  shopType: z.enum(["lenta", "globus"]),
+  shopType: z.string(),
   prices: z.array(PriceHistoryPriceModel),
 })
 export type PriceHistoryEntryModel = z.infer<typeof PriceHistoryEntryModel>
@@ -47,4 +47,4 @@ export const PriceHistoryModel = z.object({
 })
 export type PriceHistoryModel = z.infer<typeof PriceHistoryModel>
 
-export type ShopType = "lenta" | "globus"
+export type ShopType = "lenta" | "globus" | "auchan"

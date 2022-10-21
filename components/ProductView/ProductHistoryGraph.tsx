@@ -9,12 +9,14 @@ import { getShopName } from "../shops"
 
 const processDate = (date: string) => DateTime.fromISO(date).startOf("day").toJSDate()
 
-const getColors = (shopType: ShopType): [string, string] => {
+const getColors = (shopType: string): [string, string] => {
   switch (shopType) {
     case "globus":
       return ["#ee7100", "rgb(253.22, 134.68, 55.92)"]
     case "lenta":
       return ["#171c8f", "rgb(34.76, 50.77, 164.21)"]
+    case "auchan":
+      return ["#e0021a", "rgb(251.6, 53.76, 53.08)"]
     default:
       return [colors.green[500], colors.green[400]]
   }
