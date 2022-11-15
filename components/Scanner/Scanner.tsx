@@ -68,7 +68,7 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
 
   const [dimensions, setDimensions] = useState<[number, number]>([0, 0])
 
-  const [status, setStatus] = useState("Loading...")
+  const [status, setStatus] = useState("Загрузка…")
 
   const { ms, reportMs } = useFps()
 

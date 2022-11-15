@@ -87,7 +87,7 @@ type PriceHistoryProps = { isLoading: boolean; history: PriceHistoryModel | null
 
 const ProductHistory: React.FC<PriceHistoryProps> = ({ isLoading, history }) => {
   if (isLoading || !history) {
-    return <div>Loading...</div>
+    return <div>Загрузка…</div>
   }
   return <ProductHistoryGraph history={history} />
 }

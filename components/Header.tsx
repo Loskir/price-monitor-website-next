@@ -29,12 +29,12 @@ export const Header: React.FC = () => {
         <Link href="/">
           <a className="py-2 px-4 font-bold flex-shrink-0 hover:bg-gray-200 rounded-lg">Price Monitor</a>
         </Link>
-        <HeaderLink link="/scanner" text="Scanner" />
+        <HeaderLink link="/scanner" text="Сканер" />
         {/*<HeaderLink link="/search" text="Search" />*/}
-        <HeaderLink link="/categories" text="Categories" />
+        <HeaderLink link="/categories" text="Категории" />
         <div className="flex-grow"></div>
 
-        <HeaderLinkIcon link="/search" label="Search">
+        <HeaderLinkIcon link="/search" label="Поиск">
           <Search />
         </HeaderLinkIcon>
       </div>

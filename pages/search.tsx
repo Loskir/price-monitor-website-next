@@ -16,9 +16,10 @@ const Search: NextPage = () => {
           className="bg-gray-100 p-2 rounded w-full mb-1"
           value={query}
           onChange={(e) => queryChangedL(e.target.value)}
+          placeholder="Поиск по названию или штрих-коду…"
         />
         {isLoading
-          ? <div>Loading...</div>
+          ? <div>Загрузка…</div>
           : (
             <div className="relative flex-grow">
               {products.map((product) => <ProductListItem product={product} key={product.productId} />)}
