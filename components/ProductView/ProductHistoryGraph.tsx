@@ -9,16 +9,16 @@ import { getShopName } from "../shops"
 
 const processDate = (date: string) => DateTime.fromISO(date).startOf("day").toJSDate()
 
-const getColors = (shopType: string): [string, string] => {
+const getColors = (shopType: string): [string, string, string] => {
   switch (shopType) {
     case "globus":
-      return ["#ee7100", "rgb(253.22, 134.68, 55.92)"]
+      return ["#ee7100", "rgb(253.22, 134.68, 55.92)", "rgb(247.61, 202.75, 178.08)"]
     case "lenta":
-      return ["#171c8f", "rgb(34.76, 50.77, 164.21)"]
+      return ["#171c8f", "rgb(34.76, 50.77, 164.21)", "rgb(115.17, 145.76, 245.29)"]
     case "auchan":
-      return ["#e0021a", "rgb(251.6, 53.76, 53.08)"]
+      return ["#e0021a", "rgb(251.6, 53.76, 53.08)", "rgb(254.99, 173.87, 164.21)"]
     default:
-      return [colors.green[500], colors.green[400]]
+      return [colors.green[500], colors.green[400], colors.gray[200]]
   }
 }
 
@@ -38,20 +38,31 @@ const mergePoints = (history: PriceHistoryModel): ChartData<"line"> => {
         backgroundColor: c[1],
         data: xPoints.map((x) => maps[i].get(x)?.price ?? null),
         cubicInterpolationMode: "monotone",
-        pointRadius: 1,
+        pointRadius: 1.5,
+        pointBorderWidth: 0,
+        hoverBorderWidth: 0,
+        hoverRadius: 4,
+        borderWidth: 3,
+        spanGaps: true,
       }, {
         label: `${getShopName(shopType)} (без скидки)`,
-        borderColor: colors.gray[300],
-        pointBorderColor: colors.gray[200],
-        backgroundColor: colors.gray[200],
+        // borderColor: colors.gray[300],
+        // pointBorderColor: colors.gray[200],
+        // backgroundColor: colors.gray[200],
+        borderColor: c[2],
+        pointBorderColor: c[2],
+        backgroundColor: c[2],
         data: xPoints.map((x) => {
           const data = maps[i].get(x)
           if (!data) return null
-          if (data.basePrice === data.price) return null
+          // if (data.basePrice === data.price) return null
           return data.basePrice
         }),
         cubicInterpolationMode: "monotone",
-        pointRadius: 1,
+        pointRadius: 0,
+        borderWidth: 2,
+        borderDash: [4, 2],
+        spanGaps: true,
       }]
     }),
   }
