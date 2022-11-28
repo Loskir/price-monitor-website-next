@@ -26,7 +26,7 @@ const BigPrice: React.FC<{ isMulti?: boolean; price: number }> = ({ isMulti = fa
 export const ProductListItemNew: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
   const uom = formatUom(product)
   return (
-    <div className="ml-4 mt-4 flex relative product-list-item">
+    <div className="pl-4 pt-4 flex relative product-list-item">
       <div className="mr-4 rounded-2xl w-16 h-16 shrink-0 relative">
         {product.photoUrl && (
           <img

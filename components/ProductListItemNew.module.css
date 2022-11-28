@@ -5,6 +5,10 @@
     z-index: 1;
 }
 
+.link:hover {
+    color: #EB5500;
+}
+
 .title {
     font-weight: 500;
     line-height: 1.1875;
