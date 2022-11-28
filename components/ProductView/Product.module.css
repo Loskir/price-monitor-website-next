@@ -8,12 +8,8 @@
     @apply mr-4 w-14 sm:w-16;
 }
 
-.shopName {
-    @apply font-semibold sm:text-lg;
-}
-
 .shopSubtitle {
-    @apply text-gray-500 font-medium text-sm sm:text-base;
+    @apply font-medium text-xs;
 }
 
 .priceMain {
@@ -25,7 +21,7 @@
 }
 
 .priceSecondary {
-    @apply text-gray-500 font-medium text-end text-sm sm:text-base;
+    @apply text-end text-xs;
     line-height: 1;
 }
 

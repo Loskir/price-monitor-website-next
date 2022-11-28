@@ -2,9 +2,17 @@ import { DateTime } from "luxon"
 import { type ProductWithPriceModel, UomType } from "../models/Product"
 
 export const splitPrice = (price: number) => {
+  const formatter = new Intl.NumberFormat("ru")
   const priceWhole = Math.floor(price)
   const priceDecimal = (price - priceWhole).toFixed(2).slice(2)
-  return [priceWhole.toString(), priceDecimal]
+  return [formatter.format(priceWhole), priceDecimal]
+}
+export const formatPrice = (price: number) => {
+  const formatter = new Intl.NumberFormat("ru", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+  return formatter.format(price)
 }
 
 export const getUpdatedAt = (time: string, locale = "ru") => {

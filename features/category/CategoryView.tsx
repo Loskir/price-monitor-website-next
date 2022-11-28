@@ -3,8 +3,8 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import React from "react"
 import { SortOrder, SortType } from "../../api"
-import { MainLayout } from "../../components/Layout"
-import { ProductListItem } from "../../components/ProductListItem"
+import { MainLayoutNoMargin } from "../../components/Layout"
+import { ProductListItemNew } from "../../components/ProductListItemNew"
 import { CategoryGate } from "./common"
 import { $productsState } from "./products"
 import { $sort, sortChanged, sortOrderFlipped } from "./sort"
@@ -20,7 +20,7 @@ const Subcategories: React.FC = () => {
   }
   if (categories.length > 0) {
     return (
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4 mx-4">
         {categories.map((c) => (
           <Link href={`/category/${c.categoryId}`} key={c.categoryId}>
             <a className="px-4 py-2 bg-gray-100 rounded-full">{c.name}</a>
@@ -42,7 +42,7 @@ const Sort: React.FC = () => {
   return (
     <div>
       <select
-        className="bg-gray-100 p-4 rounded rounded-r-none h-14"
+        className="bg-gray-100 p-4 rounded rounded-r-none h-14 mx-4"
         value={sortType}
         onChange={(e) => setSort(e.target.value as SortType)}
       >
@@ -63,12 +63,12 @@ const Products: React.FC = () => {
     products,
   } = useStore($productsState)
   if (isLoading) {
-    return <p>Loading...</p>
+    return <p className="m-4">Loading...</p>
   }
   if (products.length > 0) {
     return (
       <div className="flex flex-col mt-4">
-        {products.map((product) => <ProductListItem product={product} key={product.productId} />)}
+        {products.map((product) => <ProductListItemNew product={product} key={product.productId} />)}
       </div>
     )
   }
@@ -79,11 +79,11 @@ export const CategoryView: React.FC<{ categoryId: number | null }> = ({ category
   const router = useRouter()
   useGate(CategoryGate, { categoryId, routerReady: router.isReady })
   return (
-    <MainLayout>
+    <MainLayoutNoMargin>
       <Subcategories />
       <Sort />
       <Products />
-    </MainLayout>
+    </MainLayoutNoMargin>
   )
 }
 
