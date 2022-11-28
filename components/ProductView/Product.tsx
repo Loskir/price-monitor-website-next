@@ -5,6 +5,7 @@ import { DateTime } from "luxon"
 import React from "react"
 import styles from "../../components/ProductView/Product.module.css"
 import { formatPrice, formatUom, getUpdatedAt, splitPrice } from "../../functions/products"
+import { insertNbspIntoName } from "../../functions/utils"
 import { PriceHistoryModel, ProductPriceModel, ProductWithPriceModel, ShopType } from "../../models/Product"
 import { ShopLogo } from "../Logos"
 import { getShopName } from "../shops"
@@ -110,7 +111,7 @@ export const Product: React.FC<{ product: ProductWithPriceModel; priceHistory: P
       {product.photoUrl && <ProductImage url={product.photoUrl} />}
       <div className="mb-12">
         <h1 className={clsx("mt-4 text-2xl mb-2 leading-7")}>
-          {product.name}
+          {insertNbspIntoName(product.name)}
         </h1>
         {product.ean && <p className="text-secondary">Арт. {product.ean}</p>}
       </div>

@@ -3,6 +3,7 @@ import clsx from "clsx"
 import Link from "next/link"
 import React from "react"
 import { formatPrice, formatUom, splitPrice } from "../functions/products"
+import { insertNbspIntoName } from "../functions/utils"
 import { ProductWithPriceModel } from "../models/Product"
 import { ShopLogo } from "./Logos"
 import styles from "./ProductListItemNew.module.css"
@@ -41,7 +42,7 @@ export const ProductListItemNew: React.FC<{ product: ProductWithPriceModel }> = 
       <div className="grow">
         <div className="mr-4">
           <Link href={`/product/${product.productId}`}>
-            <a className={cx("inline-block", styles.title, styles.link)}>{product.name}</a>
+            <a className={cx("inline-block", styles.title, styles.link)}>{insertNbspIntoName(product.name)}</a>
           </Link>
           {/*<div className="mt-3">*/}
           {/*  {product.shops.map((price) => (*/}
