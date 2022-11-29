@@ -86,21 +86,21 @@ export const ProductListItemNew: React.FC<{ product: ProductWithPriceModel }> = 
           {/*  ))}*/}
           {/*</div>*/}
           {product.shops.length > 0 && (
-            <div className="mt-1">
-              <div className="flex">
+            <div className="mt-4">
+              <div className="flex items-center">
                 <BigPrice isMulti={product.shops.length > 1} price={product.shops[0].price} />
                 <div className="grow" />
                 <ShopLogo shopType={product.shops[0].shopType} className="h-8" monochrome />
               </div>
               <div className="flex flex-wrap justify-end text-secondary text-xs">
                 {product.shops[0].unitPrice && (
-                  <span className="mt-3">
+                  <span className="mt-4">
                     {product.shops.length > 1 && "от "}
                     {formatPrice(product.shops[0].unitPrice)} ₽ за {uom}
                   </span>
                 )}
                 <div className="grow" />
-                {product.ean && <span className="mt-3">Арт. {product.ean}</span>}
+                {product.ean && <span className="mt-4">Арт. {product.ean}</span>}
               </div>
             </div>
           )}
