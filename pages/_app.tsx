@@ -6,6 +6,7 @@ import type { AppProps } from "next/app"
 import Router from "next/router"
 // @ts-ignore
 import withYM from "next-ym"
+import Head from "next/head"
 import { HeaderLayout } from "../components/HeaderLayout"
 
 attachLogger(domain, {
@@ -19,6 +20,9 @@ const enhance = withHydrate()
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <HeaderLayout>
+      <Head>
+        <title>Price Monitor</title>
+      </Head>
       <Component {...pageProps} />
     </HeaderLayout>
   )
