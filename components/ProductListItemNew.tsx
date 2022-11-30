@@ -108,7 +108,7 @@ export const ProductListItemNew: React.FC<{ product: ProductWithPriceModel }> = 
           </div>
         </div>
       </div>
-      <div className={cx("w-full mt-4 ml-20", styles.separator)} />
+      <div className={cx("mt-4 ml-20", styles.separator)} />
     </div>
   )
 }
