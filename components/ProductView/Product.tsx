@@ -5,10 +5,10 @@ import { DateTime } from "luxon"
 import React from "react"
 import styles from "../../components/ProductView/Product.module.css"
 import { formatPrice, formatUom, getUpdatedAt, splitPrice } from "../../functions/products"
+import { getShopName } from "../../functions/shops"
 import { insertNbspIntoName } from "../../functions/utils"
-import { PriceHistoryModel, ProductPriceModel, ProductWithPriceModel, ShopType } from "../../models/Product"
+import { PriceHistoryModel, ProductPriceModel, ProductWithPriceModel } from "../../models/Product"
 import { ShopLogo } from "../Logos"
-import { getShopName } from "../shops"
 import { ProductHistoryGraph } from "./ProductHistoryGraph"
 
 const locale = "ru"
@@ -42,7 +42,7 @@ const Subtitle: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 const ProductPrice: React.FC<{
   price: ProductPriceModel
-  shopType: ShopType
+  shopType: string
   uom: string
 }> = ({ price, shopType, uom }) => {
   if (!price) {

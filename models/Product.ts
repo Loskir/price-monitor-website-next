@@ -28,7 +28,7 @@ export interface ProductPriceModel extends PriceHistoryPriceModel {
   offerValidUntil?: string
 }
 export type ProductShopEntry = ProductPriceModel & {
-  shopType: ShopType
+  shopType: string
 }
 
 export interface ProductWithPriceModel extends ProductModel {
@@ -46,5 +46,3 @@ export const PriceHistoryModel = z.object({
   shops: z.array(PriceHistoryEntryModel),
 })
 export type PriceHistoryModel = z.infer<typeof PriceHistoryModel>
-
-export type ShopType = "lenta" | "globus" | "auchan"

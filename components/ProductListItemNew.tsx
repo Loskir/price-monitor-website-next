@@ -1,4 +1,4 @@
-import { cx } from "@emotion/css"
+import { css, cx } from "@emotion/css"
 import clsx from "clsx"
 import Link from "next/link"
 import React from "react"
@@ -108,7 +108,7 @@ export const ProductListItemNew: React.FC<{ product: ProductWithPriceModel }> = 
           </div>
         </div>
       </div>
-      <div className={cx("mt-4 ml-20", styles.separator)} />
+      <div className={cx("mt-4 ml-20", css`border-top: 1px solid #F0F0F0`)} />
     </div>
   )
 }

@@ -1,6 +1,5 @@
-import { cx } from "@emotion/css"
+import { css, cx } from "@emotion/css"
 import React from "react"
-import { ShopType } from "../models/Product"
 
 export const GlobusLogo: React.FC<{ monochrome?: boolean; className?: string }> = (
   { monochrome = false, className },
@@ -38,7 +37,19 @@ export const AuchanLogo: React.FC<{ monochrome?: boolean; className?: string }> 
   )
 }
 
-export const ShopLogo: React.FC<{ shopType: ShopType; monochrome?: boolean; className?: string }> = (
+export const PerekrestokLogo: React.FC<{ monochrome?: boolean; className?: string }> = (
+  { monochrome = false, className },
+) => {
+  return (
+    <img
+      className={cx(className, "h-full", css`padding: 7px 0`)}
+      alt="Globus"
+      src={monochrome ? "/logos/perekrestok_monochrome.svg" : "/logos/perekrestok.svg"}
+    />
+  )
+}
+
+export const ShopLogo: React.FC<{ shopType: string; monochrome?: boolean; className?: string }> = (
   { shopType, monochrome = false, className },
 ) => {
   if (shopType === "globus") {
@@ -49,6 +60,9 @@ export const ShopLogo: React.FC<{ shopType: ShopType; monochrome?: boolean; clas
   }
   if (shopType === "auchan") {
     return <AuchanLogo monochrome={monochrome} className={className} />
+  }
+  if (shopType === "perekrestok") {
+    return <PerekrestokLogo monochrome={monochrome} className={className} />
   }
   return <></>
 }

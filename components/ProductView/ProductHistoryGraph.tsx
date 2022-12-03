@@ -4,8 +4,8 @@ import React, { useMemo } from "react"
 import { Line } from "react-chartjs-2"
 import colors from "tailwindcss/colors"
 import "chartjs-adapter-luxon"
-import { PriceHistoryModel, ShopType } from "../../models/Product"
-import { getShopName } from "../shops"
+import { getShopName } from "../../functions/shops"
+import { PriceHistoryModel } from "../../models/Product"
 
 const processDate = (date: string) => DateTime.fromISO(date).startOf("day").toJSDate()
 
