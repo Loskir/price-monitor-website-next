@@ -40,9 +40,9 @@ const Sort: React.FC = () => {
   const setSort = useEvent(sortChanged)
   const flipOrder = useEvent(sortOrderFlipped)
   return (
-    <div>
+    <div className="mx-4">
       <select
-        className="bg-gray-100 p-4 rounded rounded-r-none h-14 mx-4"
+        className="bg-gray-100 p-4 rounded rounded-r-none h-14"
         value={sortType}
         onChange={(e) => setSort(e.target.value as SortType)}
       >
