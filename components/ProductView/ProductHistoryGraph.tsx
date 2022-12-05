@@ -41,7 +41,7 @@ const mergePoints = (history: PriceHistoryModel): ChartData<"line"> => {
         backgroundColor: c[0],
         data: xPoints.map((x) => maps[i].get(x)?.price ?? null),
         cubicInterpolationMode: "monotone",
-        pointRadius: 1,
+        pointRadius: 1.4,
         pointBorderWidth: 0,
         hoverBorderWidth: 0,
         // @ts-ignore
