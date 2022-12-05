@@ -1,4 +1,4 @@
-import { Chart, ChartData, registerables } from "chart.js"
+import { Chart, ChartData, ChartDataset, registerables } from "chart.js"
 import { DateTime } from "luxon"
 import React, { useMemo } from "react"
 import { Line } from "react-chartjs-2"
@@ -17,6 +17,8 @@ const getColors = (shopType: string): [string, string, string] => {
       return ["#171c8f", "rgb(34.76, 50.77, 164.21)", "rgb(115.17, 145.76, 245.29)"]
     case "auchan":
       return ["#e0021a", "rgb(251.6, 53.76, 53.08)", "rgb(254.99, 173.87, 164.21)"]
+    case "perekrestok":
+      return ["#1EAF37", colors.green[400], colors.green[200]]
     default:
       return [colors.green[500], colors.green[400], colors.gray[200]]
   }
@@ -29,21 +31,23 @@ const mergePoints = (history: PriceHistoryModel): ChartData<"line"> => {
   const maps = history.shops.map((shop) => new Map(shop.prices.map((v) => [v.time, v])))
   return {
     labels: xPoints.map(processDate),
-    datasets: history.shops.flatMap(({ shopType, prices }, i) => {
+    datasets: history.shops.flatMap(({ shopType, prices }, i): ChartDataset<"line">[] => {
+      const spanGaps = 1000 * 60 * 60 * 24 * 7 // 1 week
       const c = getColors(shopType)
       return [{
         label: getShopName(shopType),
         borderColor: c[0],
-        pointBorderColor: c[1],
-        backgroundColor: c[1],
+        pointBorderColor: c[0],
+        backgroundColor: c[0],
         data: xPoints.map((x) => maps[i].get(x)?.price ?? null),
         cubicInterpolationMode: "monotone",
-        pointRadius: 1.5,
+        pointRadius: 1,
         pointBorderWidth: 0,
         hoverBorderWidth: 0,
+        // @ts-ignore
         hoverRadius: 4,
         borderWidth: 3,
-        spanGaps: true,
+        spanGaps,
       }, {
         label: `${getShopName(shopType)} (без скидки)`,
         // borderColor: colors.gray[300],
@@ -62,7 +66,7 @@ const mergePoints = (history: PriceHistoryModel): ChartData<"line"> => {
         pointRadius: 0,
         borderWidth: 2,
         borderDash: [4, 2],
-        spanGaps: true,
+        spanGaps,
       }]
     }),
   }
