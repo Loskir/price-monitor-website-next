@@ -32,7 +32,8 @@ const mergePoints = (history: PriceHistoryModel): ChartData<"line"> => {
   return {
     labels: xPoints.map(processDate),
     datasets: history.shops.flatMap(({ shopType, prices }, i): ChartDataset<"line">[] => {
-      const spanGaps = 1000 * 60 * 60 * 24 * 7 // 1 week
+      // const spanGaps = 1000 * 60 * 60 * 24 * 7 // 1 week
+      const spanGaps = true
       const c = getColors(shopType)
       return [{
         label: getShopName(shopType),
