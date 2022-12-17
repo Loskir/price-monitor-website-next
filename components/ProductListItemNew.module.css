@@ -14,6 +14,6 @@
     line-height: 1.1875;
 }
 
-.bigPriceWhole {
-
+.productListItem:not(:last-child) .divider {
+    border-bottom: 1px solid #F0F0F0
 }

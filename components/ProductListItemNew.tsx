@@ -1,4 +1,4 @@
-import { css, cx } from "@emotion/css"
+import { cx } from "@emotion/css"
 import clsx from "clsx"
 import Link from "next/link"
 import React from "react"
@@ -26,8 +26,8 @@ const BigPrice: React.FC<{ isMulti?: boolean; price: number }> = ({ isMulti = fa
 export const ProductListItemNew: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
   const uom = formatUom(product)
   return (
-    <div className="pl-4 pt-4 relative product-list-item">
-      <div className="flex">
+    <div className={cx("pl-4 pt-4 relative", styles.productListItem)}>
+      <div className="flex mb-4">
         <div className="mr-4 rounded-2xl w-16 h-16 shrink-0 relative">
           {product.photoUrl && (
             <img
@@ -110,7 +110,7 @@ export const ProductListItemNew: React.FC<{ product: ProductWithPriceModel }> = 
           </div>
         </div>
       </div>
-      <div className={cx("mt-4 ml-20", css`border-top: 1px solid #F0F0F0`)} />
+      <div className={cx("ml-20", styles.divider)} />
     </div>
   )
 }
