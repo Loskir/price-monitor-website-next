@@ -101,7 +101,9 @@ export const ProductListItemNew: React.FC<{ product: ProductWithPriceModel }> = 
                     </span>
                   )}
                   <div className="grow" />
-                  {product.ean && <span className="mt-4">Арт. {product.ean}</span>}
+                  {product.eans && product.eans.length > 0 && (
+                    <span className="mt-4">Арт. {product.eans.join(", ")}</span>
+                  )}
                 </div>
               </div>
             )}

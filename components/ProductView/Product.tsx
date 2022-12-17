@@ -113,7 +113,7 @@ export const Product: React.FC<{ product: ProductWithPriceModel; priceHistory: P
         <h1 className={clsx("mt-4 text-2xl mb-2 leading-7")}>
           {insertNbspIntoName(product.name)}
         </h1>
-        {product.ean && <p className="text-secondary">Арт. {product.ean}</p>}
+        {product.eans && product.eans.length > 0 && <p className="text-secondary">Арт. {product.eans.join(", ")}</p>}
       </div>
 
       <Subtitle>Цены в магазинах</Subtitle>
