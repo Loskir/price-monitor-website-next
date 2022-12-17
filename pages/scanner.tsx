@@ -8,7 +8,7 @@ const Home: NextPage = () => {
   const router = useRouter()
   const onResult = (ean: string) => router.push(`/product/ean/${ean}`)
   return (
-    <main>
+    <main className="min-h-screen flex flex-col">
       <HeaderSpacer />
       <Scanner onResult={onResult} />
     </main>
