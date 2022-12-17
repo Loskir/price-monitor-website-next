@@ -59,31 +59,54 @@ const useWorker = (onScan: (data: ZBarSymbol[]) => any) => {
 }
 
 const ScannerOverlay: React.FC = () => {
-  const bgColor = css`background-color: #00000080`
   return (
-    <div className="absolute inset-0 z-10">
-      <div className={cx(css`width: 25vw`, "absolute left-0 h-full", bgColor)} />
-      <div className={cx(css`width: 25vw`, "absolute right-0 h-full", bgColor)} />
-      <div
+    <div
+      className={css`
+      --width: 70vw;
+      --height: calc(var(--width) * 0.5625);
+    `}
+    >
+      {/*<div className={cx(css`width: 25vw`, "absolute z-10 left-0 h-full", bgColor)} />*/}
+      {/*<div className={cx(css`width: 25vw`, "absolute z-10 right-0 h-full", bgColor)} />*/}
+      {/*<div*/}
+      {/*  className={cx(*/}
+      {/*    css`height: calc(50% - 17.5vw); left: 25vw; right: 25vw`,*/}
+      {/*    "absolute z-10 bottom-0",*/}
+      {/*    bgColor,*/}
+      {/*  )}*/}
+      {/*/>*/}
+      {/*<div*/}
+      {/*  className={cx(*/}
+      {/*    css`height: calc(50% - 17.5vw); left: 25vw; right: 25vw`,*/}
+      {/*    "absolute z-10 top-0",*/}
+      {/*    bgColor,*/}
+      {/*  )}*/}
+      {/*/>*/}
+      {/*<div*/}
+      {/*  className={cx(*/}
+      {/*    css`height: 1px; left: 25vw; right: 25vw`,*/}
+      {/*    "absolute top-0 bottom-0 my-auto bg-red-700",*/}
+      {/*  )}*/}
+      {/*/>*/}
+      <span
         className={cx(
-          css`height: calc(50% - 12.5vw); left: 25vw; right: 25vw`,
-          "absolute bottom-0",
-          bgColor,
+          "absolute z-10 w-16 h-16 top-0 left-0 rounded-lg",
+          css`
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            width: var(--width);
+            height: var(--height);
+            top: calc(50% - var(--height) / 2);
+            left: calc(50% - var(--width) / 2)`,
         )}
       />
-      <div
+      <span
         className={cx(
-          css`height: calc(50% - 12.5vw); left: 25vw; right: 25vw`,
-          "absolute top-0",
-          bgColor,
+          "absolute right-0 left-0 z-20 font-semibold text-sm mx-auto text-white text-center mt-2",
+          css`top: calc(50% + var(--height) / 2)`,
         )}
-      />
-      <div
-        className={cx(
-          css`height: 1px; left: 25vw; right: 25vw`,
-          "absolute top-0 bottom-0 my-auto bg-red-700",
-        )}
-      />
+      >
+        Наведите камеру на штрих-код
+      </span>
     </div>
   )
 }
@@ -214,9 +237,6 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
               ? `Worker error: ${workerError}`
               : (workerReady ? `${ms.toFixed(1)} ms` : "Worker not ready")}
           </span>
-        </span>
-        <span className="absolute right-0 left-0 top-0 z-20 font-semibold text-sm mx-auto p-1 text-white text-center">
-          Наведите камеру на штрих-код
         </span>
       </div>
       <canvas style={{ display: "none" }} ref={canvasRef} />
