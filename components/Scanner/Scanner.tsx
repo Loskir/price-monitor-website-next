@@ -1,3 +1,4 @@
+import { css, cx } from "@emotion/css"
 import { ZBarSymbol } from "@undecaf/zbar-wasm"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { CenteredOverlay } from "../CenteredOverlay"
@@ -55,6 +56,36 @@ const useWorker = (onScan: (data: ZBarSymbol[]) => any) => {
     workerReady,
     workerError,
   }
+}
+
+const ScannerOverlay: React.FC = () => {
+  const bgColor = css`background-color: #00000080`
+  return (
+    <div className="absolute inset-0 z-10">
+      <div className={cx(css`width: 25vw`, "absolute left-0 h-full", bgColor)} />
+      <div className={cx(css`width: 25vw`, "absolute right-0 h-full", bgColor)} />
+      <div
+        className={cx(
+          css`height: calc(50% - 12.5vw); left: 25vw; right: 25vw`,
+          "absolute bottom-0",
+          bgColor,
+        )}
+      />
+      <div
+        className={cx(
+          css`height: calc(50% - 12.5vw); left: 25vw; right: 25vw`,
+          "absolute top-0",
+          bgColor,
+        )}
+      />
+      <div
+        className={cx(
+          css`height: 1px; left: 25vw; right: 25vw`,
+          "absolute top-0 bottom-0 my-auto bg-red-700",
+        )}
+      />
+    </div>
+  )
 }
 
 export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
@@ -174,14 +205,18 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
     <div>
       {!videoReady && <CenteredOverlay>{status}</CenteredOverlay>}
       <div className="relative" style={{ display: videoReady ? undefined : "none" }}>
+        <ScannerOverlay />
         <video playsInline ref={videoRef} />
-        <span className="absolute right-0 top-0 font-semibold text-xs text-right flex flex-col items-end">
-          <span className="bg-white px-1 py-0.5">{dimensions[0]}×{dimensions[1]}</span>
-          <span className="bg-white px-1 py-0.5">
+        <span className="absolute right-0 bottom-0 z-20 font-semibold text-xs text-right flex flex-col items-end text-white">
+          <span>{dimensions[0]}×{dimensions[1]}</span>
+          <span>
             {workerError
               ? `Worker error: ${workerError}`
               : (workerReady ? `${ms.toFixed(1)} ms` : "Worker not ready")}
           </span>
+        </span>
+        <span className="absolute right-0 left-0 top-0 z-20 font-semibold text-sm mx-auto p-1 text-white text-center">
+          Наведите камеру на штрих-код
         </span>
       </div>
       <canvas style={{ display: "none" }} ref={canvasRef} />
