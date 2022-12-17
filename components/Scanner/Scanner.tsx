@@ -113,9 +113,10 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
   }, [worker, videoReady, workerReady])
 
   useEffect(() => {
+    setVideoReady(false)
     void (async () => {
       if (!navigator?.mediaDevices?.getUserMedia) {
-        setStatus("Your device does not support camera")
+        return setStatus("Your device does not support camera")
       }
 
       setStatus("Setting up camera...")
@@ -135,8 +136,7 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
             return setStatus("Camera access denied")
           }
         }
-        setStatus("Failed to access camera")
-        return
+        return setStatus("Failed to access camera")
       }
 
       videoStream.current = cameraRes
