@@ -5,9 +5,7 @@ export const HeaderLayout: React.FC<{ children: ReactNode }> = ({ children }) =>
   return (
     <>
       <Header />
-      <div>
-        {children}
-      </div>
+      {children}
     </>
   )
 }

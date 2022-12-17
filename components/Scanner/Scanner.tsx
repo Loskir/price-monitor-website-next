@@ -202,11 +202,11 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
   }, [])
 
   return (
-    <div>
+    <>
       {!videoReady && <CenteredOverlay>{status}</CenteredOverlay>}
-      <div className="relative" style={{ display: videoReady ? undefined : "none" }}>
+      <div className="relative grow" style={{ display: videoReady ? undefined : "none" }}>
         <ScannerOverlay />
-        <video playsInline ref={videoRef} />
+        <video playsInline ref={videoRef} className={"absolute h-full w-full object-cover"} />
         <span className="absolute right-0 bottom-0 z-20 font-semibold text-xs text-right flex flex-col items-end text-white">
           <span>{dimensions[0]}×{dimensions[1]}</span>
           <span>
@@ -220,6 +220,6 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
         </span>
       </div>
       <canvas style={{ display: "none" }} ref={canvasRef} />
-    </div>
+    </>
   )
 }
