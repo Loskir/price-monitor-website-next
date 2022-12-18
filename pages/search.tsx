@@ -1,14 +1,18 @@
 import { useEvent, useStore } from "effector-react"
 import { NextPage } from "next"
+import { useEffect } from "react"
 import { MainLayoutNoMargin } from "../components/Layout"
 import { ProductListItemNew } from "../components/ProductListItemNew"
-import { $isLoading, $products, $query, queryChanged } from "../features/search/state"
+import { $isLoading, $products, $query, pageLoaded, queryChanged } from "../features/search/state"
 
 const Search: NextPage = () => {
   const query = useStore($query)
   const queryChangedL = useEvent(queryChanged)
   const products = useStore($products)
   const isLoading = useStore($isLoading)
+  useEffect(() => {
+    pageLoaded()
+  }, [])
   return (
     <MainLayoutNoMargin>
       <div className="flex flex-col h-full">

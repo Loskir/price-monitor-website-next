@@ -1,10 +1,39 @@
-import { createEvent, createStore, domain, restore, sample } from "effector-next"
+import { createEffect, createEvent, createStore, domain, restore, sample } from "effector-next"
 import { Controller, createRequestFx } from "fry-fx"
 import { searchProducts } from "../../api"
 import { ProductWithPriceModel } from "../../models/Product"
 
+const pageLoaded = createEvent()
+
 const queryChanged = createEvent<string>()
 const $query = restore(queryChanged, "")
+
+const readFromQueryFx = createEffect(() => {
+  return new URLSearchParams(window.location.search).get("q") ?? ""
+})
+const saveToQueryFx = createEffect((query: string) => {
+  const url = new URL(location.href)
+  if (query) {
+    url.searchParams.set("q", query)
+  } else {
+    url.searchParams.delete("q")
+  }
+  history.pushState(null, "", url)
+})
+
+sample({
+  source: pageLoaded,
+  target: readFromQueryFx,
+})
+sample({
+  source: readFromQueryFx.doneData,
+  target: $query,
+})
+
+sample({
+  source: $query,
+  target: saveToQueryFx,
+})
 
 const $products = createStore<ProductWithPriceModel[]>([])
 
@@ -30,4 +59,4 @@ $products.reset(queryChanged)
 
 const $isLoading = searchFx.pending
 
-export { $isLoading, $products, $query, queryChanged }
+export { $isLoading, $products, $query, pageLoaded, queryChanged }
