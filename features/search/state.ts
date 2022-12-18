@@ -18,7 +18,7 @@ const saveToQueryFx = createEffect((query: string) => {
   } else {
     url.searchParams.delete("q")
   }
-  history.pushState(null, "", url)
+  history.replaceState(null, "", url)
 })
 
 sample({
