@@ -10,9 +10,10 @@ const Search: NextPage = () => {
   const queryChangedL = useEvent(queryChanged)
   const products = useStore($products)
   const isLoading = useStore($isLoading)
+  const pageLoadedL = useEvent(pageLoaded)
   useEffect(() => {
-    pageLoaded()
-  }, [])
+    pageLoadedL()
+  }, [pageLoadedL])
   return (
     <MainLayoutNoMargin>
       <div className="flex flex-col h-full">
