@@ -6,7 +6,7 @@ export const GlobusLogo: React.FC<{ monochrome?: boolean; className?: string }> 
 ) => {
   return (
     <img
-      className={cx(className, "h-full px-2")}
+      className={cx(className, "px-2")}
       alt="Globus"
       src={monochrome ? "/logos/globus_monochrome.svg" : "/logos/globus.svg"}
     />
@@ -18,7 +18,7 @@ export const LentaLogo: React.FC<{ monochrome?: boolean; className?: string }> =
 ) => {
   return (
     <img
-      className={cx(className, "h-full py-1.5")}
+      className={cx(className, "py-1.5")}
       alt="Globus"
       src={monochrome ? "/logos/lenta_monochrome.svg" : "/logos/lenta.svg"}
     />
@@ -30,7 +30,7 @@ export const AuchanLogo: React.FC<{ monochrome?: boolean; className?: string }> 
 ) => {
   return (
     <img
-      className={cx(className, "h-full py-1.5")}
+      className={cx(className, "py-1.5")}
       alt="Globus"
       src={monochrome ? "/logos/auchan_monochrome.svg" : "/logos/auchan.svg"}
     />
@@ -42,7 +42,7 @@ export const PerekrestokLogo: React.FC<{ monochrome?: boolean; className?: strin
 ) => {
   return (
     <img
-      className={cx(className, "h-full", css`padding: 7px 0`)}
+      className={cx(className, css`padding: 7px 0`)}
       alt="Globus"
       src={monochrome ? "/logos/perekrestok_monochrome.svg" : "/logos/perekrestok.svg"}
     />
