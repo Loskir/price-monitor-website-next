@@ -7,12 +7,12 @@ const useFps = () => {
   const [ms, setMs] = useState(0)
   const len = 10
   const [msArray] = useState(Array.from({ length: len }, () => 0))
-  const reportMs = (ms: number) => {
+  const reportMs = useCallback((ms: number) => {
     msArray.shift()
     msArray.push(ms)
     const sum = msArray.reduce((a, v) => a + v, 0)
     setMs(sum / len)
-  }
+  }, [msArray])
   return {
     ms,
     reportMs,
@@ -34,6 +34,7 @@ const useWorker = (onScan: (data: ZBarSymbol[]) => any) => {
   const [workerError, setWorkerError] = useState("")
 
   useEffect(() => {
+    console.log("recreating worker")
     const w = new Worker(new URL("./scanner.worker.ts", import.meta.url))
     worker.current = w
     w.addEventListener("message", (event) => {
@@ -127,6 +128,7 @@ export const Scanner: React.FC<{ onResult: OnResultFn }> = ({ onResult }) => {
   const { ms, reportMs } = useFps()
 
   const onScanCallback = useCallback((result: ZBarSymbol[]) => {
+    console.log("updating onScanCallback")
     pendingScans.current--
     handleScanResult(result, onResult)
     reportMs(Date.now() - dateStart.current)
