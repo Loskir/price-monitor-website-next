@@ -20,7 +20,9 @@ const ProductInner: React.FC = () => {
   return <Product product={state.product} priceHistory={priceHistory} />
 }
 
-const ProductView: NextPage = () => {
+type Props = { isServer: Boolean }
+
+const ProductView: NextPage<Props> = ({ isServer }) => {
   const state = useStore($productState)
   const router = useRouter()
   useGate(ProductGate, {
@@ -34,7 +36,7 @@ const ProductView: NextPage = () => {
         <title>{title}</title>
         <meta property="og:title" content={title} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={window.location.href} />
+        {!isServer && <meta property="og:url" content={window.location.href} />}
         {state.product?.photoUrl && <meta property="og:image" content={state.product.photoUrl} />}
       </Head>
       <MainLayout>
@@ -44,6 +46,10 @@ const ProductView: NextPage = () => {
       </MainLayout>
     </>
   )
+}
+
+ProductView.getInitialProps = async (ctx) => {
+  return { isServer: !!ctx.req }
 }
 
 export default ProductView
