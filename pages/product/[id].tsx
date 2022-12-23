@@ -27,10 +27,14 @@ const ProductView: NextPage = () => {
     productId: router.query.id?.toString() || null,
     routerReady: router.isReady,
   })
+  const title = `${state.product?.name || "Product"} — Price Monitor`
   return (
     <>
       <Head>
-        <title>{`${state.product?.name || "Product"} — Price Monitor`}</title>
+        <title>{title}</title>
+        <meta property="og:title" content={title} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
         {state.product?.photoUrl && <meta property="og:image" content={state.product.photoUrl} />}
       </Head>
       <MainLayout>
