@@ -31,6 +31,7 @@ const ProductView: NextPage = () => {
     <>
       <Head>
         <title>{`${state.product?.name || "Product"} — Price Monitor`}</title>
+        {state.product?.photoUrl && <meta property="og:image" content={state.product.photoUrl} />}
       </Head>
       <MainLayout>
         <div className="pt-4">
