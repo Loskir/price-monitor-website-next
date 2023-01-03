@@ -4,10 +4,19 @@ import clsx from "clsx"
 import { DateTime } from "luxon"
 import React from "react"
 import styles from "../../components/ProductView/Product.module.css"
-import { formatPrice, formatUom, getUpdatedAt, splitPrice } from "../../functions/products"
+import {
+  formatPrice,
+  formatUom,
+  getUpdatedAt,
+  splitPrice,
+} from "../../functions/products"
 import { getShopName } from "../../functions/shops"
 import { insertNbspIntoName } from "../../functions/utils"
-import { PriceHistoryModel, ProductPriceModel, ProductWithPriceModel } from "../../models/Product"
+import {
+  PriceHistoryModel,
+  ProductPriceModel,
+  ProductWithPriceModel,
+} from "../../models/Product"
 import { ShopLogo } from "../Logos"
 import { ProductHistoryGraph } from "./ProductHistoryGraph"
 
@@ -21,16 +30,17 @@ const ProductImage: React.FC<{ url: string }> = ({ url }) => {
     </div>
   )
 }
-const BigPrice: React.FC<{ isMulti: boolean; price: number }> = ({ isMulti, price }) => {
+const BigPrice: React.FC<{ isMulti: boolean; price: number }> = ({
+  isMulti,
+  price,
+}) => {
   const [priceWhole, priceDecimal] = splitPrice(price)
   return (
     <span>
       {isMulti && "от "}
       <span className="text-2xl">
         {priceWhole}
-        <span className="text-xs align-super ml-0.5">
-          {priceDecimal}
-        </span>
+        <span className="text-xs align-super ml-0.5">{priceDecimal}</span>
       </span>
     </span>
   )
@@ -49,10 +59,7 @@ const ProductPrice: React.FC<{
     return <></>
   }
   const isDiscount = price.price !== price.basePrice
-  const {
-    isOutdated,
-    dateString,
-  } = getUpdatedAt(price.time)
+  const { isOutdated, dateString } = getUpdatedAt(price.time)
   return (
     <div className="flex flex-row items-center py-4 flex-wrap">
       <ShopLogo shopType={shopType} className={styles.shopIcon} />
@@ -66,17 +73,22 @@ const ProductPrice: React.FC<{
         )}
       </div>
       <div className="flex flex-col ml-auto items-end">
-        {isDiscount
-          && (
-            <span className={cx(styles.priceSecondary, "text-secondary")}>
-              {price.offerValidUntil && (
-                <span>
-                  по {DateTime.fromISO(price.offerValidUntil).setLocale(locale).toFormat("d MMM")} • {" "}
-                </span>
-              )}
-              <span className="line-through">{Number(price.basePrice).toFixed(2)}₽</span>
+        {isDiscount && (
+          <span className={cx(styles.priceSecondary, "text-secondary")}>
+            {price.offerValidUntil && (
+              <span>
+                по{" "}
+                {DateTime.fromISO(price.offerValidUntil)
+                  .setLocale(locale)
+                  .toFormat("d MMM")}{" "}
+                •{" "}
+              </span>
+            )}
+            <span className="line-through">
+              {Number(price.basePrice).toFixed(2)}₽
             </span>
-          )}
+          </span>
+        )}
         <Tooltip
           title={dateString}
           arrow
@@ -93,18 +105,25 @@ const ProductPrice: React.FC<{
   )
 }
 
-type PriceHistoryProps = { isLoading: boolean; history: PriceHistoryModel | null }
+type PriceHistoryProps = {
+  isLoading: boolean
+  history: PriceHistoryModel | null
+}
 
-const ProductHistory: React.FC<PriceHistoryProps> = ({ isLoading, history }) => {
+const ProductHistory: React.FC<PriceHistoryProps> = ({
+  isLoading,
+  history,
+}) => {
   if (isLoading || !history) {
     return <div>Загрузка…</div>
   }
   return <ProductHistoryGraph history={history} />
 }
 
-export const Product: React.FC<{ product: ProductWithPriceModel; priceHistory: PriceHistoryProps }> = (
-  { product, priceHistory },
-) => {
+export const Product: React.FC<{
+  product: ProductWithPriceModel
+  priceHistory: PriceHistoryProps
+}> = ({ product, priceHistory }) => {
   const uom = formatUom(product)
   return (
     <div>
@@ -113,17 +132,27 @@ export const Product: React.FC<{ product: ProductWithPriceModel; priceHistory: P
         <h1 className={clsx("mt-4 text-2xl mb-2 leading-7")}>
           {insertNbspIntoName(product.name)}
         </h1>
-        {product.eans && product.eans.length > 0 && <p className="text-secondary">Арт. {product.eans.join(", ")}</p>}
+        {product.eans && product.eans.length > 0 && (
+          <p className="text-secondary">Арт. {product.eans.join(", ")}</p>
+        )}
       </div>
 
       <Subtitle>Цены в магазинах</Subtitle>
       <div className={clsx(styles.prices)}>
         {product.shops.map((price, index) => (
-          <ProductPrice key={index} price={price} shopType={price.shopType} uom={uom} />
+          <ProductPrice
+            key={index}
+            price={price}
+            shopType={price.shopType}
+            uom={uom}
+          />
         ))}
       </div>
       <Subtitle>История цен</Subtitle>
-      <ProductHistory isLoading={priceHistory.isLoading} history={priceHistory.history} />
+      <ProductHistory
+        isLoading={priceHistory.isLoading}
+        history={priceHistory.history}
+      />
     </div>
   )
 }

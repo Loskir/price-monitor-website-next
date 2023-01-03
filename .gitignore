@@ -37,3 +37,7 @@ yarn-error.log*
 .idea
 
 .env
+
+**/public/workbox-*.js*
+**/public/sw.js*
+**/public/worker-*.js*

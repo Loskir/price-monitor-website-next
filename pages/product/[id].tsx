@@ -3,14 +3,21 @@ import { NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import React from "react"
+import { getProductById, getProductHistoryById } from "../../api"
 import { CenteredOverlay } from "../../components/CenteredOverlay"
 import { MainLayout } from "../../components/Layout"
 import { Product } from "../../components/ProductView/Product"
-import { $productHistoryState, $productState, ProductGate } from "../../features/product/state"
+import {
+  $productHistoryState,
+  $productState,
+  ProductGate,
+} from "../../features/product/state"
+import { PriceHistoryModel, ProductWithPriceModel } from "../../models/Product"
 
 const ProductInner: React.FC = () => {
   const state = useStore($productState)
   const priceHistory = useStore($productHistoryState)
+
   if (state.isLoading) {
     return <CenteredOverlay>Loading...</CenteredOverlay>
   }
@@ -20,16 +27,21 @@ const ProductInner: React.FC = () => {
   return <Product product={state.product} priceHistory={priceHistory} />
 }
 
-type Props = { isServer: Boolean }
+type Props = {
+  isServer: Boolean
+  productData: ProductWithPriceModel | null
+  priceHistory: PriceHistoryModel | null
+}
 
-const ProductView: NextPage<Props> = ({ isServer }) => {
-  const state = useStore($productState)
-  const router = useRouter()
-  useGate(ProductGate, {
-    productId: router.query.id?.toString() || null,
-    routerReady: router.isReady,
-  })
-  const title = `${state.product?.name || "Product"} — Price Monitor`
+const ProductView: NextPage<Props> = (props) => {
+  const { isServer, productData, priceHistory } = props
+
+  const title = `${productData?.name || "Product"} — Price Monitor`
+
+  if (!productData || !priceHistory) {
+    return <CenteredOverlay>Not found :</CenteredOverlay>
+  }
+
   return (
     <>
       <Head>
@@ -37,11 +49,16 @@ const ProductView: NextPage<Props> = ({ isServer }) => {
         <meta property="og:title" content={title} />
         <meta property="og:type" content="website" />
         {!isServer && <meta property="og:url" content={window.location.href} />}
-        {state.product?.photoUrl && <meta property="og:image" content={state.product.photoUrl} />}
+        {productData.photoUrl && (
+          <meta property="og:image" content={productData.photoUrl} />
+        )}
       </Head>
       <MainLayout>
         <div className="pt-4">
-          <ProductInner />
+          <Product
+            product={productData}
+            priceHistory={{ isLoading: false, history: priceHistory }}
+          />
         </div>
       </MainLayout>
     </>
@@ -49,7 +66,10 @@ const ProductView: NextPage<Props> = ({ isServer }) => {
 }
 
 ProductView.getInitialProps = async (ctx) => {
-  return { isServer: !!ctx.req }
+  const productData = await getProductById(ctx.query.id as string)
+  const priceHistory = await getProductHistoryById(ctx.query.id as string)
+
+  return { isServer: !!ctx.req, productData, priceHistory }
 }
 
 export default ProductView
