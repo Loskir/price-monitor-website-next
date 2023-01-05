@@ -1,10 +1,16 @@
 {
-  "presets": ["next/babel"],
+  "presets": [
+    "next/babel"
+  ],
   "plugins": [
     [
       "effector/babel-plugin",
       {
-        "importName": ["effector-next"]
+        "importName": [
+          "effector",
+          "effector-next"
+        ],
+        "reactSsr": true
       }
     ]
   ]

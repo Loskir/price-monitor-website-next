@@ -4,19 +4,10 @@ import clsx from "clsx"
 import { DateTime } from "luxon"
 import React from "react"
 import styles from "../../components/ProductView/Product.module.css"
-import {
-  formatPrice,
-  formatUom,
-  getUpdatedAt,
-  splitPrice,
-} from "../../functions/products"
+import { formatPrice, formatUom, getUpdatedAt, splitPrice } from "../../functions/products"
 import { getShopName } from "../../functions/shops"
 import { insertNbspIntoName } from "../../functions/utils"
-import {
-  PriceHistoryModel,
-  ProductPriceModel,
-  ProductWithPriceModel,
-} from "../../models/Product"
+import { PriceHistoryModel, ProductPriceModel, ProductWithPriceModel } from "../../models/Product"
 import { ShopLogo } from "../Logos"
 import { ProductHistoryGraph } from "./ProductHistoryGraph"
 
@@ -77,11 +68,9 @@ const ProductPrice: React.FC<{
           <span className={cx(styles.priceSecondary, "text-secondary")}>
             {price.offerValidUntil && (
               <span>
-                по{" "}
-                {DateTime.fromISO(price.offerValidUntil)
+                по {DateTime.fromISO(price.offerValidUntil)
                   .setLocale(locale)
-                  .toFormat("d MMM")}{" "}
-                •{" "}
+                  .toFormat("d MMM")} •{" "}
               </span>
             )}
             <span className="line-through">
@@ -132,9 +121,7 @@ export const Product: React.FC<{
         <h1 className={clsx("mt-4 text-2xl mb-2 leading-7")}>
           {insertNbspIntoName(product.name)}
         </h1>
-        {product.eans && product.eans.length > 0 && (
-          <p className="text-secondary">Арт. {product.eans.join(", ")}</p>
-        )}
+        {product.eans && product.eans.length > 0 && <p className="text-secondary">Арт. {product.eans.join(", ")}</p>}
       </div>
 
       <Subtitle>Цены в магазинах</Subtitle>

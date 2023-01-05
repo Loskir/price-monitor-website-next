@@ -9,8 +9,7 @@ import { PriceHistoryModel } from "../../models/Product"
 
 Chart.register(...registerables)
 
-const processDate = (date: string) =>
-  DateTime.fromISO(date).startOf("day").toJSDate()
+const processDate = (date: string) => DateTime.fromISO(date).startOf("day").toJSDate()
 
 const getColors = (shopType: string): [string, string, string] => {
   switch (shopType) {
@@ -42,10 +41,10 @@ const getColors = (shopType: string): [string, string, string] => {
 const mergePoints = (history: PriceHistoryModel): ChartData<"line"> => {
   // точки гарантированно отсортированы от новых к старым, но это тут не используется
   const xPoints = Array.from(
-    new Set(history.shops.flatMap((shop) => shop.prices.map((v) => v.time)))
+    new Set(history.shops.flatMap((shop) => shop.prices.map((v) => v.time))),
   ).sort()
   const maps = history.shops.map(
-    (shop) => new Map(shop.prices.map((v) => [v.time, v]))
+    (shop) => new Map(shop.prices.map((v) => [v.time, v])),
   )
   return {
     labels: xPoints.map(processDate),
@@ -91,7 +90,7 @@ const mergePoints = (history: PriceHistoryModel): ChartData<"line"> => {
             spanGaps,
           },
         ]
-      }
+      },
     ),
   }
 }
@@ -130,9 +129,7 @@ export const ProductHistoryGraph: React.FC<{ history: PriceHistoryModel }> = ({
             position: "nearest",
             callbacks: {
               title: (ctx) => {
-                const date = DateTime.fromMillis(ctx[0].parsed.x).setLocale(
-                  "ru"
-                )
+                const date = DateTime.fromMillis(ctx[0].parsed.x).setLocale("ru")
                 if (date.year === DateTime.now().year) {
                   return date.toFormat("d MMMM")
                 }

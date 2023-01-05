@@ -1,18 +1,12 @@
-import { useGate, useStore } from "effector-react"
+import { useStore } from "effector-react"
 import { NextPage } from "next"
 import Head from "next/head"
-import { useRouter } from "next/router"
 import React from "react"
-import { getProductById, getProductHistoryById } from "../../api"
 import { CenteredOverlay } from "../../components/CenteredOverlay"
 import { MainLayout } from "../../components/Layout"
 import { Product } from "../../components/ProductView/Product"
-import {
-  $productHistoryState,
-  $productState,
-  ProductGate,
-} from "../../features/product/state"
-import { PriceHistoryModel, ProductWithPriceModel } from "../../models/Product"
+import { $productHistoryState, $productId, $productState, productPageLoaded } from "../../features/product/state"
+import { createGIPFactory } from "../../nextjs-effector"
 
 const ProductInner: React.FC = () => {
   const state = useStore($productState)
@@ -28,19 +22,15 @@ const ProductInner: React.FC = () => {
 }
 
 type Props = {
-  isServer: Boolean
-  productData: ProductWithPriceModel | null
-  priceHistory: PriceHistoryModel | null
+  // isServer: boolean
+  // serverUrl?: string
 }
 
 const ProductView: NextPage<Props> = (props) => {
-  const { isServer, productData, priceHistory } = props
+  const { product } = useStore($productState)
+  // const { isServer, serverUrl } = props
 
-  const title = `${productData?.name || "Product"} — Price Monitor`
-
-  if (!productData || !priceHistory) {
-    return <CenteredOverlay>Not found :</CenteredOverlay>
-  }
+  const title = `${product?.name || "Product"} — Price Monitor`
 
   return (
     <>
@@ -48,28 +38,33 @@ const ProductView: NextPage<Props> = (props) => {
         <title>{title}</title>
         <meta property="og:title" content={title} />
         <meta property="og:type" content="website" />
-        {!isServer && <meta property="og:url" content={window.location.href} />}
-        {productData.photoUrl && (
-          <meta property="og:image" content={productData.photoUrl} />
-        )}
+        {/*<meta property="og:url" content={isServer ? serverUrl : window.location.href} />*/}
+        {product?.photoUrl && <meta property="og:image" content={product?.photoUrl} />}
       </Head>
       <MainLayout>
         <div className="pt-4">
-          <Product
-            product={productData}
-            priceHistory={{ isLoading: false, history: priceHistory }}
-          />
+          {/*<Product*/}
+          {/*  product={productData}*/}
+          {/*  priceHistory={{ isLoading: false, history: priceHistory }}*/}
+          {/*/>*/}
+          <ProductInner />
         </div>
       </MainLayout>
     </>
   )
 }
+export const createGIP = createGIPFactory()
 
-ProductView.getInitialProps = async (ctx) => {
-  const productData = await getProductById(ctx.query.id as string)
-  const priceHistory = await getProductHistoryById(ctx.query.id as string)
-
-  return { isServer: !!ctx.req, productData, priceHistory }
-}
+ProductView.getInitialProps = createGIP({
+  pageEvent: productPageLoaded,
+  // customize: async ({ context: ctx }) => {
+  //   // console.log(ctx.req)
+  //   // return {
+  //   //   isServer: !!ctx.req,
+  //   //   serverUrl: ctx.req && ctx.req.headers.host && ctx.req.url
+  //   //     && `${ctx.req.headers.host}${ctx.req.url}`,
+  //   // }
+  // },
+})
 
 export default ProductView

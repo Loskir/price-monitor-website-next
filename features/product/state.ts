@@ -1,34 +1,25 @@
-import { combine, createEvent, createStore, domain, forward, sample } from "effector-next"
-import { createGate } from "effector-react"
+import { combine, createEffect, createEvent, createStore, forward, sample } from "effector"
 import { Controller, createRequestFx } from "fry-fx"
+import { PageContext } from "nextjs-effector"
 import { getProductById, getProductHistoryById } from "../../api"
 import { isNotNull } from "../../functions/utils"
 import { PriceHistoryModel, ProductWithPriceModel } from "../../models/Product"
 
-const ProductGate = createGate<{
-  productId: string | null
-  routerReady: boolean
-}>({
-  defaultState: { productId: null, routerReady: false },
-})
-const $productId = ProductGate.state.map((v) => v.productId)
-const $routerReady = ProductGate.state.map((v) => v.routerReady)
+export const $productId = createStore<string | null>(null)
+
+export const productPageLoaded = createEvent<PageContext>()
 
 const productIdChanged = createEvent<string | null>()
 
 sample({
-  source: {
-    isMounted: ProductGate.status,
-    routerReady: $routerReady,
-    productId: $productId,
-  },
-  clock: [
-    $productId,
-    ProductGate.open,
-  ],
-  filter: ({ isMounted, routerReady }) => isMounted && routerReady,
-  fn: ({ productId }) => productId,
+  source: productPageLoaded,
+  fn: (ctx) => ctx.params.id as string,
   target: productIdChanged,
+})
+
+sample({
+  source: productIdChanged,
+  target: $productId,
 })
 
 const productIdChangedNotNull = productIdChanged.filter({ fn: isNotNull })
@@ -36,9 +27,9 @@ const productIdChangedNotNull = productIdChanged.filter({ fn: isNotNull })
 // load product
 const $product = createStore<ProductWithPriceModel | null>(null)
 
-const loadProductFx = createRequestFx<string, ProductWithPriceModel | null, Error>({
+const loadProductFx = createEffect<string, ProductWithPriceModel | null, Error>({
   name: "loadProductFx",
-  domain,
+  sid: "loadProductFx",
   handler: async (productId, controller?: Controller) => {
     return getProductById(productId, controller?.getSignal())
   },
@@ -64,7 +55,6 @@ const $productHistory = createStore<PriceHistoryModel | null>(null)
 
 const loadProductHistoryFx = createRequestFx<string, PriceHistoryModel | null, Error>({
   name: "loadProductHistoryFx",
-  domain,
   handler: async (productId, controller?: Controller) => {
     return getProductHistoryById(productId, controller?.getSignal())
   },
@@ -85,7 +75,4 @@ const $productHistoryState = combine({
   history: $productHistory,
 })
 
-$product.reset(ProductGate.close)
-$productHistory.reset(ProductGate.close)
-
-export { $productHistoryState, $productState, ProductGate }
+export { $product, $productHistoryState, $productState }

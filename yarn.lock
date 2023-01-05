@@ -2202,17 +2202,17 @@ effector-next@^1.3.3:
   dependencies:
     next-cookies "^2.0.3"
 
-effector-react@^22.1.4:
-  version "22.1.4"
-  resolved "https://registry.yarnpkg.com/effector-react/-/effector-react-22.1.4.tgz#1d45cb6f05a07f464d3beaebebf709fe326b241e"
-  integrity sha512-8+LpOe91n1oFjfR2Mu1pOtoKQEOVC51jzU3bnkPMG8X0JRFzGVsNuDJppzCI6AZSrvyxqiyCiV8uQwaPcFG1dQ==
+effector-react@^22.4.0:
+  version "22.4.0"
+  resolved "https://registry.yarnpkg.com/effector-react/-/effector-react-22.4.0.tgz#ac36cf3db3d4464744cca246baacfb1bfece25f7"
+  integrity sha512-flyx22WCc8a525KW9cR/T0eAZCR3Ej75phafuSmlpsYwlRlImAmOXN2AsmxknCS2zlBbwAGmISbpu+YVeIdz+g==
   dependencies:
     use-sync-external-store "^1.0.0"
 
-effector@^22.3.0:
-  version "22.3.0"
-  resolved "https://registry.yarnpkg.com/effector/-/effector-22.3.0.tgz#c743dd7d934ec3f9a2efac76a563cd0281bc4201"
-  integrity sha512-Nh7IXn8U4emq8YtAZf2+y2Rs6n4W/gjPaNZpZLFOXOIAsRZSNBFjtK1vHTWNKxxmNFZOaZN6XUXdT8FDs0mAdQ==
+effector@^22.4.1:
+  version "22.4.1"
+  resolved "https://registry.yarnpkg.com/effector/-/effector-22.4.1.tgz#ba3c01622e42cf2784c83d2a4e7321e7caeef601"
+  integrity sha512-/GeCeEnSMaLvuskQMBI6bzd5V3GvRRv8mI/Wed9JEenstYGDhJQTIVkO5K+Fdt3KC3d5T8wdWxMzGVkKdaDAEw==
 
 ejs@^3.1.6:
   version "3.1.8"
@@ -3422,6 +3422,10 @@ next@12.2.4:
     "@next/swc-win32-arm64-msvc" "12.2.4"
     "@next/swc-win32-ia32-msvc" "12.2.4"
     "@next/swc-win32-x64-msvc" "12.2.4"
+
+"nextjs-effector@link:./nextjs-effector":
+  version "0.0.0"
+  uid ""
 
 node-releases@^2.0.6:
   version "2.0.6"
