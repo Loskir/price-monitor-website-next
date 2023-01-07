@@ -21,12 +21,7 @@ const ProductInner: React.FC = () => {
   return <Product product={state.product} priceHistory={priceHistory} />
 }
 
-type Props = {
-  // isServer: boolean
-  // serverUrl?: string
-}
-
-const ProductView: NextPage<Props> = (props) => {
+const ProductView: NextPage = () => {
   const { product } = useStore($productState)
   // const { isServer, serverUrl } = props
 
@@ -36,10 +31,15 @@ const ProductView: NextPage<Props> = (props) => {
     <>
       <Head>
         <title>{title}</title>
-        <meta property="og:title" content={title} />
-        <meta property="og:type" content="website" />
-        {/*<meta property="og:url" content={isServer ? serverUrl : window.location.href} />*/}
-        {product?.photoUrl && <meta property="og:image" content={product?.photoUrl} />}
+        {product && (
+          <>
+            <meta property="og:title" content={product.name} />
+            <meta property="og:type" content="website" />
+            <meta property="og:description" content="Самые выгодные скидки на продукты и история цен в Price Monitor" />
+            {/*<meta property="og:url" content={isServer ? serverUrl : window.location.href} />*/}
+            {product?.photoUrl && <meta property="og:image" content={product?.photoUrl} />}
+          </>
+        )}
       </Head>
       <MainLayout>
         <div className="pt-4">
