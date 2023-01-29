@@ -1,9 +1,13 @@
-import { createEffect, createEvent, createStore, domain, restore, sample } from "effector-next"
+import { attach, createEffect, createEvent, createStore, domain, restore, sample } from "effector-next"
 import { Controller, createRequestFx } from "fry-fx"
+import { NextRouter } from "next/router"
 import { searchProducts } from "../../api"
 import { ProductWithPriceModel } from "../../models/Product"
 
 const pageLoaded = createEvent()
+
+export const attachRouter = createEvent<NextRouter | null>()
+const $router = restore(attachRouter, null)
 
 const queryChanged = createEvent<string>()
 const $query = restore(queryChanged, "")
@@ -11,14 +15,21 @@ const $query = restore(queryChanged, "")
 const readFromQueryFx = createEffect(() => {
   return new URLSearchParams(window.location.search).get("q") ?? ""
 })
-const saveToQueryFx = createEffect((query: string) => {
-  const url = new URL(location.href)
-  if (query) {
-    url.searchParams.set("q", query)
-  } else {
-    url.searchParams.delete("q")
-  }
-  history.replaceState(null, "", url)
+const saveToQueryFx = attach({
+  source: $router,
+  effect: (router, query: string) => {
+    if (query) {
+      router?.replace({
+        query: {
+          q: query,
+        },
+      })
+    } else {
+      router?.replace({
+        query: {},
+      })
+    }
+  },
 })
 
 sample({

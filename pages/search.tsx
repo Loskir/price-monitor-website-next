@@ -1,9 +1,10 @@
 import { useEvent, useStore } from "effector-react"
 import { NextPage } from "next"
+import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { MainLayoutNoMargin } from "../components/Layout"
 import { ProductListItemNew } from "../components/ProductListItemNew"
-import { $isLoading, $products, $query, pageLoaded, queryChanged } from "../features/search/state"
+import { $isLoading, $products, $query, attachRouter, pageLoaded, queryChanged } from "../features/search/state"
 
 const Search: NextPage = () => {
   const query = useStore($query)
@@ -11,9 +12,16 @@ const Search: NextPage = () => {
   const products = useStore($products)
   const isLoading = useStore($isLoading)
   const pageLoadedL = useEvent(pageLoaded)
+  const attachRouterEvent = useEvent(attachRouter)
+  const router = useRouter()
   useEffect(() => {
     pageLoadedL()
-  }, [pageLoadedL])
+    attachRouterEvent(router)
+
+    return () => {
+      attachRouterEvent(null)
+    }
+  }, [pageLoadedL, attachRouterEvent, router])
   return (
     <MainLayoutNoMargin>
       <div className="flex flex-col h-full">
