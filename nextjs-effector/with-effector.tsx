@@ -1,18 +1,18 @@
-import { fork, serialize } from 'effector'
-import { Provider } from 'effector-react/scope'
-import { NextComponentType } from 'next'
-import { AppContext, AppProps } from 'next/app'
-import React, { useRef } from 'react'
-import { INITIAL_STATE_KEY } from './constants'
-import { env } from './env'
-import { state } from './state'
+import { fork, serialize } from "effector"
+import { Provider } from "effector-react/scope"
+import { NextComponentType } from "next"
+import { AppContext, AppProps } from "next/app"
+import React, { useRef } from "react"
+import { INITIAL_STATE_KEY } from "./constants"
+import { env } from "./env"
+import { state } from "./state"
 
 interface Values {
   [sid: string]: any
 }
 
 export function useScope(values: Values = {}) {
-  const valuesRef = useRef<Values | null>(null)
+  const valuesRef = useRef<string | null>(null)
 
   if (env.isServer) {
     return fork({ values })
@@ -25,19 +25,19 @@ export function useScope(values: Values = {}) {
    */
   if (!state.clientScope) {
     state.clientScope = fork({ values })
-    valuesRef.current = values
+    valuesRef.current = JSON.stringify(values)
   }
 
   /*
    * Values have changed, most likely it's happened on the user navigation
    * Create the new Scope from the old one and save it as before
    */
-  if (values !== valuesRef.current) {
+  if (JSON.stringify(values) !== valuesRef.current) {
     const currentValues = serialize(state.clientScope)
     const nextValues = Object.assign({}, currentValues, values)
 
     state.clientScope = fork({ values: nextValues })
-    valuesRef.current = values
+    valuesRef.current = JSON.stringify(values)
   }
 
   return state.clientScope
