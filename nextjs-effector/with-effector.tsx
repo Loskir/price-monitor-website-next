@@ -12,7 +12,7 @@ interface Values {
 }
 
 export function useScope(values: Values = {}) {
-  const valuesRef = useRef<string | null>(null)
+  // const valuesRef = useRef<string | null>(null)
 
   if (env.isServer) {
     return fork({ values })
@@ -25,19 +25,21 @@ export function useScope(values: Values = {}) {
    */
   if (!state.clientScope) {
     state.clientScope = fork({ values })
-    valuesRef.current = JSON.stringify(values)
+    state.current = values
+    // valuesRef.current = JSON.stringify(values)
   }
 
   /*
    * Values have changed, most likely it's happened on the user navigation
    * Create the new Scope from the old one and save it as before
    */
-  if (JSON.stringify(values) !== valuesRef.current) {
+  if (values !== state.current) {
     const currentValues = serialize(state.clientScope)
     const nextValues = Object.assign({}, currentValues, values)
 
     state.clientScope = fork({ values: nextValues })
-    valuesRef.current = JSON.stringify(values)
+    state.current = values
+    // valuesRef.current = JSON.stringify(values)
   }
 
   return state.clientScope
