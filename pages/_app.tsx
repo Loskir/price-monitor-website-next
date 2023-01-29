@@ -1,6 +1,4 @@
 import "../styles/globals.css"
-import { withHydrate } from "effector-next"
-// import { domain } from "effector-next"
 import type { AppProps } from "next/app"
 import Router from "next/router"
 // @ts-ignore
@@ -16,8 +14,6 @@ import { HeaderLayout } from "../components/HeaderLayout"
 //   inspector: "disabled",
 //   console: "disabled",
 // })
-
-const enhance = withHydrate()
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -39,4 +35,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-export default withEffector(withYM("90362829", Router)(enhance(MyApp)))
+export default withEffector(withYM("90362829", Router)(MyApp))
