@@ -1,6 +1,6 @@
 import { NextPage } from "next"
 import { NextRouter, useRouter } from "next/router"
-import { useCallback, useEffect, useState } from "react"
+import { ChangeEvent, useCallback, useEffect, useState } from "react"
 import { useQuery } from "react-query"
 import { searchProducts } from "../api"
 import { MainLayoutNoMargin } from "../components/Layout"
@@ -37,7 +37,8 @@ const Search: NextPage = () => {
   )
   const products = data ?? []
 
-  const queryChanged = useCallback((newQuery: string) => {
+  const queryChanged = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value
     setQuery(newQuery)
     saveToURL(router, newQuery)
   }, [router])
@@ -49,7 +50,7 @@ const Search: NextPage = () => {
           <input
             className="bg-gray-100 p-2 rounded w-full"
             value={query}
-            onChange={(e) => queryChanged(e.target.value)}
+            onChange={queryChanged}
             placeholder="Поиск по названию или штрих-коду…"
           />
         </div>
