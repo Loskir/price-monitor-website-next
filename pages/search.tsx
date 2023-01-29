@@ -1,27 +1,47 @@
-import { useEvent, useStore } from "effector-react"
 import { NextPage } from "next"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
+import { NextRouter, useRouter } from "next/router"
+import { useCallback, useEffect, useState } from "react"
+import { useQuery } from "react-query"
+import { searchProducts } from "../api"
 import { MainLayoutNoMargin } from "../components/Layout"
 import { ProductListItemNew } from "../components/ProductListItemNew"
-import { $isLoading, $products, $query, attachRouter, pageLoaded, queryChanged } from "../features/search/state"
+
+const saveToURL = (router: NextRouter, query: string) => {
+  if (query) {
+    router?.replace({
+      query: {
+        q: query,
+      },
+    })
+  } else {
+    router?.replace({
+      query: {},
+    })
+  }
+}
 
 const Search: NextPage = () => {
-  const query = useStore($query)
-  const queryChangedL = useEvent(queryChanged)
-  const products = useStore($products)
-  const isLoading = useStore($isLoading)
-  const pageLoadedL = useEvent(pageLoaded)
-  const attachRouterEvent = useEvent(attachRouter)
   const router = useRouter()
-  useEffect(() => {
-    pageLoadedL()
-    attachRouterEvent(router)
+  const [query, setQuery] = useState<string>("")
 
-    return () => {
-      attachRouterEvent(null)
-    }
-  }, [pageLoadedL, attachRouterEvent, router])
+  useEffect(() => {
+    let q = router.query.q
+    if (Array.isArray(q)) q = q[0]
+    if (!q) q = ""
+    setQuery(q)
+  }, [router])
+
+  const { isLoading, error, data } = useQuery(
+    ["search", query],
+    ({ signal }) => searchProducts(query, signal),
+  )
+  const products = data ?? []
+
+  const queryChanged = useCallback((newQuery: string) => {
+    setQuery(newQuery)
+    saveToURL(router, newQuery)
+  }, [router])
+
   return (
     <MainLayoutNoMargin>
       <div className="flex flex-col h-full">
@@ -29,12 +49,14 @@ const Search: NextPage = () => {
           <input
             className="bg-gray-100 p-2 rounded w-full"
             value={query}
-            onChange={(e) => queryChangedL(e.target.value)}
+            onChange={(e) => queryChanged(e.target.value)}
             placeholder="Поиск по названию или штрих-коду…"
           />
         </div>
         {isLoading
           ? <div>Загрузка…</div>
+          : error
+          ? <div>Ошибка :(</div>
           : (
             <div className="relative flex-grow">
               {products.map((product) => <ProductListItemNew product={product} key={product.productId} />)}
