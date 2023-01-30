@@ -1,72 +1,39 @@
-import { combine, createEvent, createStore, domain, forward } from "effector-next"
-import { useEvent, useStore } from "effector-react"
-import { Controller, createRequestFx } from "fry-fx"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
+import { useQuery } from "react-query"
 import { getProductByEan } from "../../../api"
 import { CenteredOverlay } from "../../../components/CenteredOverlay"
-import { ProductWithPriceModel } from "../../../models/Product"
-
-const eanChanged = createEvent<string>()
-
-const getProductByEanFx = createRequestFx<string, ProductWithPriceModel | null, Error>({
-  name: "getProductByEanFx",
-  domain,
-  handler: async (ean, controller?: Controller) => {
-    return getProductByEan(ean, controller?.getSignal())
-  },
-})
-
-const $product = createStore<ProductWithPriceModel | null>(null)
-
-forward({
-  from: eanChanged,
-  to: getProductByEanFx,
-})
-
-forward({
-  from: getProductByEanFx.doneData,
-  to: $product,
-})
-
-const $isLoading = getProductByEanFx.pending
-
-const $state = combine({
-  isLoading: $isLoading,
-  product: $product,
-})
-
-const productIdReceived = createEvent<string>()
-
-$product.watch((product) => {
-  console.log("watch", product)
-  if (product?.productId) {
-    return productIdReceived(product.productId)
-  }
-})
 
 const ProductView: NextPage = () => {
+  const [ean, setEan] = useState<string>("")
   const router = useRouter()
-  const eanChangedL = useEvent(eanChanged)
-  const state = useStore($state)
 
-  productIdReceived.watch((productId) => {
-    return router.replace(`/product/${productId}`)
-  })
+  const { isLoading, error, data: product } = useQuery(
+    ["getProductByEan", ean],
+    ({ signal }) => getProductByEan(ean, signal),
+  )
 
   useEffect(() => {
-    $product.reset()
     const ean = router.query.ean?.toString()
     if (router.isReady && ean) {
-      eanChangedL(ean)
+      setEan(ean)
     }
-  }, [eanChangedL, router])
+  }, [router])
+
+  useEffect(() => {
+    if (product) {
+      router.replace(`/product/${product.productId}`)
+    }
+  }, [router, product])
   // state.product → redirecting
-  if (state.isLoading || state.product) {
-    return <CenteredOverlay>Loading...</CenteredOverlay>
+  if (isLoading || product) {
+    return <CenteredOverlay>Загрузка...</CenteredOverlay>
   }
-  return <CenteredOverlay>Not found :(</CenteredOverlay>
+  if (error) {
+    return <CenteredOverlay>Ошибка :(</CenteredOverlay>
+  }
+  return <CenteredOverlay>Товара со штрих-кодом {ean} пока нет в базе.</CenteredOverlay>
 }
 
 export default ProductView
