@@ -1,6 +1,6 @@
 import { PriceHistoryModel } from "./models/Product"
 
-const apiRoot = process.env.NEXT_PUBLIC_API_ROOT
+const apiRoot = ''
 import type { CategoryModel } from "./models/Category"
 import type { ProductWithPriceModel } from "./models/Product"
 
