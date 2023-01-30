@@ -1,6 +1,6 @@
 import { PriceHistoryModel } from "./models/Product"
 
-const apiRoot = ''
+const apiRoot = "/api"
 import type { CategoryModel } from "./models/Category"
 import type { ProductWithPriceModel } from "./models/Product"
 
