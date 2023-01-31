@@ -6,20 +6,16 @@ import { getProductByEan } from "../../../api"
 import { CenteredOverlay } from "../../../components/CenteredOverlay"
 
 const ProductView: NextPage = () => {
-  const [ean, setEan] = useState<string>("")
   const router = useRouter()
+  const ean = router.query.ean?.toString()
 
   const { isLoading, error, data: product } = useQuery(
     ["getProductByEan", ean],
-    ({ signal }) => getProductByEan(ean, signal),
+    ({ signal }) => {
+      if (!ean) return
+      return getProductByEan(ean, signal)
+    },
   )
-
-  useEffect(() => {
-    const ean = router.query.ean?.toString()
-    if (router.isReady && ean) {
-      setEan(ean)
-    }
-  }, [router])
 
   useEffect(() => {
     if (product) {
