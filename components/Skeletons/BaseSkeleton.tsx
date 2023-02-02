@@ -1,7 +1,9 @@
 import React from "react"
 import { cx } from "@emotion/css"
 
-const baseSkeleton: React.FC<{ className?: string }> = ({ className }) => {
+export const BaseSkeleton: React.FC<{ className?: string }> = ({
+  className,
+}) => {
   return (
     <>
       <div
@@ -13,5 +15,3 @@ const baseSkeleton: React.FC<{ className?: string }> = ({ className }) => {
     </>
   )
 }
-
-export default baseSkeleton

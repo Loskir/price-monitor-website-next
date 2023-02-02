@@ -9,7 +9,7 @@ import { CategoryGate } from "./common"
 import { $productsState } from "./products"
 import { $sort, sortChanged, sortOrderFlipped } from "./sort"
 import { $subcategoriesState } from "./subcategories"
-import BaseSkeleton from "../../components/Skeletons/BaseSkeleton"
+import { BaseSkeleton } from "../../components/Skeletons/BaseSkeleton"
 
 const Subcategories: React.FC = () => {
   const skeletonWidths = useMemo(

@@ -1,9 +1,9 @@
 import React from "react"
-import BaseSkeleton from "./BaseSkeleton"
+import { BaseSkeleton } from "./BaseSkeleton"
 import { cx } from "@emotion/css"
 import styles from "./ProductListItemSkeleton.module.css"
 
-const ProductListItemSkeleton = () => {
+export const ProductListItemSkeleton = () => {
   return (
     <div className={cx("pl-4 pt-4 relative", styles.productListItem)}>
       <div className="flex mb-4">
@@ -30,5 +30,3 @@ const ProductListItemSkeleton = () => {
     </div>
   )
 }
-
-export default ProductListItemSkeleton

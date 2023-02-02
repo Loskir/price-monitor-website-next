@@ -5,7 +5,7 @@ import { useQuery } from "react-query"
 import { searchProducts } from "../api"
 import { MainLayoutNoMargin } from "../components/Layout"
 import { ProductListItemNew } from "../components/ProductListItemNew"
-import ProductListItemSkeleton from "../components/Skeletons/ProductListItemSkeleton"
+import { ProductListItemSkeleton } from "../components/Skeletons/ProductListItemSkeleton"
 
 const saveToURL = (router: NextRouter, query: string) => {
   if (query) {
