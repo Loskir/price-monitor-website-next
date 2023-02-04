@@ -1,9 +1,11 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useQuery } from "react-query"
 import { getProductByEan } from "../../../api"
 import { CenteredOverlay } from "../../../components/CenteredOverlay"
+import { MainLayout } from "../../../components/Layout"
+import { ProductItemSkeleton } from "../../../components/Skeletons/ProductItemSkeleton"
 
 const ProductView: NextPage = () => {
   const router = useRouter()
@@ -24,7 +26,13 @@ const ProductView: NextPage = () => {
   }, [router, product])
   // state.product → redirecting
   if (isLoading || product) {
-    return <CenteredOverlay>Загрузка...</CenteredOverlay>
+    return (
+      <MainLayout>
+        <div className="pt-4">
+          <ProductItemSkeleton />
+        </div>
+      </MainLayout>
+    )
   }
   if (error) {
     return <CenteredOverlay>Ошибка :(</CenteredOverlay>
