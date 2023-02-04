@@ -1,7 +1,7 @@
 import { useEvent, useGate, useStore } from "effector-react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import React from "react"
+import React, { useMemo } from "react"
 import { SortOrder, SortType } from "../../api"
 import { MainLayoutNoMargin } from "../../components/Layout"
 import { ProductListItemNew } from "../../components/ProductListItemNew"
@@ -9,15 +9,29 @@ import { CategoryGate } from "./common"
 import { $productsState } from "./products"
 import { $sort, sortChanged, sortOrderFlipped } from "./sort"
 import { $subcategoriesState } from "./subcategories"
+import { BaseSkeleton } from "../../components/Skeletons/BaseSkeleton"
+import { createArray } from "../../functions/utils"
+import { ProductListItemSkeleton } from "../../components/Skeletons/ProductListItemSkeleton"
 
 const Subcategories: React.FC = () => {
-  const {
-    isLoading,
-    categories,
-  } = useStore($subcategoriesState)
+  const skeletonWidths = useMemo(
+    () => createArray(25).map(() => Math.floor(Math.random() * (5 - 2) + 2)),
+    []
+  )
+  const { isLoading, categories } = useStore($subcategoriesState)
   if (isLoading) {
-    return <p>Loading...</p>
+    return (
+      <div className="flex flex-wrap gap-2 mb-4 mx-4">
+        {skeletonWidths.map((width, index) => (
+          <BaseSkeleton
+            className={`h-10 w-${width}/12 rounded-full`}
+            key={index}
+          />
+        ))}
+      </div>
+    )
   }
+
   if (categories.length > 0) {
     return (
       <div className="flex flex-wrap gap-2 mb-4 mx-4">
@@ -33,10 +47,7 @@ const Subcategories: React.FC = () => {
 }
 
 const Sort: React.FC = () => {
-  const {
-    sortType,
-    sortOrder,
-  } = useStore($sort)
+  const { sortType, sortOrder } = useStore($sort)
   const setSort = useEvent(sortChanged)
   const flipOrder = useEvent(sortOrderFlipped)
   return (
@@ -50,7 +61,10 @@ const Sort: React.FC = () => {
         <option value="price">По цене</option>
         <option value="unitPrice">По удельной цене</option>
       </select>
-      <button className="p-4 rounded rounded-l-none bg-gray-100 h-14" onClick={flipOrder}>
+      <button
+        className="p-4 rounded rounded-l-none bg-gray-100 h-14"
+        onClick={flipOrder}
+      >
         {sortOrder === SortOrder.asc ? "↑" : "↓"}
       </button>
     </div>
@@ -58,24 +72,31 @@ const Sort: React.FC = () => {
 }
 
 const Products: React.FC = () => {
-  const {
-    isLoading,
-    products,
-  } = useStore($productsState)
+  const { isLoading, products } = useStore($productsState)
   if (isLoading) {
-    return <p className="m-4">Loading...</p>
+    return (
+      <>
+        {createArray(10).map((_, index) => (
+          <ProductListItemSkeleton key={index} />
+        ))}
+      </>
+    )
   }
   if (products.length > 0) {
     return (
       <div className="flex flex-col mt-4">
-        {products.map((product) => <ProductListItemNew product={product} key={product.productId} />)}
+        {products.map((product) => (
+          <ProductListItemNew product={product} key={product.productId} />
+        ))}
       </div>
     )
   }
   return <></>
 }
 
-export const CategoryView: React.FC<{ categoryId: number | null }> = ({ categoryId }) => {
+export const CategoryView: React.FC<{ categoryId: number | null }> = ({
+  categoryId,
+}) => {
   const router = useRouter()
   useGate(CategoryGate, { categoryId, routerReady: router.isReady })
   return (

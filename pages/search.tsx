@@ -5,6 +5,8 @@ import { useQuery } from "react-query"
 import { searchProducts } from "../api"
 import { MainLayoutNoMargin } from "../components/Layout"
 import { ProductListItemNew } from "../components/ProductListItemNew"
+import { ProductListItemSkeleton } from "../components/Skeletons/ProductListItemSkeleton"
+import { createArray } from "../functions/utils"
 
 const saveToURL = (router: NextRouter, query: string) => {
   if (query) {
@@ -31,17 +33,19 @@ const Search: NextPage = () => {
     setQuery(q)
   }, [router])
 
-  const { isLoading, error, data } = useQuery(
-    ["search", query],
-    ({ signal }) => searchProducts(query, signal),
+  const { isLoading, error, data } = useQuery(["search", query], ({ signal }) =>
+    searchProducts(query, signal)
   )
   const products = data ?? []
 
-  const queryChanged = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const newQuery = e.target.value
-    setQuery(newQuery)
-    saveToURL(router, newQuery)
-  }, [router])
+  const queryChanged = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const newQuery = e.target.value
+      setQuery(newQuery)
+      saveToURL(router, newQuery)
+    },
+    [router]
+  )
 
   return (
     <MainLayoutNoMargin>
@@ -54,15 +58,20 @@ const Search: NextPage = () => {
             placeholder="Поиск по названию или штрих-коду…"
           />
         </div>
-        {isLoading
-          ? <div>Загрузка…</div>
-          : error
-          ? <div>Ошибка :(</div>
-          : (
-            <div className="relative flex-grow">
-              {products.map((product) => <ProductListItemNew product={product} key={product.productId} />)}
-            </div>
-          )}
+
+        {isLoading ? (
+          createArray(6).map((_, index) => (
+            <ProductListItemSkeleton key={index} />
+          ))
+        ) : error ? (
+          <div>Ошибка :(</div>
+        ) : (
+          <div className="relative flex-grow">
+            {products.map((product) => (
+              <ProductListItemNew product={product} key={product.productId} />
+            ))}
+          </div>
+        )}
       </div>
     </MainLayoutNoMargin>
   )
