@@ -1,6 +1,6 @@
 import React from "react"
-import { BaseSkeleton } from "./BaseSkeleton"
 import { createArray } from "../../functions/utils"
+import { BaseSkeleton } from "./BaseSkeleton"
 
 export const ProductItemSkeleton = () => {
   return (

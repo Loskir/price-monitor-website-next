@@ -33,9 +33,7 @@ const Search: NextPage = () => {
     setQuery(q)
   }, [router])
 
-  const { isLoading, error, data } = useQuery(["search", query], ({ signal }) =>
-    searchProducts(query, signal)
-  )
+  const { isLoading, error, data } = useQuery(["search", query], ({ signal }) => searchProducts(query, signal))
   const products = data ?? []
 
   const queryChanged = useCallback(
@@ -44,7 +42,7 @@ const Search: NextPage = () => {
       setQuery(newQuery)
       saveToURL(router, newQuery)
     },
-    [router]
+    [router],
   )
 
   return (
@@ -59,19 +57,17 @@ const Search: NextPage = () => {
           />
         </div>
 
-        {isLoading ? (
-          createArray(6).map((_, index) => (
-            <ProductListItemSkeleton key={index} />
-          ))
-        ) : error ? (
-          <div>Ошибка :(</div>
-        ) : (
-          <div className="relative flex-grow">
-            {products.map((product) => (
-              <ProductListItemNew product={product} key={product.productId} />
-            ))}
-          </div>
-        )}
+        {isLoading
+          ? (
+            createArray(6).map((_, index) => <ProductListItemSkeleton key={index} />)
+          )
+          : error
+          ? <div>Ошибка :(</div>
+          : (
+            <div className="relative flex-grow">
+              {products.map((product) => <ProductListItemNew product={product} key={product.productId} />)}
+            </div>
+          )}
       </div>
     </MainLayoutNoMargin>
   )
