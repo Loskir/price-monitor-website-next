@@ -6,6 +6,7 @@ import { searchProducts } from "../api"
 import { MainLayoutNoMargin } from "../components/Layout"
 import { ProductListItemNew } from "../components/ProductListItemNew"
 import { ProductListItemSkeleton } from "../components/Skeletons/ProductListItemSkeleton"
+import { createArray } from "../functions/utils"
 
 const saveToURL = (router: NextRouter, query: string) => {
   if (query) {
@@ -59,9 +60,9 @@ const Search: NextPage = () => {
         </div>
 
         {isLoading ? (
-          Array(6)
-            .fill("")
-            .map((_, index) => <ProductListItemSkeleton key={index} />)
+          createArray(6).map((_, index) => (
+            <ProductListItemSkeleton key={index} />
+          ))
         ) : error ? (
           <div>Ошибка :(</div>
         ) : (

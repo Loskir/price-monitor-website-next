@@ -5,15 +5,21 @@ import React from "react"
 import { CenteredOverlay } from "../../components/CenteredOverlay"
 import { MainLayout } from "../../components/Layout"
 import { Product } from "../../components/ProductView/Product"
-import { $productHistoryState, $productId, $productState, productPageLoaded } from "../../features/product/state"
+import {
+  $productHistoryState,
+  $productId,
+  $productState,
+  productPageLoaded,
+} from "../../features/product/state"
 import { createGIPFactory } from "../../nextjs-effector"
+import { ProductItemSkeleton } from "../../components/Skeletons/ProductItemSkeleton"
 
 const ProductInner: React.FC = () => {
   const state = useStore($productState)
   const priceHistory = useStore($productHistoryState)
 
   if (state.isLoading) {
-    return <CenteredOverlay>Loading...</CenteredOverlay>
+    return <ProductItemSkeleton />
   }
   if (!state.product) {
     return <CenteredOverlay>Not found :(</CenteredOverlay>
@@ -35,9 +41,14 @@ const ProductView: NextPage = () => {
           <>
             <meta property="og:title" content={product.name} />
             <meta property="og:type" content="website" />
-            <meta property="og:description" content="Самые выгодные скидки на продукты и история цен в Price Monitor" />
+            <meta
+              property="og:description"
+              content="Самые выгодные скидки на продукты и история цен в Price Monitor"
+            />
             {/*<meta property="og:url" content={isServer ? serverUrl : window.location.href} />*/}
-            {product?.photoUrl && <meta property="og:image" content={product?.photoUrl} />}
+            {product?.photoUrl && (
+              <meta property="og:image" content={product?.photoUrl} />
+            )}
           </>
         )}
       </Head>

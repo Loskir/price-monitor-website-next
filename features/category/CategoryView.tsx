@@ -10,13 +10,12 @@ import { $productsState } from "./products"
 import { $sort, sortChanged, sortOrderFlipped } from "./sort"
 import { $subcategoriesState } from "./subcategories"
 import { BaseSkeleton } from "../../components/Skeletons/BaseSkeleton"
+import { createArray } from "../../functions/utils"
+import { ProductListItemSkeleton } from "../../components/Skeletons/ProductListItemSkeleton"
 
 const Subcategories: React.FC = () => {
   const skeletonWidths = useMemo(
-    () =>
-      Array(25)
-        .fill("")
-        .map(() => Math.floor(Math.random() * (8 - 2) + 2)),
+    () => createArray(25).map(() => Math.floor(Math.random() * (5 - 2) + 2)),
     []
   )
   const { isLoading, categories } = useStore($subcategoriesState)
@@ -75,7 +74,13 @@ const Sort: React.FC = () => {
 const Products: React.FC = () => {
   const { isLoading, products } = useStore($productsState)
   if (isLoading) {
-    return <p className="m-4">Loading...</p>
+    return (
+      <>
+        {createArray(10).map((_, index) => (
+          <ProductListItemSkeleton key={index} />
+        ))}
+      </>
+    )
   }
   if (products.length > 0) {
     return (
