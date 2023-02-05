@@ -105,7 +105,6 @@ export const ProductHistoryGraph: React.FC<{ history: PriceHistoryModel }> = ({
     <Line
       data={chartData}
       options={{
-        animation: false,
         scales: {
           x: {
             type: "time",
