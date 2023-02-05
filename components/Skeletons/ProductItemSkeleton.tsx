@@ -2,7 +2,11 @@ import React from "react"
 import { createArray } from "../../functions/utils"
 import { BaseSkeleton } from "./BaseSkeleton"
 
-export const ProductItemSkeleton = () => {
+export const ProductItemPriceHistorySkeleton: React.FC = () => {
+  return <BaseSkeleton className={"w-full h-[420px]"} />
+}
+
+export const ProductItemSkeleton: React.FC = () => {
   return (
     <div>
       <div className="h-48 w-64 mx-auto flex justify-center items-center">
@@ -31,7 +35,7 @@ export const ProductItemSkeleton = () => {
         ))}
       </div>
       <BaseSkeleton className="h-7 w-3/12 my-4" />
-      <BaseSkeleton className={"w-full h-[420px]"} />
+      <ProductItemPriceHistorySkeleton />
     </div>
   )
 }

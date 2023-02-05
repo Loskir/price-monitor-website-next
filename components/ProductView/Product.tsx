@@ -9,6 +9,7 @@ import { getShopName } from "../../functions/shops"
 import { insertNbspIntoName } from "../../functions/utils"
 import { PriceHistoryModel, ProductPriceModel, ProductWithPriceModel } from "../../models/Product"
 import { ShopLogo } from "../Logos"
+import { ProductItemPriceHistorySkeleton } from "../Skeletons/ProductItemSkeleton"
 import { ProductHistoryGraph } from "./ProductHistoryGraph"
 
 const locale = "ru"
@@ -104,7 +105,7 @@ const ProductHistory: React.FC<PriceHistoryProps> = ({
   history,
 }) => {
   if (isLoading || !history) {
-    return <div>Загрузка…</div>
+    return <ProductItemPriceHistorySkeleton />
   }
   return <ProductHistoryGraph history={history} />
 }

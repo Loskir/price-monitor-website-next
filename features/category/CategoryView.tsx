@@ -103,11 +103,3 @@ export const CategoryView: React.FC<{ categoryId: number | null }> = ({
     </MainLayoutNoMargin>
   )
 }
-
-// <div v-if="categoryProductsStore.isLoading">Loading...</div>
-// <div className="flex flex-col mt-4" v-else>
-//   {/*<ProductListItem*/}
-//   {/*  v-for="p in categoryProductsStore.products"*/}
-//   {/*  product="p"*/}
-//   {/*/>*/}
-// </div>

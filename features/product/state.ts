@@ -1,9 +1,9 @@
 import { combine, createEffect, createEvent, createStore, forward, sample } from "effector"
-import { Controller, createRequestFx } from "fry-fx"
+import { Controller } from "fry-fx"
 import { PageContext } from "nextjs-effector"
-import { getProductById, getProductHistoryById } from "../../api"
+import { getProductById } from "../../api"
 import { isNotNull } from "../../functions/utils"
-import { PriceHistoryModel, ProductWithPriceModel } from "../../models/Product"
+import { ProductWithPriceModel } from "../../models/Product"
 
 export const $productId = createStore<string | null>(null)
 
@@ -50,29 +50,4 @@ const $productState = combine({
   product: $product,
 })
 
-// load history
-const $productHistory = createStore<PriceHistoryModel | null>(null)
-
-const loadProductHistoryFx = createRequestFx<string, PriceHistoryModel | null, Error>({
-  name: "loadProductHistoryFx",
-  handler: async (productId, controller?: Controller) => {
-    return getProductHistoryById(productId, controller?.getSignal())
-  },
-})
-
-sample({
-  source: productIdChangedNotNull,
-  target: loadProductHistoryFx,
-})
-
-forward({
-  from: loadProductHistoryFx.doneData,
-  to: $productHistory,
-})
-
-const $productHistoryState = combine({
-  isLoading: loadProductFx.pending,
-  history: $productHistory,
-})
-
-export { $product, $productHistoryState, $productState }
+export { $product, $productState }

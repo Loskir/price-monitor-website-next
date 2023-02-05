@@ -1,18 +1,22 @@
 import { useStore } from "effector-react"
 import { NextPage } from "next"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import React from "react"
+import { useQuery } from "react-query"
+import { getProductHistoryById } from "../../api"
 import { CenteredOverlay } from "../../components/CenteredOverlay"
 import { MainLayout } from "../../components/Layout"
 import { Product } from "../../components/ProductView/Product"
 import { ProductItemSkeleton } from "../../components/Skeletons/ProductItemSkeleton"
-import { $productHistoryState, $productState, productPageLoaded } from "../../features/product/state"
+import { $productState, productPageLoaded } from "../../features/product/state"
+import { PriceHistoryModel, ProductWithPriceModel } from "../../models/Product"
 import { createGIPFactory } from "../../nextjs-effector"
 
-const ProductInner: React.FC = () => {
-  const state = useStore($productState)
-  const priceHistory = useStore($productHistoryState)
-
+const ProductInner: React.FC<{
+  state: { isLoading: boolean; product: ProductWithPriceModel | null }
+  priceHistory: { isLoading: boolean; history: PriceHistoryModel | null }
+}> = ({ state, priceHistory }) => {
   if (state.isLoading) {
     return <ProductItemSkeleton />
   }
@@ -24,7 +28,18 @@ const ProductInner: React.FC = () => {
 
 const ProductView: NextPage = () => {
   const { product } = useStore($productState)
+  const router = useRouter()
+  const productId = router.query.id as string
   // const { isServer, serverUrl } = props
+
+  const productHistoryQuery = useQuery(
+    ["getProductHistoryById", productId],
+    ({ signal }) => {
+      if (!productId) return
+      return getProductHistoryById(productId, signal)
+    },
+  )
+  const state = useStore($productState)
 
   const title = `${product?.name || "Product"} — Price Monitor`
 
@@ -51,7 +66,10 @@ const ProductView: NextPage = () => {
           {/*  product={productData}*/}
           {/*  priceHistory={{ isLoading: false, history: priceHistory }}*/}
           {/*/>*/}
-          <ProductInner />
+          <ProductInner
+            state={state}
+            priceHistory={{ isLoading: productHistoryQuery.isLoading, history: productHistoryQuery.data ?? null }}
+          />
         </div>
       </MainLayout>
     </>
