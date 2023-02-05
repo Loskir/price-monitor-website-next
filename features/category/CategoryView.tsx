@@ -5,18 +5,18 @@ import React, { useMemo } from "react"
 import { SortOrder, SortType } from "../../api"
 import { MainLayoutNoMargin } from "../../components/Layout"
 import { ProductListItemNew } from "../../components/ProductListItemNew"
+import { BaseSkeleton } from "../../components/Skeletons/BaseSkeleton"
+import { ProductListItemSkeleton } from "../../components/Skeletons/ProductListItemSkeleton"
+import { createArray } from "../../functions/utils"
 import { CategoryGate } from "./common"
 import { $productsState } from "./products"
 import { $sort, sortChanged, sortOrderFlipped } from "./sort"
 import { $subcategoriesState } from "./subcategories"
-import { BaseSkeleton } from "../../components/Skeletons/BaseSkeleton"
-import { createArray } from "../../functions/utils"
-import { ProductListItemSkeleton } from "../../components/Skeletons/ProductListItemSkeleton"
 
 const Subcategories: React.FC = () => {
   const skeletonWidths = useMemo(
     () => createArray(25).map(() => Math.floor(Math.random() * (5 - 2) + 2)),
-    []
+    [],
   )
   const { isLoading, categories } = useStore($subcategoriesState)
   if (isLoading) {
@@ -24,7 +24,7 @@ const Subcategories: React.FC = () => {
       <div className="flex flex-wrap gap-2 mb-4 mx-4">
         {skeletonWidths.map((width, index) => (
           <BaseSkeleton
-            className={`h-10 w-${width}/12 rounded-full`}
+            className={`h-10 width-${width} rounded-full`}
             key={index}
           />
         ))}
@@ -76,18 +76,14 @@ const Products: React.FC = () => {
   if (isLoading) {
     return (
       <>
-        {createArray(10).map((_, index) => (
-          <ProductListItemSkeleton key={index} />
-        ))}
+        {createArray(10).map((_, index) => <ProductListItemSkeleton key={index} />)}
       </>
     )
   }
   if (products.length > 0) {
     return (
       <div className="flex flex-col mt-4">
-        {products.map((product) => (
-          <ProductListItemNew product={product} key={product.productId} />
-        ))}
+        {products.map((product) => <ProductListItemNew product={product} key={product.productId} />)}
       </div>
     )
   }

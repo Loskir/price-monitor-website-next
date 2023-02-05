@@ -1,15 +1,10 @@
-import { allSettled, fork, Scope, serialize } from 'effector'
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  GetServerSidePropsResult,
-  PreviewData,
-} from 'next'
-import { ParsedUrlQuery } from 'querystring'
-import { INITIAL_STATE_KEY } from '../constants'
-import { ContextNormalizers } from '../context-normalizers'
-import { isPageEvent } from '../shared'
-import { AnyProps, EmptyOrPageEvent } from '../types'
+import { allSettled, fork, Scope, serialize } from "effector"
+import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult, PreviewData } from "next"
+import { ParsedUrlQuery } from "querystring"
+import { INITIAL_STATE_KEY } from "../constants"
+import { ContextNormalizers } from "../context-normalizers"
+import { isPageEvent } from "../shared"
+import { AnyProps, EmptyOrPageEvent } from "../types"
 
 export interface CreateAppGSSPConfig {
   sharedEvents?: EmptyOrPageEvent<any, any>[]
@@ -18,7 +13,7 @@ export interface CreateAppGSSPConfig {
 
 export interface CustomizeGSSPParams<
   Q extends ParsedUrlQuery = ParsedUrlQuery,
-  D extends PreviewData = PreviewData
+  D extends PreviewData = PreviewData,
 > {
   scope: Scope
   context: GetServerSidePropsContext<Q, D>
@@ -27,15 +22,15 @@ export interface CustomizeGSSPParams<
 export type CustomizeGSSP<
   P extends AnyProps = AnyProps,
   Q extends ParsedUrlQuery = ParsedUrlQuery,
-  D extends PreviewData = PreviewData
+  D extends PreviewData = PreviewData,
 > = (
-  params: CustomizeGSSPParams<Q, D>
+  params: CustomizeGSSPParams<Q, D>,
 ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>
 
 export interface CreateGSSPConfig<
   P extends AnyProps,
   Q extends ParsedUrlQuery,
-  D extends PreviewData
+  D extends PreviewData,
 > {
   pageEvent?: EmptyOrPageEvent<any, any>
   customize?: CustomizeGSSP<P, Q, D>
@@ -48,7 +43,7 @@ export function createGSSPFactory({
   return function createGSSP<
     P extends AnyProps = AnyProps,
     Q extends ParsedUrlQuery = ParsedUrlQuery,
-    D extends PreviewData = PreviewData
+    D extends PreviewData = PreviewData,
   >({
     pageEvent,
     customize,
@@ -75,7 +70,7 @@ export function createGSSPFactory({
         ? await customize({ scope, context })
         : { props: {} as P }
 
-      const hasProps = 'props' in gsspResult
+      const hasProps = "props" in gsspResult
 
       /*
        * Pass 404 and redirects as they are

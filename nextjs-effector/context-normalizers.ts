@@ -1,12 +1,8 @@
-import {
-  GetServerSidePropsContext,
-  GetStaticPropsContext,
-  NextPageContext,
-} from 'next'
-import { NextRouter } from 'next/router'
-import { ParsedUrlQuery } from 'querystring'
-import { env } from './env'
-import { PageContext, PageContextBase, StaticPageContext } from './types'
+import { GetServerSidePropsContext, GetStaticPropsContext, NextPageContext } from "next"
+import { NextRouter } from "next/router"
+import { ParsedUrlQuery } from "querystring"
+import { env } from "./env"
+import { PageContext, PageContextBase, StaticPageContext } from "./types"
 
 function normalizeQuery(query: ParsedUrlQuery, route: string) {
   const onlyQuery: ParsedUrlQuery = {}
@@ -46,13 +42,13 @@ function removeParamsFromQuery(query: ParsedUrlQuery, params: ParsedUrlQuery) {
 
 function buildPathname({ req, resolvedUrl }: GetServerSidePropsContext) {
   const domain = req.headers.host
-  const protocol = req.headers.referer?.split('://')?.[0] ?? 'https'
+  const protocol = req.headers.referer?.split("://")?.[0] ?? "https"
   return `${protocol}://` + domain + resolvedUrl
 }
 
 function withoutExplicitUndefined<T extends Record<string, any>>(object: T): T {
   const entries = Object.entries(object).filter(
-    ([, value]) => value !== undefined
+    ([, value]) => value !== undefined,
   )
 
   return Object.fromEntries(entries) as T
@@ -61,7 +57,7 @@ function withoutExplicitUndefined<T extends Record<string, any>>(object: T): T {
 export const ContextNormalizers = {
   router: (router: NextRouter): PageContext =>
     withoutExplicitUndefined({
-      env: 'client',
+      env: "client",
       pathname: router.pathname,
       asPath: router.asPath,
       defaultLocale: router.defaultLocale,
@@ -82,12 +78,12 @@ export const ContextNormalizers = {
     })
 
     if (env.isClient) {
-      return { ...base, env: 'client' }
+      return { ...base, env: "client" }
     }
 
     return Object.defineProperties(base, {
       env: {
-        value: 'server',
+        value: "server",
         enumerable: true,
       },
       req: {
@@ -112,7 +108,7 @@ export const ContextNormalizers = {
 
     return Object.defineProperties(base, {
       env: {
-        value: 'server',
+        value: "server",
         enumerable: true,
       },
       req: {
