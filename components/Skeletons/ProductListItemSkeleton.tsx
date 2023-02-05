@@ -1,6 +1,6 @@
+import { cx } from "@emotion/css"
 import React from "react"
 import { BaseSkeleton } from "./BaseSkeleton"
-import { cx } from "@emotion/css"
 import styles from "./ProductListItemSkeleton.module.css"
 
 export const ProductListItemSkeleton = () => {
