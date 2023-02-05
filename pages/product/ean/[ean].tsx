@@ -1,25 +1,23 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useQuery } from "react-query"
 import { getProductByEan } from "../../../api"
 import { CenteredOverlay } from "../../../components/CenteredOverlay"
+import { MainLayout } from "../../../components/Layout"
+import { ProductItemSkeleton } from "../../../components/Skeletons/ProductItemSkeleton"
 
 const ProductView: NextPage = () => {
-  const [ean, setEan] = useState<string>("")
   const router = useRouter()
+  const ean = router.query.ean?.toString()
 
   const { isLoading, error, data: product } = useQuery(
     ["getProductByEan", ean],
-    ({ signal }) => getProductByEan(ean, signal),
+    ({ signal }) => {
+      if (!ean) return
+      return getProductByEan(ean, signal)
+    },
   )
-
-  useEffect(() => {
-    const ean = router.query.ean?.toString()
-    if (router.isReady && ean) {
-      setEan(ean)
-    }
-  }, [router])
 
   useEffect(() => {
     if (product) {
@@ -28,7 +26,13 @@ const ProductView: NextPage = () => {
   }, [router, product])
   // state.product → redirecting
   if (isLoading || product) {
-    return <CenteredOverlay>Загрузка...</CenteredOverlay>
+    return (
+      <MainLayout>
+        <div className="pt-4">
+          <ProductItemSkeleton />
+        </div>
+      </MainLayout>
+    )
   }
   if (error) {
     return <CenteredOverlay>Ошибка :(</CenteredOverlay>

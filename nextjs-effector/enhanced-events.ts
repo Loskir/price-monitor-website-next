@@ -1,10 +1,10 @@
-import { createEvent, createStore, Event, sample } from 'effector'
-import { useEvent } from 'effector-react/scope'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { ContextNormalizers } from './context-normalizers'
-import { assertStrict } from './shared'
-import { EmptyOrPageEvent, PageContext, StaticPageContext } from './types'
+import { createEvent, createStore, Event, sample } from "effector"
+import { useEvent } from "effector-react/scope"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
+import { ContextNormalizers } from "./context-normalizers"
+import { assertStrict } from "./shared"
+import { EmptyOrPageEvent, PageContext, StaticPageContext } from "./types"
 
 export interface EnhancedEventOptions {
   runOnce?: boolean
@@ -16,7 +16,7 @@ type AnyPayload = PageContext<any, any> | StaticPageContext<any, any> | void
 
 export function enhancePageEvent<P extends AnyPayload>(
   event: Event<P>,
-  options: EnhancedEventOptions = {}
+  options: EnhancedEventOptions = {},
 ): Event<P> {
   const key = `${event.sid}-${JSON.stringify(options)}`
 
@@ -46,7 +46,7 @@ export function enhancePageEvent<P extends AnyPayload>(
 
 export function usePageEvent(
   event: EmptyOrPageEvent<any, any>,
-  options: EnhancedEventOptions = {}
+  options: EnhancedEventOptions = {},
 ) {
   assertStrict(event)
 

@@ -4,6 +4,6 @@ interface Env {
 }
 
 export const env: Env = {
-  isClient: typeof window !== 'undefined',
-  isServer: typeof window === 'undefined',
+  isClient: typeof window !== "undefined",
+  isServer: typeof window === "undefined",
 }

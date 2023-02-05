@@ -1,10 +1,10 @@
-import { allSettled, createEvent, createStore, fork } from 'effector'
-import { nanoid } from 'nanoid'
-import { enhancePageEvent } from './enhanced-events'
+import { allSettled, createEvent, createStore, fork } from "effector"
+import { nanoid } from "nanoid"
+import { enhancePageEvent } from "./enhanced-events"
 
-describe('enhancePageEvent', () => {
-  describe('options: runOnce', () => {
-    it('when "true", should run the event only once', async () => {
+describe("enhancePageEvent", () => {
+  describe("options: runOnce", () => {
+    it("when \"true\", should run the event only once", async () => {
       const event = createEvent()
       event.sid = nanoid()
 
@@ -20,7 +20,7 @@ describe('enhancePageEvent', () => {
       expect(scope.getState($times)).toBe(1)
     })
 
-    it('when "false", should run the event the same amount of times', async () => {
+    it("when \"false\", should run the event the same amount of times", async () => {
       const event = createEvent()
       event.sid = nanoid()
 
@@ -37,8 +37,8 @@ describe('enhancePageEvent', () => {
     })
   })
 
-  describe('caching', () => {
-    it('should return the same enhanced event on multiple calls', async () => {
+  describe("caching", () => {
+    it("should return the same enhanced event on multiple calls", async () => {
       const event = createEvent()
       event.sid = nanoid()
 
