@@ -6,7 +6,7 @@ import { CenteredOverlay } from "../../components/CenteredOverlay"
 import { MainLayout } from "../../components/Layout"
 import { Product } from "../../components/ProductView/Product"
 import { ProductItemSkeleton } from "../../components/Skeletons/ProductItemSkeleton"
-import { $productHistoryState, $productId, $productState, productPageLoaded } from "../../features/product/state"
+import { $productHistoryState, $productState, productPageLoaded } from "../../features/product/state"
 import { createGIPFactory } from "../../nextjs-effector"
 
 const ProductInner: React.FC = () => {

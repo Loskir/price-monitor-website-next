@@ -1,12 +1,12 @@
-import { allSettled, fork, Scope, serialize } from 'effector'
-import { NextPageContext } from 'next'
-import { INITIAL_STATE_KEY } from '../constants'
-import { ContextNormalizers } from '../context-normalizers'
-import { enhancePageEvent } from '../enhanced-events'
-import { env } from '../env'
-import { assertStrict, isPageEvent } from '../shared'
-import { state } from '../state'
-import { AnyProps, EmptyOrPageEvent, GetInitialProps } from '../types'
+import { allSettled, fork, Scope, serialize } from "effector"
+import { NextPageContext } from "next"
+import { INITIAL_STATE_KEY } from "../constants"
+import { ContextNormalizers } from "../context-normalizers"
+import { enhancePageEvent } from "../enhanced-events"
+import { env } from "../env"
+import { assertStrict, isPageEvent } from "../shared"
+import { state } from "../state"
+import { AnyProps, EmptyOrPageEvent, GetInitialProps } from "../types"
 
 export interface CreateAppGIPConfig {
   sharedEvents?: EmptyOrPageEvent[]
@@ -20,7 +20,7 @@ export interface CustomizeGIPParams {
 }
 
 export type CustomizeGIP<P extends AnyProps = AnyProps> = (
-  params: CustomizeGIPParams
+  params: CustomizeGIPParams,
 ) => P | Promise<P>
 
 export interface CreateGIPConfig<P> {
