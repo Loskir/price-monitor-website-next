@@ -1,7 +1,10 @@
 import { cx } from "@emotion/css"
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import { Tooltip } from "@mui/material"
 import clsx from "clsx"
 import { DateTime } from "luxon"
+import Carousel from "nuka-carousel"
 import React from "react"
 import styles from "../../components/ProductView/Product.module.css"
 import { formatPrice, formatUom, getUpdatedAt, splitPrice } from "../../functions/products"
@@ -14,14 +17,33 @@ import { ProductHistoryGraph } from "./ProductHistoryGraph"
 
 const locale = "ru"
 
-const ProductImage: React.FC<{ url: string }> = ({ url }) => {
+const ProductImage: React.FC<{ url: string; cls?: string }> = ({ url, cls }) => {
   return (
-    <div className="h-48 w-64 mx-auto flex justify-center items-center">
+    <div className={cx("h-48 w-64 mx-auto flex justify-center items-center", cls)}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className="max-w-full max-h-full" src={url} alt="Photo" />
     </div>
   )
 }
+
+const ProductImageCarousel: React.FC<{ urls: string[] }> = ({ urls }) => {
+  return (
+    <Carousel
+      wrapAround
+      autoplay
+      autoplayInterval={5000}
+      pauseOnHover
+      defaultControlsConfig={{
+        pagingDotsClassName: "mx-1",
+      }}
+      renderCenterLeftControls={({ previousSlide }) => <ArrowBackIosIcon onClick={previousSlide} />}
+      renderCenterRightControls={({ nextSlide }) => <ArrowForwardIosIcon onClick={nextSlide} />}
+    >
+      {urls.map((url) => <ProductImage url={url} key={url} cls={"h-[31vh] pb-[35px]"} />)}
+    </Carousel>
+  )
+}
+
 const BigPrice: React.FC<{ isMulti: boolean; price: number }> = ({
   isMulti,
   price,
@@ -117,7 +139,9 @@ export const Product: React.FC<{
   const uom = formatUom(product)
   return (
     <div>
-      {product.photoUrl && <ProductImage url={product.photoUrl} />}
+      {Array.isArray(product.photoUrl)
+        ? <ProductImageCarousel urls={product.photoUrl} />
+        : product.photoUrl && <ProductImage url={product.photoUrl} />}
       <div className="mb-12">
         <h1 className={clsx("mt-4 text-2xl mb-2 leading-7")}>
           {insertNbspIntoName(product.name)}
