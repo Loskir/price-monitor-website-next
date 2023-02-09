@@ -56,7 +56,14 @@ const ProductView: NextPage = () => {
               content="Самые выгодные скидки на продукты и история цен в Price Monitor"
             />
             {/*<meta property="og:url" content={isServer ? serverUrl : window.location.href} />*/}
-            {product?.photoUrl && <meta property="og:image" content={product?.photoUrl} />}
+            {product?.photoUrl && (
+              <meta
+                property="og:image"
+                content={Array.isArray(product.photoUrl)
+                  ? product?.photoUrl[0]
+                  : product?.photoUrl}
+              />
+            )}
           </>
         )}
       </Head>

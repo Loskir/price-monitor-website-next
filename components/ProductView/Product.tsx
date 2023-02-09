@@ -17,9 +17,9 @@ import { ProductHistoryGraph } from "./ProductHistoryGraph"
 
 const locale = "ru"
 
-const ProductImage: React.FC<{ url: string; cls?: string }> = ({ url, cls }) => {
+const ProductImage: React.FC<{ url: string }> = ({ url }) => {
   return (
-    <div className={cx("h-48 w-64 mx-auto flex justify-center items-center", cls)}>
+    <div className={"h-48 w-64 mx-auto flex justify-center items-center"}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className="max-w-full max-h-full" src={url} alt="Photo" />
     </div>
@@ -30,16 +30,21 @@ const ProductImageCarousel: React.FC<{ urls: string[] }> = ({ urls }) => {
   return (
     <Carousel
       wrapAround
-      autoplay
-      autoplayInterval={5000}
-      pauseOnHover
       defaultControlsConfig={{
         pagingDotsClassName: "mx-1",
       }}
       renderCenterLeftControls={({ previousSlide }) => <ArrowBackIosIcon onClick={previousSlide} />}
       renderCenterRightControls={({ nextSlide }) => <ArrowForwardIosIcon onClick={nextSlide} />}
+      className={styles.carousel}
     >
-      {urls.map((url) => <ProductImage url={url} key={url} cls={"h-[31vh] pb-[35px]"} />)}
+      {urls.map((url, index) => (
+        <img
+          className="max-h-[80%] max-w-[90%] m-auto"
+          src={url}
+          alt={`Photo-${index + 1}`}
+          key={url}
+        />
+      ))}
     </Carousel>
   )
 }

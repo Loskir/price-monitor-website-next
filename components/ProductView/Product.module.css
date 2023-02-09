@@ -25,6 +25,15 @@
     line-height: 1;
 }
 
+.carousel > div {
+    height: 31vh;
+}
+
+.carousel div {
+    display: flex;
+}
+
+
 /*.lineThrough {*/
 /*    position: relative;*/
 /*}*/
