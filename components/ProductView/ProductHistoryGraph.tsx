@@ -2,7 +2,6 @@ import { Chart, ChartData, ChartDataset, registerables } from "chart.js"
 import { DateTime } from "luxon"
 import React, { useMemo } from "react"
 import { Line } from "react-chartjs-2"
-import colors from "tailwindcss/colors"
 import "chartjs-adapter-luxon"
 import { getShopName } from "../../functions/shops"
 import { PriceHistoryModel } from "../../models/Product"
@@ -32,9 +31,9 @@ const getColors = (shopType: string): [string, string, string] => {
         "rgb(254.99, 173.87, 164.21)",
       ]
     case "perekrestok":
-      return ["#1EAF37", colors.green[400], colors.green[200]]
+      return ["#1EAF37", "#4ade80", "#bbf7d0"]
     default:
-      return [colors.green[500], colors.green[400], colors.gray[200]]
+      return ["#6b7280", "#9ca3af", "#e5e7eb"]
   }
 }
 
