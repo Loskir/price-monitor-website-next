@@ -1,8 +1,8 @@
-import { PriceHistoryModel } from "./models/Product"
-
-const apiRoot = process.env.NEXT_PUBLIC_API_ROOT
 import type { CategoryModel } from "./models/Category"
+import { PriceHistoryModel } from "./models/Product"
 import type { ProductWithPriceModel } from "./models/Product"
+
+const apiRoot = process.env.NEXT_PUBLIC_API_ROOT ?? ""
 
 export function getProductById(id: string, signal?: AbortSignal): Promise<ProductWithPriceModel | null> {
   return fetch(`${apiRoot}/products/${id}`, { signal })
