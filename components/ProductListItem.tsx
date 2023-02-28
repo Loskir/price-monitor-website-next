@@ -48,6 +48,7 @@ const ShopPriceRow: React.FC<{ price: ProductPriceModel; shopType: string; uom: 
 
 export const ProductListItem: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
   const uom = formatUom(product)
+  const photoUrl = Array.isArray(product.photoUrl) ? product.photoUrl[0] : product.photoUrl
   return (
     <div
       className={cx(
@@ -57,14 +58,14 @@ export const ProductListItem: React.FC<{ product: ProductWithPriceModel }> = ({ 
         styles.productListItem,
       )}
     >
-      {product.photoUrl && (
+      {photoUrl && (
         <div className={"relative flex-shrink-0 flex-grow-0 w-20 sm:w-24 mr-4"}>
           <img
             className={clsx(
               "absolute inset-0 max-h-full m-auto py-2",
               styles.image,
             )}
-            src={product.photoUrl}
+            src={photoUrl}
             alt="Photo"
           />
         </div>
