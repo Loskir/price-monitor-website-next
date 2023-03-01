@@ -26,11 +26,7 @@
 }
 
 .carousel > div {
-    height: 31vh;
-}
-
-.carousel div {
-    display: flex;
+    @apply h-64;
 }
 
 
