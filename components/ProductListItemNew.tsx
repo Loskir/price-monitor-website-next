@@ -25,18 +25,17 @@ const BigPrice: React.FC<{ isMulti?: boolean; price: number }> = ({ isMulti = fa
 
 export const ProductListItemNew: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
   const uom = formatUom(product)
-  const photoUrl = Array.isArray(product.photoUrl) ? product.photoUrl[0] : product.photoUrl
   return (
     <div className={cx("pl-4 pt-4 relative", styles.productListItem)}>
       <div className="flex mb-4">
         <div className="mr-4 rounded-2xl w-16 h-16 shrink-0 relative">
-          {photoUrl && (
+          {product.photoUrl && (
             <img
               className={clsx(
                 "absolute inset-0 max-h-full m-auto",
                 styles.image,
               )}
-              src={photoUrl}
+              src={product.photoUrl}
               alt="Photo"
             />
           )}

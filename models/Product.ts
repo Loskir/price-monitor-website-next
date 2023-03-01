@@ -16,7 +16,8 @@ export type PriceHistoryPriceModel = z.infer<typeof PriceHistoryPriceModel>
 export interface ProductModel {
   productId: string
   name: string
-  photoUrl?: string | string[]
+  photoUrl?: string
+  photoUrls?: string[]
   /** @deprecated */
   ean?: string
   eans?: string[]
