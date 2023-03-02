@@ -31,7 +31,7 @@ const ProductImageCarousel: React.FC<{ urls: string[] }> = ({ urls }) => {
     >
       {urls.map((url, index) => (
         <img
-          className="m-auto h-full pb-6"
+          className="m-auto h-full pb-8"
           src={url}
           alt={`Photo-${index + 1}`}
           key={url}
