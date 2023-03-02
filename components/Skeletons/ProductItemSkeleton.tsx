@@ -9,7 +9,7 @@ export const ProductItemPriceHistorySkeleton: React.FC = () => {
 export const ProductItemSkeleton: React.FC = () => {
   return (
     <div>
-      <div className="h-48 w-64 mx-auto flex justify-center items-center">
+      <div className="h-64 w-64 mx-auto flex justify-center items-center">
         <BaseSkeleton className="w-full h-full" />
       </div>
       <div className="mb-12">

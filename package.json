@@ -29,6 +29,7 @@
     "next-pwa": "^5.6.0",
     "next-ym": "^2.3.5",
     "nextjs-effector": "link:./nextjs-effector",
+    "nuka-carousel": "^5.4.1",
     "react": "18.2.0",
     "react-chartjs-2": "^4.3.1",
     "react-dom": "18.2.0",

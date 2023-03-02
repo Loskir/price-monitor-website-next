@@ -25,6 +25,11 @@
     line-height: 1;
 }
 
+.carousel > div {
+    @apply h-64;
+}
+
+
 /*.lineThrough {*/
 /*    position: relative;*/
 /*}*/
