@@ -42,7 +42,7 @@ const ProductImageCarousel: React.FC<{ urls: string[] }> = ({ urls }) => {
 }
 
 const ProductPhotos: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
-  if (product.photoUrls) {
+  if (product.photoUrls && product.photoUrls.length > 1) {
     return <ProductImageCarousel urls={product.photoUrls} />
   }
   if (product.photoUrl) {
