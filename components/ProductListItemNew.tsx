@@ -3,6 +3,7 @@ import clsx from "clsx"
 import Link from "next/link"
 import React from "react"
 import { formatPrice, formatUom, splitPrice } from "../functions/products"
+import { generateSlug } from "../functions/slug"
 import { insertNbspIntoName } from "../functions/utils"
 import { ProductWithPriceModel } from "../models/Product"
 import { ShopLogo } from "./Logos"
@@ -42,7 +43,7 @@ export const ProductListItemNew: React.FC<{ product: ProductWithPriceModel }> = 
         </div>
         <div className="grow min-h-16">
           <div className="mr-4">
-            <Link href={`/product/${product.productId}`}>
+            <Link href={`/product/${generateSlug(product)}`}>
               <a className={cx("inline-block", styles.title, styles.link)}>{insertNbspIntoName(product.name)}</a>
             </Link>
             {/*<div className="mt-3">*/}

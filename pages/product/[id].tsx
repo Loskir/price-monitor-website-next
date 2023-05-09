@@ -2,7 +2,7 @@ import { useStore } from "effector-react"
 import { NextPage } from "next"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import React from "react"
+import React, { useEffect, useMemo } from "react"
 import { useQuery } from "react-query"
 import { getProductHistoryById } from "../../api"
 import { CenteredOverlay } from "../../components/CenteredOverlay"
@@ -10,6 +10,7 @@ import { MainLayout } from "../../components/Layout"
 import { Product } from "../../components/ProductView/Product"
 import { ProductItemSkeleton } from "../../components/Skeletons/ProductItemSkeleton"
 import { $productState, productPageLoaded } from "../../features/product/state"
+import { generateSlug, parseSlug } from "../../functions/slug"
 import { PriceHistoryModel, ProductWithPriceModel } from "../../models/Product"
 import { createGIPFactory } from "../../nextjs-effector"
 
@@ -29,7 +30,21 @@ const ProductInner: React.FC<{
 const ProductView: NextPage = () => {
   const { product } = useStore($productState)
   const router = useRouter()
-  const productId = router.query.id as string
+  const productId = useMemo(
+    () => parseSlug(router.query.id as string),
+    [router],
+  )
+
+  useEffect(() => {
+    if (!product) return
+    console.log(generateSlug(product))
+    const newUrl = `/product/${generateSlug(product)}`
+    window.history.replaceState(
+      { ...window.history.state, as: newUrl, url: newUrl },
+      "",
+      newUrl,
+    )
+  }, [product, router])
   // const { isServer, serverUrl } = props
 
   const productHistoryQuery = useQuery(

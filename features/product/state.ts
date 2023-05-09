@@ -2,6 +2,7 @@ import { combine, createEffect, createEvent, createStore, forward, sample } from
 import { Controller } from "fry-fx"
 import { PageContext } from "nextjs-effector"
 import { getProductById } from "../../api"
+import { parseSlug } from "../../functions/slug"
 import { isNotNull } from "../../functions/utils"
 import { ProductWithPriceModel } from "../../models/Product"
 
@@ -13,7 +14,7 @@ const productIdChanged = createEvent<string | null>()
 
 sample({
   source: productPageLoaded,
-  fn: (ctx) => ctx.params.id as string,
+  fn: (ctx) => parseSlug(ctx.params.id as string),
   target: productIdChanged,
 })
 
