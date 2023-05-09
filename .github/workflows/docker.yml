@@ -48,4 +48,5 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          buildArgs: NEXT_PUBLIC_API_ROOT=https://pm-api.loskir.ru
+          build-args: |
+            NEXT_PUBLIC_API_ROOT=https://pm-api.loskir.ru
