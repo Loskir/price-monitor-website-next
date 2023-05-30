@@ -43,6 +43,6 @@ export function formatUom(product: ProductWithPriceModel) {
     case UomType.l:
       return "л"
     default:
-      return product.uom || "шт"
+      return product.uomName || "шт"
   }
 }

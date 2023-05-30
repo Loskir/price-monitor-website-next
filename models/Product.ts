@@ -3,7 +3,7 @@ import { z } from "zod"
 export enum UomType {
   kg = "kg",
   l = "l",
-  none = "none",
+  pcs = "pcs",
 }
 
 export const PriceHistoryPriceModel = z.object({
@@ -23,8 +23,8 @@ export interface ProductModel {
   ean?: string
   eans?: string[]
   uomType?: UomType
-  uom?: string
-  volume?: number
+  uomName?: string
+  uomValue?: number
 }
 
 export interface ProductPriceModel extends PriceHistoryPriceModel {
