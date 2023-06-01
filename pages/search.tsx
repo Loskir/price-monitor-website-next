@@ -12,12 +12,16 @@ const saveToURL = (router: NextRouter, query: string) => {
   if (query) {
     router?.replace({
       query: {
+        ...router.query,
         q: query,
       },
     })
   } else {
     router?.replace({
-      query: {},
+      query: {
+        ...router.query,
+        q: undefined,
+      },
     })
   }
 }
@@ -25,6 +29,7 @@ const saveToURL = (router: NextRouter, query: string) => {
 const Search: NextPage = () => {
   const router = useRouter()
   const [query, setQuery] = useState<string>("")
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
     let q = router.query.q
@@ -33,7 +38,18 @@ const Search: NextPage = () => {
     setQuery(q)
   }, [router])
 
-  const { isLoading, error, data } = useQuery(["search", query], ({ signal }) => searchProducts(query, signal))
+  const {
+    isLoading,
+    error,
+    data,
+    isPreviousData,
+  } = useQuery(
+    ["search", query, page],
+    ({ signal }) => searchProducts({ query, page, manticore: router.query.manticore }, signal),
+    {
+      keepPreviousData: true,
+    },
+  )
   const products = data ?? []
 
   const queryChanged = useCallback(

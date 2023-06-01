@@ -43,9 +43,17 @@ export function getProductByEan(ean: string, signal?: AbortSignal): Promise<Prod
     })
 }
 
-export function searchProducts(query: string, signal?: AbortSignal): Promise<ProductWithPriceModel[]> {
+export function searchProducts(
+  { query, page = 1, manticore }: { query: string; page?: number; manticore?: any },
+  signal?: AbortSignal,
+): Promise<ProductWithPriceModel[]> {
+  const limit = 30
+  const offset = (page - 1) * limit
   const queryString = new URLSearchParams({
     query,
+    offset: offset.toString(),
+    limit: limit.toString(),
+    ...manticore && { manticore: "1" },
   })
   return fetch(`${apiRoot}/products/search?${queryString}`, { signal })
     .then(async (res) => {
