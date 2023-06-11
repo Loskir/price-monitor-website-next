@@ -14,6 +14,11 @@
     line-height: 1.1875;
 }
 
-.productListItem:not(:last-child) .divider {
-    border-bottom: 1px solid #F0F0F0
+.divider {
+    border-bottom: 1px solid #F0F0F0;
+    display: none;
+}
+
+.productListItem + .productListItem .divider {
+    display: block;
 }

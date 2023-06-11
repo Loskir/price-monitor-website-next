@@ -40,6 +40,12 @@ export interface ProductWithPriceModel extends ProductModel {
   shops: ProductShopEntry[]
 }
 
+export interface SearchResponseModel {
+  totalCount: number
+  nextOffset?: number
+  items: ProductWithPriceModel[]
+}
+
 export const PriceHistoryEntryModel = z.object({
   shopType: z.string(),
   prices: z.array(PriceHistoryPriceModel),

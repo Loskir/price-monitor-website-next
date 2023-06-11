@@ -1,5 +1,5 @@
 import type { CategoryModel } from "./models/Category"
-import { PriceHistoryModel } from "./models/Product"
+import { PriceHistoryModel, SearchResponseModel } from "./models/Product"
 import type { ProductWithPriceModel } from "./models/Product"
 
 const apiRoot = process.env.NEXT_PUBLIC_API_ROOT ?? ""
@@ -44,23 +44,21 @@ export function getProductByEan(ean: string, signal?: AbortSignal): Promise<Prod
 }
 
 export function searchProducts(
-  { query, page = 1, manticore }: { query: string; page?: number; manticore?: any },
+  { query, offset = 0, manticore }: { query: string; offset?: number; manticore?: any },
   signal?: AbortSignal,
-): Promise<ProductWithPriceModel[]> {
-  const limit = 30
-  const offset = (page - 1) * limit
+): Promise<SearchResponseModel> {
+  const limit = 50
   const queryString = new URLSearchParams({
     query,
     offset: offset.toString(),
     limit: limit.toString(),
-    ...manticore && { manticore: "1" },
   })
-  return fetch(`${apiRoot}/products/search?${queryString}`, { signal })
+  return fetch(`${apiRoot}/v2/products/search?${queryString}`, { signal })
     .then(async (res) => {
       if (res.status > 400) {
         throw new Error() // todo
       }
-      return await res.json() as ProductWithPriceModel[]
+      return await res.json() as SearchResponseModel
     })
 }
 

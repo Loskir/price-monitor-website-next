@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import React, { useMemo } from "react"
 import { SortOrder, SortType } from "../../api"
 import { MainLayoutNoMargin } from "../../components/Layout"
-import { ProductListItemNew } from "../../components/ProductListItemNew"
+import { ProductListItem } from "../../components/ProductListItem/ProductListItem"
 import { BaseSkeleton } from "../../components/Skeletons/BaseSkeleton"
 import { ProductListItemSkeleton } from "../../components/Skeletons/ProductListItemSkeleton"
 import { createArray } from "../../functions/utils"
@@ -83,7 +83,7 @@ const Products: React.FC = () => {
   if (products.length > 0) {
     return (
       <div className="flex flex-col mt-4">
-        {products.map((product) => <ProductListItemNew product={product} key={product.productId} />)}
+        {products.map((product) => <ProductListItem product={product} key={product.productId} />)}
       </div>
     )
   }
