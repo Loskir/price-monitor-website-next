@@ -17,11 +17,9 @@ const saveToURL = (router: NextRouter, query: string) => {
       },
     })
   } else {
+    delete router.query.q
     router?.replace({
-      query: {
-        ...router.query,
-        q: undefined,
-      },
+      query: router.query,
     })
   }
 }
