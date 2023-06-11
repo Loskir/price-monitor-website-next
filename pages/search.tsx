@@ -91,15 +91,13 @@ const Search: NextPage = () => {
         {/*</span>*/}
         {products.map((product) => <ProductListItem product={product} key={product.productId} />)}
         {hasNextPage && (
-          <div className={"px-4 w-full"}>
-            <Button
-              isLoading={isFetching}
-              fullWidth
-              onClick={() => fetchNextPage()}
-            >
-              Ещё
-            </Button>
-          </div>
+          <Button
+            isLoading={isFetching}
+            fullWidth
+            onClick={() => fetchNextPage()}
+          >
+            Ещё
+          </Button>
         )}
       </div>
     )
