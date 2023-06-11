@@ -45,6 +45,14 @@ const ProductPhotos: React.FC<{ product: ProductWithPriceModel }> = ({ product }
   if (product.photoUrls && product.photoUrls.length > 1) {
     return <ProductImageCarousel urls={product.photoUrls} />
   }
+  if (product.photoUrls && product.photoUrls.length > 0) {
+    return (
+      <div className={"h-64 w-64 mx-auto flex justify-center items-center"}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="max-w-full max-h-full" src={product.photoUrls[0]} alt="Photo" />
+      </div>
+    )
+  }
   if (product.photoUrl) {
     return (
       <div className={"h-64 w-64 mx-auto flex justify-center items-center"}>
