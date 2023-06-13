@@ -2,12 +2,12 @@ import { cx } from "@emotion/css"
 import clsx from "clsx"
 import Link from "next/link"
 import React from "react"
-import { formatPrice, formatUom, splitPrice } from "../../functions/products"
+import { formatPrice, formatUom } from "../../functions/products"
 import { generateSlug } from "../../functions/slug"
 import { insertNbspIntoName } from "../../functions/utils"
 import { ProductWithPriceModel } from "../../models/Product"
-import { ShopLogo } from "../Logos"
-import { VStack } from "../VStack/VStack"
+import { BigPrice } from "../BigPrice/BigPrice"
+import { ShopLogo } from "../ShopLogo/ShopLogo"
 import styles from "./ProductListItem.module.css"
 
 const EAN_DISPLAY_LIMIT = 1
@@ -16,21 +16,6 @@ const formatEanText = (eans: string[]) => {
   return eans.length > EAN_DISPLAY_LIMIT
     ? `${eans.slice(0, EAN_DISPLAY_LIMIT).join(", ")} и ещё ${eans.length - EAN_DISPLAY_LIMIT}`
     : eans.join(", ")
-}
-
-const BigPrice: React.FC<{ isMulti?: boolean; price: number }> = ({ isMulti = false, price }) => {
-  const [priceWhole, priceDecimal] = splitPrice(price)
-  return (
-    <span>
-      {isMulti && "от "}
-      <span className="text-2xl">
-        {priceWhole}
-        <span className="text-xs align-super ml-0.5">
-          {priceDecimal}
-        </span>
-      </span>
-    </span>
-  )
 }
 
 export const ProductListItem: React.FC<{ product: ProductWithPriceModel }> = ({ product }) => {
@@ -51,15 +36,16 @@ export const ProductListItem: React.FC<{ product: ProductWithPriceModel }> = ({ 
             />
           )}
         </div>
-        <VStack gap={"4"} className="grow min-h-16">
+        <div className="flex flex-col gap-3 grow min-h-16">
           <Link href={`/product/${generateSlug(product)}`}>
-            <a className={cx("inline-block", styles.title, styles.link)}>{insertNbspIntoName(product.name)}</a>
+            <a className={cx("inline-block hover:text-orange-600 leading-tight font-medium", styles.link)}>
+              {insertNbspIntoName(product.name)}
+            </a>
           </Link>
           {product.shops.length > 0 && (
             <>
-              <div className="flex items-center">
+              <div className="flex flex-wrap items-center justify-between">
                 <BigPrice isMulti={product.shops.length > 1} price={product.shops[0].price} />
-                <div className="grow" />
                 <ShopLogo shopType={product.shops[0].shopType} className="h-8" monochrome />
               </div>
               <div className="flex flex-wrap justify-end text-secondary text-xs">
@@ -78,7 +64,7 @@ export const ProductListItem: React.FC<{ product: ProductWithPriceModel }> = ({ 
               </div>
             </>
           )}
-        </VStack>
+        </div>
       </div>
     </div>
   )

@@ -5,9 +5,11 @@ import { useQuery } from "react-query"
 import { getProductByEan } from "../../../api"
 import { CenteredOverlay } from "../../../components/CenteredOverlay"
 import { MainLayout } from "../../../components/Layout"
-import { ProductItemSkeleton } from "../../../components/Skeletons/ProductItemSkeleton"
+import { ProductSkeleton } from "../../../components/ProductView/Product"
+import { useIslands } from "../../../hooks/useIslands"
 
 const ProductView: NextPage = () => {
+  useIslands()
   const router = useRouter()
   const ean = router.query.ean?.toString()
 
@@ -29,7 +31,7 @@ const ProductView: NextPage = () => {
     return (
       <MainLayout>
         <div className="pt-4">
-          <ProductItemSkeleton />
+          <ProductSkeleton />
         </div>
       </MainLayout>
     )

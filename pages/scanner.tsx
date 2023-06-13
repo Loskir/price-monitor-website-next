@@ -1,7 +1,7 @@
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
 import React from "react"
-import { HeaderSpacer } from "../components/HeaderLayout"
+import { NavbarSpacer } from "../components/NavbarLayout"
 import { Scanner } from "../components/Scanner/Scanner"
 
 const Home: NextPage = () => {
@@ -9,7 +9,7 @@ const Home: NextPage = () => {
   const onResult = (ean: string) => router.push(`/product/ean/${ean}`)
   return (
     <main className="h-full flex flex-col">
-      <HeaderSpacer />
+      <NavbarSpacer />
       <Scanner onResult={onResult} />
     </main>
   )

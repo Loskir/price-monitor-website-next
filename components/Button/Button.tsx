@@ -13,7 +13,7 @@ export const Button: React.FC<ButtonProps> = ({ className, children, fullWidth, 
   return (
     <button
       className={clsx(
-        "py-2 px-4 bg-gray-100 rounded-xl hover:bg-gray-200 relative",
+        "py-2 px-4 bg-white rounded-2xl hover:text-orange-600 relative",
         fullWidth && "w-full",
         className,
       )}

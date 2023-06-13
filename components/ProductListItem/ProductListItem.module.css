@@ -5,15 +5,6 @@
     z-index: 1;
 }
 
-.link:hover {
-    color: #EB5500;
-}
-
-.title {
-    font-weight: 500;
-    line-height: 1.1875;
-}
-
 .divider {
     border-bottom: 1px solid #F0F0F0;
     display: none;

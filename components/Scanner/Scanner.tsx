@@ -91,7 +91,7 @@ const ScannerOverlay: React.FC = () => {
       {/*/>*/}
       <span
         className={cx(
-          "absolute z-10 w-16 h-16 top-0 left-0 rounded-lg",
+          "absolute z-10 rounded-lg",
           css`
             box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
             width: var(--width);

@@ -7,13 +7,16 @@ import { DateTime } from "luxon"
 import Carousel from "nuka-carousel"
 import React from "react"
 import styles from "../../components/ProductView/Product.module.css"
-import { formatPrice, formatUom, getUpdatedAt, splitPrice } from "../../functions/products"
+import { formatPrice, formatUom, getUpdatedAt } from "../../functions/products"
 import { getShopName } from "../../functions/shops"
-import { insertNbspIntoName } from "../../functions/utils"
+import { createArray, insertNbspIntoName } from "../../functions/utils"
 import { PriceHistoryModel, ProductPriceModel, ProductWithPriceModel } from "../../models/Product"
-import { ShopLogo } from "../Logos"
-import { ProductItemPriceHistorySkeleton } from "../Skeletons/ProductItemSkeleton"
-import { ProductHistoryGraph } from "./ProductHistoryGraph"
+import { BigPrice } from "../BigPrice/BigPrice"
+import { H1 } from "../Header/Header"
+import { Island } from "../Island/Island"
+import { ShopLogo } from "../ShopLogo/ShopLogo"
+import { BaseSkeleton } from "../Skeletons/BaseSkeleton"
+import { ProductHistoryGraph, ProductItemPriceHistorySkeleton } from "./ProductHistoryGraph"
 
 const locale = "ru"
 
@@ -64,26 +67,6 @@ const ProductPhotos: React.FC<{ product: ProductWithPriceModel }> = ({ product }
   return <></>
 }
 
-const BigPrice: React.FC<{ isMulti: boolean; price: number }> = ({
-  isMulti,
-  price,
-}) => {
-  const [priceWhole, priceDecimal] = splitPrice(price)
-  return (
-    <span>
-      {isMulti && "от "}
-      <span className="text-2xl">
-        {priceWhole}
-        <span className="text-xs align-super ml-0.5">{priceDecimal}</span>
-      </span>
-    </span>
-  )
-}
-
-const Subtitle: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <h2 className="text-xl mt-4 mb-2">{children}</h2>
-}
-
 const ProductPrice: React.FC<{
   price: ProductPriceModel
   shopType: string
@@ -95,13 +78,13 @@ const ProductPrice: React.FC<{
   const isDiscount = price.price !== price.basePrice
   const { isOutdated, dateString } = getUpdatedAt(price.time)
   return (
-    <div className="flex flex-row items-center py-4 flex-wrap">
+    <div className="flex flex-row items-center py-4 flex-wrap gap-4">
       <ShopLogo shopType={shopType} className={styles.shopIcon} />
       <div className="flex flex-col mr-4">
         <span className={styles.shopName}>{getShopName(shopType)}</span>
         {/*<span className={clsx(styles.shopSubtitle, styles.decreasedLineHeight)}>10 часов назад</span>*/}
         {price.unitPrice && (
-          <span className={cx(styles.shopSubtitle, "text-secondary")}>
+          <span className={"text-xs text-secondary"}>
             {formatPrice(price.unitPrice)} ₽ за {uom}
           </span>
         )}
@@ -159,30 +142,79 @@ export const Product: React.FC<{
   const uom = formatUom(product)
   return (
     <div>
-      <ProductPhotos product={product} />
-      <div className="mb-12">
-        <h1 className={clsx("mt-4 text-2xl mb-2 leading-7")}>
-          {insertNbspIntoName(product.name)}
-        </h1>
-        {product.eans && product.eans.length > 0 && <p className="text-secondary">Арт. {product.eans.join(", ")}</p>}
-      </div>
+      <Island className={"py-4 mb-4"}>
+        <ProductPhotos product={product} />
+        <div>
+          <h1 className={clsx("mt-4 text-xl mb-2 leading-6 font-medium")}>
+            {insertNbspIntoName(product.name)}
+          </h1>
+          {product.eans && product.eans.length > 0 && (
+            <p className="text-secondary text-sm">Арт. {product.eans.join(", ")}</p>
+          )}
+        </div>
+      </Island>
 
-      <Subtitle>Цены в магазинах</Subtitle>
-      <div className={clsx(styles.prices)}>
-        {product.shops.map((price, index) => (
-          <ProductPrice
-            key={index}
-            price={price}
-            shopType={price.shopType}
-            uom={uom}
-          />
-        ))}
-      </div>
-      <Subtitle>История цен</Subtitle>
-      <ProductHistory
-        isLoading={priceHistory.isLoading}
-        history={priceHistory.history}
-      />
+      <Island className={"pt-4 mb-4"}>
+        <H1>Цены в магазинах</H1>
+        <div className={clsx(styles.prices)}>
+          {product.shops.map((price, index) => (
+            <ProductPrice
+              key={index}
+              price={price}
+              shopType={price.shopType}
+              uom={uom}
+            />
+          ))}
+        </div>
+      </Island>
+      <Island className={"py-4"}>
+        <H1>История цен</H1>
+        <ProductHistory
+          isLoading={priceHistory.isLoading}
+          history={priceHistory.history}
+        />
+      </Island>
+    </div>
+  )
+}
+
+export const ProductSkeleton: React.FC<{ className?: string }> = ({ className }) => {
+  return (
+    <div className={className}>
+      <Island className={"py-4 mb-4"}>
+        <div className="h-64 w-64 mx-auto flex justify-center items-center">
+          <BaseSkeleton className="w-full h-full" />
+        </div>
+        <div>
+          <BaseSkeleton className="mt-4 h-7 mb-1 w-full" />
+          <BaseSkeleton className="h-5 w-40" />
+        </div>
+      </Island>
+
+      <Island className={"pt-4 mb-4"}>
+        <H1>Цены в магазинах</H1>
+        <div>
+          {createArray(4).map((_, index) => (
+            <div
+              className="h-[71px] flex flex-row items-center py-4 flex-wrap border-b border-solid border-gray-100 last:border-none"
+              key={index}
+            >
+              <BaseSkeleton className="h-8 mr-4 w-14 sm:w-16" />
+              <div className="flex flex-col mr-4 w-1/2">
+                <BaseSkeleton className={"h-4 w-16 mb-1"} />
+                <BaseSkeleton className={"h-4 w-24"} />
+              </div>
+              <div className="flex flex-col ml-auto items-end w-12">
+                <BaseSkeleton className={"h-8 w-full"} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </Island>
+      <Island className={"py-4"}>
+        <H1>История цен</H1>
+        <ProductItemPriceHistorySkeleton />
+      </Island>
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { Line } from "react-chartjs-2"
 import "chartjs-adapter-luxon"
 import { getShopName } from "../../functions/shops"
 import { PriceHistoryModel } from "../../models/Product"
+import { BaseSkeleton } from "../Skeletons/BaseSkeleton"
 
 Chart.register(...registerables)
 
@@ -92,6 +93,10 @@ const mergePoints = (history: PriceHistoryModel): ChartData<"line"> => {
       },
     ),
   }
+}
+
+export const ProductItemPriceHistorySkeleton: React.FC = () => {
+  return <BaseSkeleton className={"mt-2 w-full h-[300px]"} />
 }
 
 export const ProductHistoryGraph: React.FC<{ history: PriceHistoryModel }> = ({

@@ -6,7 +6,7 @@ import withYM from "next-ym"
 import Head from "next/head"
 import { withEffector } from "nextjs-effector"
 import { QueryClient, QueryClientProvider } from "react-query"
-import { HeaderLayout } from "../components/HeaderLayout"
+import { NavbarLayout } from "../components/NavbarLayout"
 
 // import { attachLogger } from "effector-logger/attach"
 
@@ -21,7 +21,7 @@ const queryClient = new QueryClient()
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <HeaderLayout>
+      <NavbarLayout>
         <Head>
           <title>Price Monitor</title>
           <meta name="application-name" content="Price Monitor" />
@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <link rel="manifest" href="/manifest.json" />
         </Head>
         <Component {...pageProps} />
-      </HeaderLayout>
+      </NavbarLayout>
     </QueryClientProvider>
   )
 }

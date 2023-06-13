@@ -3,13 +3,12 @@
 }
 
 .shopIcon {
-    width: 50px;
     flex-shrink: 0;
-    @apply mr-4 w-14 sm:w-16;
+    @apply w-14 sm:w-16;
 }
 
 .shopSubtitle {
-    @apply font-medium text-xs;
+    @apply text-xs;
 }
 
 .priceMain {

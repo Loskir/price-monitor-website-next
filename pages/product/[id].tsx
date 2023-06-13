@@ -7,10 +7,10 @@ import { useQuery } from "react-query"
 import { getProductHistoryById } from "../../api"
 import { CenteredOverlay } from "../../components/CenteredOverlay"
 import { MainLayout } from "../../components/Layout"
-import { Product } from "../../components/ProductView/Product"
-import { ProductItemSkeleton } from "../../components/Skeletons/ProductItemSkeleton"
+import { Product, ProductSkeleton } from "../../components/ProductView/Product"
 import { $productState, productPageLoaded } from "../../features/product/state"
 import { generateSlug, parseSlug } from "../../functions/slug"
+import { useIslands } from "../../hooks/useIslands"
 import { PriceHistoryModel, ProductWithPriceModel } from "../../models/Product"
 import { createGIPFactory } from "../../nextjs-effector"
 
@@ -19,7 +19,7 @@ const ProductInner: React.FC<{
   priceHistory: { isLoading: boolean; history: PriceHistoryModel | null }
 }> = ({ state, priceHistory }) => {
   if (state.isLoading) {
-    return <ProductItemSkeleton />
+    return <ProductSkeleton />
   }
   if (!state.product) {
     return <CenteredOverlay>Not found :(</CenteredOverlay>
@@ -28,6 +28,8 @@ const ProductInner: React.FC<{
 }
 
 const ProductView: NextPage = () => {
+  useIslands()
+
   const { product } = useStore($productState)
   const router = useRouter()
   const productId = useMemo(
@@ -85,16 +87,10 @@ const ProductView: NextPage = () => {
         )}
       </Head>
       <MainLayout>
-        <div className="pt-4">
-          {/*<Product*/}
-          {/*  product={productData}*/}
-          {/*  priceHistory={{ isLoading: false, history: priceHistory }}*/}
-          {/*/>*/}
-          <ProductInner
-            state={state}
-            priceHistory={{ isLoading: productHistoryQuery.isLoading, history: productHistoryQuery.data ?? null }}
-          />
-        </div>
+        <ProductInner
+          state={state}
+          priceHistory={{ isLoading: productHistoryQuery.isLoading, history: productHistoryQuery.data ?? null }}
+        />
       </MainLayout>
     </>
   )
