@@ -75,14 +75,14 @@ const Products: React.FC = () => {
   const { isLoading, products } = useStore($productsState)
   if (isLoading) {
     return (
-      <>
+      <div className="flex flex-col mt-4 mx-4">
         {createArray(10).map((_, index) => <ProductListItemSkeleton key={index} />)}
-      </>
+      </div>
     )
   }
   if (products.length > 0) {
     return (
-      <div className="flex flex-col mt-4">
+      <div className="flex flex-col mt-4 mx-4">
         {products.map((product) => <ProductListItem product={product} key={product.productId} />)}
       </div>
     )
