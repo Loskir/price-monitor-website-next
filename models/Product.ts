@@ -44,6 +44,7 @@ export interface SearchResponseModel {
   totalCount: number
   nextOffset?: number
   items: ProductWithPriceModel[]
+  ms?: number
 }
 
 export const PriceHistoryEntryModel = z.object({

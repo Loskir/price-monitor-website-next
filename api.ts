@@ -4,6 +4,17 @@ import type { ProductWithPriceModel } from "./models/Product"
 
 const apiRoot = process.env.NEXT_PUBLIC_API_ROOT ?? ""
 
+export enum SortType {
+  name = "name",
+  price = "price",
+  unitPrice = "unitPrice",
+}
+
+export enum SortOrder {
+  asc = "asc",
+  desc = "desc",
+}
+
 export function getProductById(id: string, signal?: AbortSignal): Promise<ProductWithPriceModel | null> {
   return fetch(`${apiRoot}/products/${id}`, { signal })
     .then(async (res) => {
@@ -44,7 +55,17 @@ export function getProductByEan(ean: string, signal?: AbortSignal): Promise<Prod
 }
 
 export function searchProducts(
-  { query, offset = 0, manticore }: { query: string; offset?: number; manticore?: any },
+  {
+    query,
+    offset = 0,
+    sort,
+    sortOrder,
+  }: {
+    query: string
+    offset?: number
+    sort?: SortType
+    sortOrder?: SortOrder
+  },
   signal?: AbortSignal,
 ): Promise<SearchResponseModel> {
   const limit = 50
@@ -53,6 +74,8 @@ export function searchProducts(
     offset: offset.toString(),
     limit: limit.toString(),
   })
+  if (sort) queryString.set("sort", sort)
+  if (sortOrder) queryString.set("sortOrder", sortOrder)
   return fetch(`${apiRoot}/v2/products/search?${queryString}`, { signal })
     .then(async (res) => {
       if (res.status > 400) {
@@ -73,17 +96,6 @@ export function getCategories(parentId: number | null, signal?: AbortSignal): Pr
       }
       return await res.json() as CategoryModel[]
     })
-}
-
-export enum SortType {
-  name = "name",
-  price = "price",
-  unitPrice = "unitPrice",
-}
-
-export enum SortOrder {
-  asc = "asc",
-  desc = "desc",
 }
 
 export function getProductsByCategory(categoryId: number, {
