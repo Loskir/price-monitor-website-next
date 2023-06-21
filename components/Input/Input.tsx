@@ -1,3 +1,4 @@
+import { css } from "@emotion/css"
 import clsx from "clsx"
 import React, { useCallback, useMemo } from "react"
 import TextareaAutosize from "react-textarea-autosize"
@@ -21,6 +22,7 @@ export const Input: React.FC<InputProps> = ({
   const className = useMemo(() =>
     clsx(
       "bg-white rounded-xl px-4 py-2 border border-gray-200 hover:border-gray-300 active:border-gray-300",
+      css`min-height: 42px`,
       classNameProp,
     ), [classNameProp])
   const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
