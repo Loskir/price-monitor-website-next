@@ -1,10 +1,11 @@
 import { z } from "zod"
 
-export enum UomType {
-  kg = "kg",
-  l = "l",
-  pcs = "pcs",
-}
+export type UomType = (typeof UomType)[keyof typeof UomType]
+export const UomType = {
+  kg: "kg",
+  l: "l",
+  pcs: "pcs",
+} as const
 
 export const PriceHistoryPriceModel = z.object({
   price: z.preprocess((v) => Number(v), z.number()),
