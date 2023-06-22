@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
           <a className="py-2 px-2 font-semibold flex-shrink-0 hover:text-orange-600 rounded-lg">Price Monitor</a>
         </Link>
         <NavbarLink link="/scanner" text="Сканер" />
-        <NavbarLink link="/categories" text="Категории" />
+        {/*<NavbarLink link="/categories" text="Категории" />*/}
         <div className="flex-grow"></div>
 
         {/*<NavbarLinkIcon link="/scanner" label="Сканер">*/}
