@@ -25,14 +25,15 @@ export const ProductListItem: React.FC<{ product: ProductWithPriceModel }> = ({ 
       <div className={cx("ml-20", styles.divider)} />
       <div className="flex py-4">
         <div className="mr-4 rounded-xl w-16 h-16 shrink-0 relative">
-          {product.photoUrl && (
+          {product.thumbnailUrl && (
             <img
               className={clsx(
                 "absolute inset-0 max-h-full m-auto",
                 styles.image,
               )}
-              src={product.photoUrl}
+              src={product.thumbnailUrl}
               alt="Photo"
+              loading="lazy"
             />
           )}
         </div>

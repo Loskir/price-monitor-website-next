@@ -18,10 +18,9 @@ export interface ProductModel {
   productId: string
   name: string
   slug?: string
+  thumbnailUrl?: string
   photoUrl?: string
   photoUrls?: string[]
-  /** @deprecated */
-  ean?: string
   eans?: string[]
   uomType?: UomType
   uomName?: string
