@@ -17,6 +17,7 @@ export const Button: React.FC<ButtonProps> = ({ className, children, fullWidth, 
         fullWidth && "w-full",
         className,
       )}
+      disabled={isLoading}
       {...props}
     >
       <span className={clsx(isLoading && styles.hidden)}>{children}</span>
