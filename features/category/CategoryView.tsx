@@ -15,7 +15,7 @@ import { $subcategoriesState } from "./subcategories"
 
 const Subcategories: React.FC = () => {
   const skeletonWidths = useMemo(
-    () => createArray(25).map(() => Math.floor(Math.random() * (5 - 2) + 2)),
+    () => createArray(25).map(() => (Math.floor(Math.random() * (22 - 9) + 9)) * 10),
     [],
   )
   const { isLoading, categories } = useStore($subcategoriesState)
@@ -24,8 +24,9 @@ const Subcategories: React.FC = () => {
       <div className="flex flex-wrap gap-2 mb-4 mx-4">
         {skeletonWidths.map((width, index) => (
           <BaseSkeleton
-            className={`h-10 w-${width}/12 rounded-full`}
+            className={`h-10 rounded-full`}
             key={index}
+            width={width}
           />
         ))}
       </div>
